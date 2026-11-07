@@ -27,9 +27,19 @@ export const publicEnvSchema = z.object({
   ),
   NEXT_PUBLIC_SUPABASE_URL: optionalUrl,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalString,
+  /** Shows the "fictitious data" banner and disables real contact buttons. */
+  NEXT_PUBLIC_DEMO_MODE: z.preprocess(
+    blankToUndefined,
+    z
+      .enum(["true", "false", "1", "0"])
+      .default("false")
+      .transform((v) => v === "true" || v === "1"),
+  ),
 });
 
 export const serverEnvSchema = z.object({
+  /** Postgres connection string. On Supabase, use the pooler URL (transaction mode). */
+  DATABASE_URL: optionalUrl,
   SUPABASE_SERVICE_ROLE_KEY: optionalString,
   ANTHROPIC_API_KEY: optionalString,
   ANTHROPIC_MODEL_EXTRACTION: z.preprocess(
