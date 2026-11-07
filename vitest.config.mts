@@ -1,5 +1,11 @@
 import { fileURLToPath } from "node:url";
+
+import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
+
+// Integration tests run against TEST_DATABASE_URL (a disposable local database).
+const env = loadEnv("test", process.cwd(), "");
+const testDatabaseUrl = process.env.TEST_DATABASE_URL ?? env.TEST_DATABASE_URL;
 
 export default defineConfig({
   resolve: {
@@ -12,7 +18,13 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts", "tests/unit/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
     clearMocks: true,
+    globalSetup: ["./tests/integration/global-setup.ts"],
+    env: testDatabaseUrl
+      ? { TEST_DATABASE_URL: testDatabaseUrl, DATABASE_URL: testDatabaseUrl }
+      : { DATABASE_URL: "" },
+    // Integration tests share one database: run files sequentially.
+    fileParallelism: false,
   },
 });
