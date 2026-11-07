@@ -1,11 +1,14 @@
-import { MessageCircle, ScanSearch, Search, ShieldCheck, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, MessageCircle, ScanSearch, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-const POPULAR_SEARCHES = ["XC60", "XC40", "XC90", "S60", "V40", "EX30", "XC60 T8", "C30 T5"];
+import { ListingGrid } from "@/components/listing-card";
+import { SafetyTips } from "@/components/safety-tips";
+import { SearchBox } from "@/components/search/search-box";
+import { Skeleton } from "@/components/ui/skeleton";
+import { POPULAR_SEARCHES } from "@/content/popular";
+import { getRecentListings } from "@/lib/listings/queries";
 
 const STEPS = [
   {
@@ -25,22 +28,12 @@ const STEPS = [
   },
 ] as const;
 
-const SAFETY_TIPS = [
-  "Nunca pague sinal ou reserva antes de ver o carro pessoalmente.",
-  "Desconfie de preço muito abaixo do mercado.",
-  "Confira o documento e se o vendedor é o proprietário.",
-  "Faça uma vistoria cautelar antes de fechar negócio.",
-] as const;
-
 export default function HomePage() {
   return (
     <>
       <section className="border-b border-border/70">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20">
-          <div className="flex flex-col gap-4">
-            <Badge variant="outline" className="font-normal text-muted-foreground">
-              Prévia da Fase 0: a busca chega na Fase 1
-            </Badge>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-14 pb-12 sm:px-6 sm:pt-20 sm:pb-16">
+          <div className="flex max-w-3xl flex-col gap-4">
             <h1 className="text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl">
               Encontre seu próximo Volvo.
             </h1>
@@ -50,33 +43,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <form
-            action="/busca"
-            method="get"
-            role="search"
-            className="flex flex-col gap-3 sm:flex-row"
-          >
-            <label htmlFor="q" className="sr-only">
-              Buscar anúncios
-            </label>
-            <div className="relative flex-1">
-              <Search
-                className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-muted-foreground"
-                aria-hidden
-              />
-              <Input
-                id="q"
-                name="q"
-                type="search"
-                autoComplete="off"
-                placeholder="Ex.: xc60 t8 sp até 250 mil"
-                className="h-12 rounded-xl pl-11 text-base md:text-base"
-              />
-            </div>
-            <Button type="submit" className="h-12 rounded-xl px-6 text-base">
-              Buscar
-            </Button>
-          </form>
+          <SearchBox className="max-w-3xl" />
 
           <div className="flex flex-col gap-3">
             <p className="text-sm text-muted-foreground">Buscas populares</p>
@@ -96,8 +63,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section aria-labelledby="recentes" className="border-b border-border/70">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
+          <div className="flex items-end justify-between gap-4">
+            <h2 id="recentes" className="text-2xl font-semibold tracking-tight">
+              Anúncios recentes
+            </h2>
+            <Link
+              href="/busca"
+              className="inline-flex items-center gap-1 text-sm font-medium text-primary"
+            >
+              Ver todos <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+          <Suspense fallback={<RecentSkeleton />}>
+            <RecentListings />
+          </Suspense>
+        </div>
+      </section>
+
       <section aria-labelledby="como-funciona" className="border-b border-border/70">
-        <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <h2 id="como-funciona" className="text-2xl font-semibold tracking-tight">
             Como funciona
           </h2>
@@ -116,27 +102,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="seguranca">
-        <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-          <div className="flex flex-col gap-6 rounded-2xl bg-muted/60 p-6 sm:p-10">
-            <h2
-              id="seguranca"
-              className="flex items-center gap-3 text-2xl font-semibold tracking-tight"
-            >
-              <ShieldCheck className="size-6 text-primary" aria-hidden />
-              Compre com segurança
-            </h2>
-            <ul className="grid gap-3 text-muted-foreground sm:grid-cols-2">
-              {SAFETY_TIPS.map((tip) => (
-                <li key={tip} className="flex gap-3">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
-                  <span>{tip}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <SafetyTips />
+      </div>
     </>
+  );
+}
+
+async function RecentListings() {
+  await connection();
+  const listings = await getRecentListings(6);
+  if (listings.length === 0) {
+    return <p className="text-muted-foreground">Nenhum anúncio publicado ainda.</p>;
+  }
+  return <ListingGrid listings={listings} now={new Date()} />;
+}
+
+function RecentSkeleton() {
+  return (
+    <div
+      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      aria-busy="true"
+      aria-label="Carregando anúncios"
+    >
+      {Array.from({ length: 6 }, (_, i) => (
+        <Skeleton key={i} className="h-72 rounded-2xl" />
+      ))}
+    </div>
   );
 }

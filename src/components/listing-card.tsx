@@ -1,0 +1,76 @@
+import { BadgeCheck } from "lucide-react";
+import Link from "next/link";
+
+import { ModelPlate } from "@/components/model-plate";
+import {
+  formatKm,
+  formatPlace,
+  formatPrice,
+  formatRelativeDays,
+  formatYears,
+} from "@/lib/listings/format";
+import type { ListingCard as Listing } from "@/lib/listings/queries";
+
+export function listingTitle(l: Pick<Listing, "modelName" | "engineName" | "trimName">) {
+  return [l.modelName, l.engineName, l.trimName].filter(Boolean).join(" ");
+}
+
+export function ListingCard({ listing, now }: { listing: Listing; now: Date }) {
+  const title = listingTitle(listing);
+  return (
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary/40">
+      <ModelPlate modelName={listing.modelName} className="aspect-[16/10]" />
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="leading-snug font-medium">
+            <Link
+              href={`/anuncio/${listing.slug}`}
+              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:underline"
+            >
+              Volvo {title}
+            </Link>
+          </h3>
+          {listing.isClaimed && (
+            <BadgeCheck
+              className="mt-0.5 size-5 shrink-0 text-primary"
+              aria-label="Vendedor verificado"
+            />
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {formatYears(listing.yearFab, listing.yearModel)} · {formatKm(listing.km)}
+        </p>
+        <p className="mt-auto pt-2 text-xl font-semibold tracking-tight">
+          {formatPrice(listing.priceCents)}
+        </p>
+        <p className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+          <span>{formatPlace(listing.city, listing.uf)}</span>
+          <span aria-hidden>·</span>
+          <span>
+            {listing.sellerType === "loja"
+              ? "Loja"
+              : listing.sellerType === "particular"
+                ? "Particular"
+                : "Vendedor"}
+          </span>
+          <span aria-hidden>·</span>
+          <time dateTime={listing.firstSeenAt.toISOString()}>
+            {formatRelativeDays(listing.firstSeenAt, now)}
+          </time>
+        </p>
+      </div>
+    </article>
+  );
+}
+
+export function ListingGrid({ listings, now }: { listings: Listing[]; now: Date }) {
+  return (
+    <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {listings.map((listing) => (
+        <li key={listing.id} className="flex">
+          <ListingCard listing={listing} now={now} />
+        </li>
+      ))}
+    </ul>
+  );
+}
