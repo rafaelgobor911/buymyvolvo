@@ -124,7 +124,7 @@ values
   ('r', 'R', array['850', 's60', 'v70'], null, '{}'::text[], null, 1996, 2007, true, null),
   ('r-design', 'R-Design', null, null, array['r design', 'rdesign', 'r-desing', 'r desing', 'rdesing'], null, 2008, 2022, true, null),
   ('polestar', 'Polestar', array['s60', 'v60'], array['t6'], '{}'::text[], null, 2014, 2018, false, null),
-  ('polestar-engineered', 'Polestar Engineered', array['s60', 'v60', 'xc60'], array['t8'], array['polestar', 'polestar eng'], null, 2019, 2026, true, 'Confirmado na XC60 até 2026. Também houve S60 e V60 Polestar Engineered no Brasil?'), -- REVISAR: Confirmado na XC60 até 2026. Também houve S60 e V60 Polestar Engineered no Brasil?
+  ('polestar-engineered', 'Polestar Engineered', array['s60', 'xc60'], array['t8'], array['polestar', 'polestar eng'], null, 2019, 2026, true, null),
   ('inscription', 'Inscription', null, null, '{}'::text[], null, 2015, 2022, true, null),
   ('momentum', 'Momentum', null, null, '{}'::text[], null, 2015, 2021, true, null),
   ('kinetic', 'Kinetic', null, null, '{}'::text[], null, 2010, 2013, true, null),
@@ -133,9 +133,9 @@ values
   ('core', 'Core', null, null, '{}'::text[], null, 2023, null, true, null),
   ('plus', 'Plus', null, null, '{}'::text[], null, 2023, null, true, null),
   ('ultimate', 'Ultimate', null, null, '{}'::text[], null, 2023, null, true, null),
-  ('ultimate-dark', 'Ultimate Dark', array['xc60'], null, '{}'::text[], 'ultimate', 2023, null, true, 'Você citou o Ultimate Dark na XC60. Existe em outros modelos no Brasil?'), -- REVISAR: Você citou o Ultimate Dark na XC60. Existe em outros modelos no Brasil?
+  ('ultimate-dark', 'Ultimate Dark', array['xc60', 'xc90'], null, '{}'::text[], 'ultimate', 2023, null, true, null),
   ('ultra', 'Ultra', null, null, '{}'::text[], null, 2024, null, true, null),
-  ('ultra-dark', 'Ultra Dark', array['xc60'], null, '{}'::text[], 'ultra', 2024, null, true, 'Você citou o Ultra Dark na XC60. Existe em outros modelos no Brasil?') -- REVISAR: Você citou o Ultra Dark na XC60. Existe em outros modelos no Brasil?
+  ('ultra-dark', 'Ultra Dark', array['xc60', 'xc90'], null, '{}'::text[], 'ultra', 2024, null, true, null)
 on conflict (id) do update set name = excluded.name, model_ids = excluded.model_ids,
   engine_ids = excluded.engine_ids, aliases = excluded.aliases, parent_id = excluded.parent_id,
   year_start = excluded.year_start, year_end = excluded.year_end,

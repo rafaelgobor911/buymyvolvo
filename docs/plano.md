@@ -71,9 +71,9 @@ A Business Verification depende do **CNPJ** e, idealmente, do **domínio**. Vale
 - **Não vendidos no Brasil** (continuam reconhecidos pela busca, com aviso; saem dos filtros): V90 e V90 Cross Country, S60 e V60 Cross Country, V70 3ª geração, motores T2, D3, D4, B4, B5 e B6, versões Summum e Polestar (2014–2018).
 - **Disponibilidade restrita:** T3 só no V40 (2015–2017); T4 sem versão Recharge, nos S60, V60, V40 e XC40; D5 na XC60 (2015–2020) e na XC90 (2018–2020); T6 sem versão Recharge.
 - **Anos:** S60 3ª geração até 2022; Inscription a partir de 2015; Momentum a partir de 2015; Kinetic 2010–2013; Polestar Engineered até 2026; ES90 a partir de 2026.
-- **Novos itens:** geração V70 XC (1997–2000) dentro da XC70; versões Ultimate Dark e Ultra Dark (XC60); Ultra disponível em todos os modelos atuais.
+- **Novos itens:** geração V70 XC (1997–2000) dentro da XC70; versões Ultimate Dark e Ultra Dark (XC60 e XC90); Ultra disponível em todos os modelos atuais.
 
-Dúvidas que restam: S60/V60 Polestar Engineered no Brasil e versões Dark em outros modelos além da XC60.
+Segunda rodada: Polestar Engineered na XC60 (2019–2026) e no S60 (2019–2022), sem V60; Ultimate Dark e Ultra Dark na XC60 e na XC90. Nenhuma dúvida pendente na taxonomia.
 
 ## Próxima fase (Fase 2: extração com IA)
 

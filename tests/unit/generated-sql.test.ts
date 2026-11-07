@@ -3,6 +3,8 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { ENGINES, MODELS, TRIMS } from "@/lib/taxonomy";
+
 import {
   generateSeedSql,
   generateTaxonomySql,
@@ -21,8 +23,13 @@ describe("generated SQL", () => {
     expect(readFileSync(path.join(root, SEED_FILE), "utf8")).toBe(generateSeedSql());
   });
 
-  it("marks doubtful taxonomy entries for review", () => {
-    expect(generateTaxonomySql()).toContain("-- REVISAR:");
+  it("turns every review note into a -- REVISAR comment", () => {
+    const notes = [
+      ...MODELS.flatMap((m) => [m.review, ...m.generations.map((g) => g.review)]),
+      ...ENGINES.map((e) => e.review),
+      ...TRIMS.map((t) => t.review),
+    ].filter(Boolean);
+    expect(generateTaxonomySql().match(/-- REVISAR: /g)?.length ?? 0).toBe(notes.length);
   });
 
   it("uses DDD 20 (non-existent) for every fixture phone", () => {

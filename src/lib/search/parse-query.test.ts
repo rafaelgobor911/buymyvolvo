@@ -325,6 +325,7 @@ describe("parseQuery: Brazilian market (owner review 2026-11-07)", () => {
     expect(parse("xc60 ultimate dark").trimIds).toEqual(["ultimate-dark"]);
     expect(parse("xc60 ultra").trimIds).toEqual(["ultra", "ultra-dark"]);
     expect(parse("ex30 ultra").trimIds).toEqual(["ultra"]);
+    expect(parse("xc90 ultimate").trimIds).toEqual(["ultimate", "ultimate-dark"]);
   });
 
   it("warns about trims not sold in Brazil", () => {
