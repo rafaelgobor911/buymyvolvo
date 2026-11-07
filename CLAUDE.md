@@ -70,7 +70,7 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 
 - **Postgres direto** (driver `postgres`, sem ORM) via `DATABASE_URL`. No Supabase, use a URL do pooler (modo transaction); o pool já usa `prepare: false`.
 - **Migrations** em `supabase/migrations/AAAAMMDDHHMMSS_nome.sql`. Nunca edite uma migration já aplicada em produção; crie outra. O runner (`scripts/db/lib.ts`) registra em `supabase_migrations.schema_migrations`, a mesma tabela do Supabase CLI.
-- **Taxonomia:** edite `src/lib/taxonomy/data.ts` e rode `npm run db:generate`. Um teste falha se o SQL gerado estiver desatualizado. Itens duvidosos levam `review: "..."`, que vira `-- REVISAR:` no SQL.
+- **Taxonomia:** edite `src/lib/taxonomy/data.ts` e rode `npm run db:generate`. Revisada pelo dono do produto em 07/11/2026; o que ainda é dúvida leva `review`. Um teste falha se o SQL gerado estiver desatualizado. Itens duvidosos levam `review: "..."`, que vira `-- REVISAR:` no SQL.
 - **RLS em toda tabela nova**: `enable row level security`, `revoke all ... from anon, authenticated`, e só então `grant select (colunas)` + policy para o que for público. Um teste de integração falha se alguma tabela de `public` estiver sem RLS.
 - **Leituras públicas** passam por `asAnon()` (`set local role anon`), então a RLS vale também no servidor. Liste as colunas explicitamente: `anon` tem grants por coluna (telefone, legenda e campos internos ficam de fora).
 - **Escritas** só no servidor, com o papel dono das tabelas. O navegador nunca fala com o banco.
@@ -79,7 +79,8 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 ## Busca
 
 - `parseQuery(texto)` é determinístico e sem IA: regex para km/ano/preço, depois um dicionário de aliases (taxonomia + lugares) com n-gramas de até 5 palavras e segmentação de tokens colados ("s60t5"). O que sobra vai para full-text (`pt_unaccent`) com fallback por trigram (erros de digitação).
-- Regras de produto: "v40" inclui o V40 Cross Country (o mesmo vale para S60/V60/V90); "xc40 elétrico" inclui o EX40; "c40" ⇄ "ec40"; "São Paulo"/"Rio de Janeiro" sozinhos = estado, com atalho para a cidade; "cidade de…", "capital" e "sampa" = cidade.
+- Regras de produto: "v40" inclui o V40 Cross Country; "ultimate"/"ultra" incluem as versões Dark ("ultimate dark" restringe); "xc40 elétrico" inclui o EX40; "c40" ⇄ "ec40"; "polestar" = Polestar Engineered (a série Polestar 2014–2018 não veio ao Brasil); "São Paulo"/"Rio de Janeiro" sozinhos = estado, com atalho para a cidade; "cidade de…", "capital" e "sampa" = cidade.
+- **Mercado brasileiro:** `brazil: false` na taxonomia marca o que nunca foi vendido oficialmente aqui (V90, S60/V60 Cross Country, B4/B5/B6, D3/D4, T2, Summum, Polestar 2014–2018, V70 3ª geração). A busca continua reconhecendo esses termos e mostra um aviso, mas eles saem das opções do painel de filtros. Motores com `brazil: [...]` (T3, T4, D5) só valem nos modelos/anos listados. Os anúncios fictícios só usam combinações vendidas no Brasil (há teste para isso).
 - URL: `q` é o texto; parâmetros explícitos do painel (`modelo`, `motor`, `versao`, `combustivel`, `cambio`, `vendedor`, `ano_min`, `ano_max`, `preco_min`, `preco_max`, `km_max`, `uf`, `cidade`, `texto`, `ordem`, `pagina`) **sobrescrevem** o que veio do texto, inclusive quando vazios (= "qualquer").
 
 ## Variáveis de ambiente
