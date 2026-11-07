@@ -5,20 +5,21 @@
  * - Generates `supabase/migrations/*_taxonomy_data.sql` (`npm run db:generate`);
  *   every `review` note becomes a `-- REVISAR:` comment there.
  *
- * Years are model years (ano-modelo) and approximate the Brazilian market.
- * Anything marked `review` must be validated by the product owner.
+ * Years are model years (ano-modelo) for the Brazilian market. `brazil: false`
+ * marks what was never sold officially here: search still recognizes it, the
+ * filter panel hides it and extraction lowers confidence.
+ * Reviewed by the product owner on 2026-11-07; remaining doubts carry `review`.
  */
 import type { EngineDef, ModelDef, TrimDef } from "./types";
 
 export const MODELS: ModelDef[] = [
-  // --- Classics (RWD) -------------------------------------------------------
+  // --- Classics (RWD); platforms outside the P80…SEA list stay null --------
   {
     id: "240",
     name: "240",
     bodyTypes: ["sedan", "perua"],
     aliases: [],
     generations: [{ id: "240", name: "240", yearStart: 1974, yearEnd: 1993, platform: null }],
-    review: "Plataforma fora da lista (P80…SEA); deixei nula. Idem 740/760/940/960.",
   },
   {
     id: "740",
@@ -47,7 +48,6 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["sedan", "perua"],
     aliases: [],
     generations: [{ id: "960", name: "960", yearStart: 1991, yearEnd: 1997, platform: null }],
-    review: "Em 1997 o 960 foi rebatizado de S90/V90 (1ª geração).",
   },
   // --- P80 ------------------------------------------------------------------
   {
@@ -81,14 +81,8 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["sedan"],
     aliases: [],
     generations: [
-      {
-        id: "s40-1",
-        name: "1ª geração",
-        yearStart: 1996,
-        yearEnd: 2004,
-        platform: null,
-        review: "Plataforma compartilhada com a Mitsubishi (NedCar), fora da lista.",
-      },
+      // Shared with Mitsubishi (NedCar), outside the platform list.
+      { id: "s40-1", name: "1ª geração", yearStart: 1996, yearEnd: 2004, platform: null },
       { id: "s40-2", name: "2ª geração", yearStart: 2004, yearEnd: 2012, platform: "P1" },
     ],
   },
@@ -98,14 +92,8 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["perua", "hatch"],
     aliases: [],
     generations: [
-      {
-        id: "v40-1",
-        name: "1ª geração (perua)",
-        yearStart: 1996,
-        yearEnd: 2004,
-        platform: null,
-        review: "Plataforma NedCar, fora da lista.",
-      },
+      // NedCar platform, outside the platform list.
+      { id: "v40-1", name: "1ª geração (perua)", yearStart: 1996, yearEnd: 2004, platform: null },
       { id: "v40-2", name: "2ª geração (hatch)", yearStart: 2013, yearEnd: 2019, platform: "P1" },
     ],
   },
@@ -142,14 +130,7 @@ export const MODELS: ModelDef[] = [
     generations: [
       { id: "s60-1", name: "1ª geração", yearStart: 2001, yearEnd: 2009, platform: "P2" },
       { id: "s60-2", name: "2ª geração", yearStart: 2011, yearEnd: 2018, platform: "P3" },
-      {
-        id: "s60-3",
-        name: "3ª geração",
-        yearStart: 2019,
-        yearEnd: 2024,
-        platform: "SPA",
-        review: "Fim de produção em 2024; confirmar último ano-modelo vendido no Brasil.",
-      },
+      { id: "s60-3", name: "3ª geração", yearStart: 2019, yearEnd: 2022, platform: "SPA" },
     ],
   },
   {
@@ -158,6 +139,7 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["sedan"],
     aliases: ["s60 cc", "s60 cross"],
     parentId: "s60",
+    brazil: false,
     generations: [
       { id: "s60-cc", name: "S60 Cross Country", yearStart: 2016, yearEnd: 2018, platform: "P3" },
     ],
@@ -178,6 +160,7 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["perua"],
     aliases: ["v60 cc", "v60 cross"],
     parentId: "v60",
+    brazil: false,
     generations: [
       { id: "v60-cc-1", name: "1ª geração", yearStart: 2015, yearEnd: 2018, platform: "P3" },
       { id: "v60-cc-2", name: "2ª geração", yearStart: 2019, yearEnd: null, platform: "SPA" },
@@ -192,7 +175,14 @@ export const MODELS: ModelDef[] = [
     generations: [
       { id: "v70-1", name: "1ª geração", yearStart: 1997, yearEnd: 2000, platform: "P80" },
       { id: "v70-2", name: "2ª geração", yearStart: 2001, yearEnd: 2007, platform: "P2" },
-      { id: "v70-3", name: "3ª geração", yearStart: 2008, yearEnd: 2016, platform: "P3" },
+      {
+        id: "v70-3",
+        name: "3ª geração",
+        yearStart: 2008,
+        yearEnd: 2016,
+        platform: "P3",
+        brazil: false,
+      },
     ],
   },
   {
@@ -201,10 +191,16 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["perua"],
     aliases: ["v70 xc", "v70xc"],
     generations: [
-      { id: "xc70-1", name: "1ª geração", yearStart: 2001, yearEnd: 2007, platform: "P2" },
+      { id: "xc70-0", name: "V70 XC", yearStart: 1997, yearEnd: 2000, platform: "P80" },
+      {
+        id: "xc70-1",
+        name: "1ª geração (V70 XC até 2002)",
+        yearStart: 2001,
+        yearEnd: 2007,
+        platform: "P2",
+      },
       { id: "xc70-2", name: "2ª geração", yearStart: 2008, yearEnd: 2016, platform: "P3" },
     ],
-    review: "Até 2002 se chamava V70 XC; a V70 XC 1997–2000 (P80) não foi incluída.",
   },
   {
     id: "s80",
@@ -232,6 +228,7 @@ export const MODELS: ModelDef[] = [
     name: "V90",
     bodyTypes: ["perua"],
     aliases: [],
+    brazil: false,
     generations: [
       { id: "v90-1", name: "1ª geração (ex-960)", yearStart: 1997, yearEnd: 1998, platform: null },
       { id: "v90-2", name: "2ª geração", yearStart: 2017, yearEnd: null, platform: "SPA" },
@@ -243,6 +240,7 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["perua"],
     aliases: ["v90 cc", "v90 cross"],
     parentId: "v90",
+    brazil: false,
     generations: [
       { id: "v90-cc", name: "V90 Cross Country", yearStart: 2017, yearEnd: null, platform: "SPA" },
     ],
@@ -256,13 +254,13 @@ export const MODELS: ModelDef[] = [
     generations: [{ id: "xc40", name: "XC40", yearStart: 2018, yearEnd: null, platform: "CMA" }],
   },
   {
+    // New name of the XC40 Recharge Pure Electric from 2024.
     id: "ex40",
     name: "EX40",
     bodyTypes: ["suv"],
     aliases: ["xc40 pure electric", "xc40 recharge pure electric"],
     renamedFrom: { modelId: "xc40", scope: "electric" },
     generations: [{ id: "ex40", name: "EX40", yearStart: 2024, yearEnd: null, platform: "CMA" }],
-    review: "Nome novo do XC40 Recharge Pure Electric a partir de 2024.",
   },
   {
     id: "c40",
@@ -274,13 +272,13 @@ export const MODELS: ModelDef[] = [
     ],
   },
   {
+    // New name of the C40 Recharge from 2024.
     id: "ec40",
     name: "EC40",
     bodyTypes: ["suv"],
     aliases: [],
     renamedFrom: { modelId: "c40", scope: "all" },
     generations: [{ id: "ec40", name: "EC40", yearStart: 2024, yearEnd: null, platform: "CMA" }],
-    review: "Nome novo do C40 Recharge a partir de 2024.",
   },
   {
     id: "xc60",
@@ -315,7 +313,6 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["suv"],
     aliases: [],
     generations: [{ id: "ex90", name: "EX90", yearStart: 2025, yearEnd: null, platform: "SPA2" }],
-    review: "Plataforma SPA2 não estava na lista original; acrescentei.",
   },
   {
     id: "es90",
@@ -323,7 +320,6 @@ export const MODELS: ModelDef[] = [
     bodyTypes: ["sedan"],
     aliases: [],
     generations: [{ id: "es90", name: "ES90", yearStart: 2026, yearEnd: null, platform: "SPA2" }],
-    review: "Lançado em 2025; confirmar chegada e ano-modelo no Brasil.",
   },
 ];
 
@@ -336,7 +332,7 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2015,
     yearEnd: null,
     aliases: [],
-    review: "Pouco comum no Brasil.",
+    brazil: false,
   },
   {
     id: "t3",
@@ -346,18 +342,21 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2013,
     yearEnd: null,
     aliases: [],
+    brazil: [{ modelIds: ["v40"], yearStart: 2015, yearEnd: 2017 }],
   },
   {
+    // T4 1.6 (S60, P3) and T4 2.0 Drive-E (S60, V60, V40, XC40). No T4 Recharge in Brazil.
     id: "t4",
     name: "T4",
-    fuels: ["gasolina", "hibrido_plugin"],
+    fuels: ["gasolina"],
     platforms: ["P1", "P3", "SPA", "CMA"],
     yearStart: 2011,
     yearEnd: null,
     aliases: [],
-    review: "Inclui T4 Recharge (plug-in) no XC40 e o T4 1.6 da P3.",
+    brazil: [{ modelIds: ["s60", "v60", "v40", "xc40"], yearStart: 2011, yearEnd: null }],
   },
   {
+    // Includes T5 Twin Engine/Recharge (plug-in) on the CMA.
     id: "t5",
     name: "T5",
     fuels: ["gasolina", "hibrido_plugin"],
@@ -365,7 +364,6 @@ export const ENGINES: EngineDef[] = [
     yearStart: 1994,
     yearEnd: null,
     aliases: [],
-    review: "Inclui T5 Twin Engine/Recharge (plug-in) na CMA.",
   },
   {
     id: "t5r",
@@ -378,14 +376,14 @@ export const ENGINES: EngineDef[] = [
     aliases: ["t-5r", "t5-r"],
   },
   {
+    // No T6 Recharge (plug-in) in Brazil.
     id: "t6",
     name: "T6",
-    fuels: ["gasolina", "hibrido_plugin"],
+    fuels: ["gasolina"],
     platforms: ["P2", "P3", "SPA"],
     yearStart: 1999,
     yearEnd: null,
     aliases: [],
-    review: "T6 Recharge (plug-in) na SPA a partir de 2022.",
   },
   {
     id: "t8",
@@ -404,7 +402,7 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2010,
     yearEnd: 2021,
     aliases: [],
-    review: "No Brasil, diesel só é permitido em SUVs/4x4; confirmar oferta.",
+    brazil: false,
   },
   {
     id: "d4",
@@ -414,7 +412,7 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2012,
     yearEnd: 2021,
     aliases: [],
-    review: "No Brasil, diesel só é permitido em SUVs/4x4; confirmar oferta.",
+    brazil: false,
   },
   {
     id: "d5",
@@ -424,6 +422,10 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2001,
     yearEnd: 2021,
     aliases: [],
+    brazil: [
+      { modelIds: ["xc60"], yearStart: 2015, yearEnd: 2020 },
+      { modelIds: ["xc90"], yearStart: 2018, yearEnd: 2020 },
+    ],
   },
   {
     id: "b4",
@@ -433,6 +435,7 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2020,
     yearEnd: null,
     aliases: [],
+    brazil: false,
   },
   {
     id: "b5",
@@ -442,6 +445,7 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2020,
     yearEnd: null,
     aliases: [],
+    brazil: false,
   },
   {
     id: "b6",
@@ -451,6 +455,7 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2020,
     yearEnd: null,
     aliases: [],
+    brazil: false,
   },
   {
     id: "single-motor",
@@ -462,6 +467,7 @@ export const ENGINES: EngineDef[] = [
     aliases: ["single", "single motor extended range", "extended range"],
   },
   {
+    // "Recharge" and "Pure Electric" are treated as fuel, not as an engine.
     id: "twin-motor",
     name: "Twin Motor",
     fuels: ["eletrico"],
@@ -469,19 +475,18 @@ export const ENGINES: EngineDef[] = [
     yearStart: 2020,
     yearEnd: null,
     aliases: ["twin", "twin motor performance"],
-    review: '"Recharge" e "Pure Electric" foram tratados como combustível, não como motor.',
   },
 ];
 
 export const TRIMS: TrimDef[] = [
   {
+    // 850 R (1996–97), S60 R and V70 R (2003–07).
     id: "r",
     name: "R",
     yearStart: 1996,
     yearEnd: 2007,
     modelIds: ["850", "s60", "v70"],
     aliases: [],
-    review: "850 R (1996–97), S60 R e V70 R (2003–07).",
   },
   {
     id: "r-design",
@@ -491,6 +496,7 @@ export const TRIMS: TrimDef[] = [
     aliases: ["r design", "rdesign", "r-desing", "r desing", "rdesing"],
   },
   {
+    // S60/V60 Polestar (T6) limited series, 2014–2018: not sold in Brazil.
     id: "polestar",
     name: "Polestar",
     yearStart: 2014,
@@ -498,67 +504,53 @@ export const TRIMS: TrimDef[] = [
     modelIds: ["s60", "v60"],
     engineIds: ["t6"],
     aliases: [],
-    review: "Séries S60/V60 Polestar (T6). O kit de software Polestar não é versão.",
+    brazil: false,
   },
   {
     id: "polestar-engineered",
     name: "Polestar Engineered",
     yearStart: 2019,
-    yearEnd: 2024,
+    yearEnd: 2026,
     modelIds: ["s60", "v60", "xc60"],
     engineIds: ["t8"],
     aliases: ["polestar", "polestar eng"],
+    review: "Confirmado na XC60 até 2026. Também houve S60 e V60 Polestar Engineered no Brasil?",
   },
-  {
-    id: "inscription",
-    name: "Inscription",
-    yearStart: 2014,
-    yearEnd: 2022,
-    aliases: [],
-    review: "Confirmar primeiro ano no Brasil.",
-  },
-  {
-    id: "momentum",
-    name: "Momentum",
-    yearStart: 2006,
-    yearEnd: 2021,
-    aliases: [],
-    review: "Confirmar faixa de anos no Brasil.",
-  },
-  {
-    id: "kinetic",
-    name: "Kinetic",
-    yearStart: 2005,
-    yearEnd: 2013,
-    aliases: [],
-    review: "Confirmar faixa de anos no Brasil.",
-  },
+  { id: "inscription", name: "Inscription", yearStart: 2015, yearEnd: 2022, aliases: [] },
+  { id: "momentum", name: "Momentum", yearStart: 2015, yearEnd: 2021, aliases: [] },
+  { id: "kinetic", name: "Kinetic", yearStart: 2010, yearEnd: 2013, aliases: [] },
   {
     id: "summum",
     name: "Summum",
     yearStart: 2005,
     yearEnd: 2015,
     aliases: [],
-    review: "Confirmar faixa de anos no Brasil.",
+    brazil: false,
   },
-  {
-    id: "dynamic",
-    name: "Dynamic",
-    yearStart: 2008,
-    yearEnd: 2016,
-    aliases: [],
-    review: "Nomenclatura usada no Brasil; confirmar modelos e anos.",
-  },
+  { id: "dynamic", name: "Dynamic", yearStart: 2008, yearEnd: 2016, aliases: [] },
   { id: "core", name: "Core", yearStart: 2023, yearEnd: null, aliases: [] },
   { id: "plus", name: "Plus", yearStart: 2023, yearEnd: null, aliases: [] },
   { id: "ultimate", name: "Ultimate", yearStart: 2023, yearEnd: null, aliases: [] },
   {
-    id: "ultra",
-    name: "Ultra",
+    id: "ultimate-dark",
+    name: "Ultimate Dark",
+    yearStart: 2023,
+    yearEnd: null,
+    modelIds: ["xc60"],
+    parentId: "ultimate",
+    aliases: [],
+    review: "Você citou o Ultimate Dark na XC60. Existe em outros modelos no Brasil?",
+  },
+  // Every current model has an Ultra version.
+  { id: "ultra", name: "Ultra", yearStart: 2024, yearEnd: null, aliases: [] },
+  {
+    id: "ultra-dark",
+    name: "Ultra Dark",
     yearStart: 2024,
     yearEnd: null,
-    modelIds: ["ex30", "ex90", "es90", "ex40", "ec40"],
+    modelIds: ["xc60"],
+    parentId: "ultra",
     aliases: [],
-    review: "Confirmar em quais modelos a versão Ultra é oferecida no Brasil.",
+    review: "Você citou o Ultra Dark na XC60. Existe em outros modelos no Brasil?",
   },
 ];

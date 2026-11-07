@@ -50,7 +50,7 @@ export function generateTaxonomySql(): string {
 
   out.push(
     "insert into public.vehicle_models",
-    "  (id, name, body_types, aliases, parent_id, renamed_from_id, renamed_scope, year_start, year_end, sort_order, review_note)",
+    "  (id, name, body_types, aliases, parent_id, renamed_from_id, renamed_scope, year_start, year_end, sold_in_brazil, sort_order, review_note)",
     "values",
     rows(
       MODELS.map((m, i) => {
@@ -65,6 +65,7 @@ export function generateTaxonomySql(): string {
           lit(m.renamedFrom?.scope),
           lit(start),
           lit(end),
+          lit(m.brazil !== false),
           lit(i + 1),
           lit(m.review),
         ];
@@ -74,13 +75,13 @@ export function generateTaxonomySql(): string {
     "on conflict (id) do update set name = excluded.name, body_types = excluded.body_types,",
     "  aliases = excluded.aliases, parent_id = excluded.parent_id, renamed_from_id = excluded.renamed_from_id,",
     "  renamed_scope = excluded.renamed_scope, year_start = excluded.year_start, year_end = excluded.year_end,",
-    "  sort_order = excluded.sort_order, review_note = excluded.review_note;",
+    "  sold_in_brazil = excluded.sold_in_brazil, sort_order = excluded.sort_order, review_note = excluded.review_note;",
     "",
   );
 
   const generations = MODELS.flatMap((m) => m.generations.map((g) => ({ m, g })));
   out.push(
-    "insert into public.vehicle_generations (id, model_id, name, year_start, year_end, platform, review_note)",
+    "insert into public.vehicle_generations (id, model_id, name, year_start, year_end, platform, sold_in_brazil, review_note)",
     "values",
     rows(
       generations.map(({ m, g }) => [
@@ -90,18 +91,20 @@ export function generateTaxonomySql(): string {
         lit(g.yearStart),
         lit(g.yearEnd),
         lit(g.platform),
+        lit(g.brazil !== false),
         lit(g.review),
       ]),
       generations.map(({ g }) => g.review),
     ),
     "on conflict (id) do update set model_id = excluded.model_id, name = excluded.name,",
     "  year_start = excluded.year_start, year_end = excluded.year_end, platform = excluded.platform,",
+    "  sold_in_brazil = excluded.sold_in_brazil,",
     "  review_note = excluded.review_note;",
     "",
   );
 
   out.push(
-    "insert into public.vehicle_engines (id, name, fuels, platforms, model_ids, aliases, year_start, year_end, review_note)",
+    "insert into public.vehicle_engines (id, name, fuels, platforms, model_ids, aliases, year_start, year_end, sold_in_brazil, brazil_offers, review_note)",
     "values",
     rows(
       ENGINES.map((e) => [
@@ -113,18 +116,21 @@ export function generateTaxonomySql(): string {
         arr(e.aliases),
         lit(e.yearStart),
         lit(e.yearEnd),
+        lit(e.brazil !== false),
+        Array.isArray(e.brazil) ? `${lit(JSON.stringify(e.brazil))}::jsonb` : "null",
         lit(e.review),
       ]),
       ENGINES.map((e) => e.review),
     ),
     "on conflict (id) do update set name = excluded.name, fuels = excluded.fuels, platforms = excluded.platforms,",
     "  model_ids = excluded.model_ids, aliases = excluded.aliases, year_start = excluded.year_start,",
-    "  year_end = excluded.year_end, review_note = excluded.review_note;",
+    "  year_end = excluded.year_end, sold_in_brazil = excluded.sold_in_brazil,",
+    "  brazil_offers = excluded.brazil_offers, review_note = excluded.review_note;",
     "",
   );
 
   out.push(
-    "insert into public.vehicle_trims (id, name, model_ids, engine_ids, aliases, year_start, year_end, review_note)",
+    "insert into public.vehicle_trims (id, name, model_ids, engine_ids, aliases, parent_id, year_start, year_end, sold_in_brazil, review_note)",
     "values",
     rows(
       TRIMS.map((t) => [
@@ -133,15 +139,18 @@ export function generateTaxonomySql(): string {
         arr(t.modelIds ?? null),
         arr(t.engineIds ?? null),
         arr(t.aliases),
+        lit(t.parentId),
         lit(t.yearStart),
         lit(t.yearEnd),
+        lit(t.brazil !== false),
         lit(t.review),
       ]),
       TRIMS.map((t) => t.review),
     ),
     "on conflict (id) do update set name = excluded.name, model_ids = excluded.model_ids,",
-    "  engine_ids = excluded.engine_ids, aliases = excluded.aliases, year_start = excluded.year_start,",
-    "  year_end = excluded.year_end, review_note = excluded.review_note;",
+    "  engine_ids = excluded.engine_ids, aliases = excluded.aliases, parent_id = excluded.parent_id,",
+    "  year_start = excluded.year_start, year_end = excluded.year_end,",
+    "  sold_in_brazil = excluded.sold_in_brazil, review_note = excluded.review_note;",
     "",
   );
 

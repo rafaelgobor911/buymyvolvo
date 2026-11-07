@@ -1,5 +1,13 @@
 import { ENGINES, MODELS, TRIMS } from "./data";
-import type { EngineDef, Fuel, Generation, ModelDef, Platform, TrimDef } from "./types";
+import type {
+  BrazilOffer,
+  EngineDef,
+  Fuel,
+  Generation,
+  ModelDef,
+  Platform,
+  TrimDef,
+} from "./types";
 
 export * from "./types";
 export { ENGINES, MODELS, TRIMS };
@@ -46,9 +54,56 @@ export function generationsFor(modelId: string, years: YearWindow = {}): Generat
   );
 }
 
-/** Children (variants) of a model, e.g. V40 → V40 Cross Country. */
+/**
+ * Variants of a model to include when the base model is searched, e.g. V40 →
+ * V40 Cross Country. Variants never sold in Brazil are left out unless the
+ * base model was not sold here either (V90 → V90 Cross Country).
+ */
 export function variantsOf(modelId: string): ModelDef[] {
-  return MODELS.filter((m) => m.parentId === modelId);
+  const base = modelById.get(modelId);
+  return MODELS.filter(
+    (m) => m.parentId === modelId && (m.brazil !== false || base?.brazil === false),
+  );
+}
+
+/** Variants of a trim, e.g. Ultimate → Ultimate Dark. */
+export function trimVariantsOf(trimId: string): TrimDef[] {
+  return TRIMS.filter((t) => t.parentId === trimId);
+}
+
+/** Sold officially in Brazil (model, engine or trim as a whole). */
+export function isSoldInBrazil(kind: "model" | "engine" | "trim", id: string): boolean {
+  const item =
+    kind === "model"
+      ? modelById.get(id)
+      : kind === "engine"
+        ? engineById.get(id)
+        : trimById.get(id);
+  return !!item && item.brazil !== false;
+}
+
+/** Whether an engine was offered in Brazil for this model (and year window). */
+export function isEngineOfferedInBrazil(engineId: string, modelId: string, years: YearWindow = {}) {
+  const engine = engineById.get(engineId);
+  if (!engine || engine.brazil === false) return false;
+  if (!engine.brazil) return true;
+  const baseModelId = modelById.get(modelId)?.parentId ?? modelId;
+  return engine.brazil.some(
+    (offer) =>
+      (offer.modelIds.includes(modelId) || offer.modelIds.includes(baseModelId)) &&
+      overlaps(offer.yearStart, offer.yearEnd, years.min ?? 0, years.max ?? null),
+  );
+}
+
+/** "V40 (2015–2017)" style description of where an engine was offered in Brazil. */
+export function describeBrazilOffers(offers: BrazilOffer[]): string {
+  return offers
+    .map((o) => {
+      const names = o.modelIds.map((id) => modelById.get(id)?.name ?? id).join(", ");
+      const years = o.yearEnd ? `${o.yearStart}–${o.yearEnd}` : `desde ${o.yearStart}`;
+      return `${names} (${years})`;
+    })
+    .join("; ");
 }
 
 export function isEngineCompatible(engineId: string, modelId: string, years: YearWindow = {}) {
@@ -93,13 +148,32 @@ export function impliedFuel(engineId: string): Fuel | undefined {
   return engine && engine.fuels.length === 1 ? engine.fuels[0] : undefined;
 }
 
-/** Models for select inputs: base models first, variants right after their parent. */
+/**
+ * Models for select inputs: base models first, variants right after their
+ * parent. Only what was sold in Brazil.
+ */
 export function modelsForSelect(): Array<{ model: ModelDef; isVariant: boolean }> {
   const result: Array<{ model: ModelDef; isVariant: boolean }> = [];
   for (const model of MODELS) {
-    if (model.parentId) continue;
+    if (model.parentId || model.brazil === false) continue;
     result.push({ model, isVariant: false });
     for (const variant of variantsOf(model.id)) result.push({ model: variant, isVariant: true });
   }
   return result;
+}
+
+/** Trims for select inputs, variants after their parent. Only what was sold in Brazil. */
+export function trimsForSelect(): Array<{ trim: TrimDef; isVariant: boolean }> {
+  const result: Array<{ trim: TrimDef; isVariant: boolean }> = [];
+  for (const trim of TRIMS) {
+    if (trim.parentId || trim.brazil === false) continue;
+    result.push({ trim, isVariant: false });
+    for (const variant of trimVariantsOf(trim.id)) result.push({ trim: variant, isVariant: true });
+  }
+  return result;
+}
+
+/** Engines for select inputs. Only what was sold in Brazil. */
+export function enginesForSelect(): EngineDef[] {
+  return ENGINES.filter((e) => e.brazil !== false);
 }

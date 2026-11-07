@@ -1,6 +1,7 @@
 -- Vehicle taxonomy. Ids are stable slugs ('xc60', 't8', 'r-design') so seeds and
 -- code can reference them in every environment. Data lives in
 -- 20261107120400_taxonomy_data.sql, generated from src/lib/taxonomy/data.ts.
+-- sold_in_brazil = false: never sold officially in Brazil (still searchable).
 
 create table public.vehicle_models (
   id text primary key check (id ~ '^[a-z0-9-]+$'),
@@ -12,6 +13,7 @@ create table public.vehicle_models (
   renamed_scope text check (renamed_scope in ('all', 'electric')),
   year_start smallint not null,
   year_end smallint,
+  sold_in_brazil boolean not null default true,
   sort_order smallint not null default 0,
   review_note text,
   check (year_end is null or year_end >= year_start),
@@ -25,6 +27,7 @@ create table public.vehicle_generations (
   year_start smallint not null,
   year_end smallint,
   platform text check (platform in ('P80', 'P1', 'P2', 'P3', 'SPA', 'SPA2', 'CMA', 'SEA')),
+  sold_in_brazil boolean not null default true,
   review_note text,
   check (year_end is null or year_end >= year_start)
 );
@@ -40,6 +43,10 @@ create table public.vehicle_engines (
   aliases text[] not null default '{}',
   year_start smallint not null,
   year_end smallint,
+  sold_in_brazil boolean not null default true,
+  -- Where/when it was offered in Brazil: [{"modelIds": [...], "yearStart": n, "yearEnd": n|null}].
+  -- Null = no restriction.
+  brazil_offers jsonb check (brazil_offers is null or jsonb_typeof(brazil_offers) = 'array'),
   review_note text,
   check (year_end is null or year_end >= year_start)
 );
@@ -50,6 +57,8 @@ create table public.vehicle_trims (
   model_ids text[],
   engine_ids text[],
   aliases text[] not null default '{}',
+  parent_id text references public.vehicle_trims (id),
+  sold_in_brazil boolean not null default true,
   year_start smallint not null,
   year_end smallint,
   review_note text,

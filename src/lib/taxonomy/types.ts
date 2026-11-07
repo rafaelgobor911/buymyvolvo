@@ -19,6 +19,8 @@ export interface Generation {
   yearStart: number;
   yearEnd: number | null;
   platform: Platform | null;
+  /** `false` = never sold officially in Brazil (still recognized by search). */
+  brazil?: false;
   review?: string;
 }
 
@@ -36,7 +38,16 @@ export interface ModelDef {
   parentId?: string;
   /** Renamed model (EX40 ← XC40 Recharge Pure Electric). See parse-query. */
   renamedFrom?: { modelId: string; scope: "all" | "electric" };
+  /** `false` = never sold officially in Brazil (still recognized by search). */
+  brazil?: false;
   review?: string;
+}
+
+/** Where and when an engine was offered in Brazil. */
+export interface BrazilOffer {
+  modelIds: string[];
+  yearStart: number;
+  yearEnd: number | null;
 }
 
 export interface EngineDef {
@@ -49,6 +60,11 @@ export interface EngineDef {
   yearStart: number;
   yearEnd: number | null;
   aliases: string[];
+  /**
+   * Brazilian market: `false` = never sold here; a list = only these
+   * models/years (variants count as their parent model); absent = no restriction.
+   */
+  brazil?: false | BrazilOffer[];
   review?: string;
 }
 
@@ -60,6 +76,13 @@ export interface TrimDef {
   modelIds?: string[];
   engineIds?: string[];
   aliases: string[];
+  /**
+   * Variant of another trim (Ultimate Dark → Ultimate). Searching the parent
+   * also returns the variant; searching the variant returns only it.
+   */
+  parentId?: string;
+  /** `false` = never sold officially in Brazil (still recognized by search). */
+  brazil?: false;
   review?: string;
 }
 
