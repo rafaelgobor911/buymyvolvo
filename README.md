@@ -8,8 +8,8 @@ Buscador de anúncios de Volvo à venda no Brasil. Reúne posts de venda publica
 
 | Fase | Escopo                                      | Situação                |
 | ---- | ------------------------------------------- | ----------------------- |
-| 0    | Setup, convenções, guia da Meta             | ✅ aguardando aprovação |
-| 1    | Taxonomia, banco, busca com dados fictícios | ⏳                      |
+| 0    | Setup, convenções, guia da Meta             | ✅ aprovada             |
+| 1    | Taxonomia, banco, busca com dados fictícios | ✅ aguardando aprovação |
 | 2    | Extração com IA                             | ⏳                      |
 | 3    | Conectores do Instagram                     | ⏳                      |
 | 4    | Leads e WhatsApp                            | ⏳                      |
@@ -37,7 +37,19 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Abra http://localhost:3000. Na Fase 0 nenhuma variável de ambiente é obrigatória.
+Para o banco local você precisa de um Postgres 16 com as extensões `unaccent` e `pg_trgm` (vêm no pacote `postgresql-contrib`). Com Docker, por exemplo:
+
+```bash
+docker run -d --name buymyvolvo-db -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:16
+```
+
+Preencha `DATABASE_URL` (e `TEST_DATABASE_URL`, um banco separado para os testes) no `.env.local` e rode:
+
+```bash
+npm run db:setup
+```
+
+Isso aplica as migrations e carrega ~60 anúncios **fictícios**. Abra http://localhost:3000.
 
 ## Scripts
 
@@ -51,6 +63,8 @@ Abra http://localhost:3000. Na Fase 0 nenhuma variável de ambiente é obrigató
 | `npm test`                                | Testes de unidade (Vitest)                                                                    |
 | `npm run test:e2e`                        | Testes e2e (Playwright, desktop + mobile). Na primeira vez: `npx playwright install chromium` |
 | `npm run check`                           | Tudo acima, menos e2e (critério de fim de fase)                                               |
+| `npm run db:setup` / `db:reset`           | Migrations + dados fictícios (`db:reset` apaga tudo; só funciona em banco local)              |
+| `npm run db:generate`                     | Regera a migration da taxonomia e o `supabase/seed.sql`                                       |
 
 ## Documentação
 

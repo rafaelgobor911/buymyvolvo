@@ -18,7 +18,7 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 - **Next.js 16** (App Router, TypeScript estrito, Server Components). `cacheComponents` e `partialPrefetching` estão ligados em `next.config.ts`: os dados são dinâmicos por padrão e o cache é opt-in com `"use cache"`. Antes de usar uma API do Next, **leia o guia em `node_modules/next/dist/docs/`**, porque esta versão difere do que você conhece. `middleware` agora se chama `proxy`.
 - **Tailwind CSS v4** + **shadcn/ui** (estilo `base-nova`, primitivas **Base UI**, não Radix). Para adicionar componentes: `npx shadcn@latest add <nome>`. Os tokens de cor ficam em `src/app/globals.css` (neutros escandinavos + acento azul-aço; claro e escuro via `next-themes`, classe `.dark`).
-- **Supabase** (Postgres, Auth, Storage). Migrations SQL versionadas em `supabase/migrations/` (a partir da Fase 1). **RLS em todas as tabelas.**
+- **Supabase** (Postgres, Auth, Storage). Migrations SQL versionadas em `supabase/migrations/`. **RLS em todas as tabelas.**
 - **Busca:** Postgres full-text (`portuguese`) + `unaccent` + `pg_trgm`. Só proponha Meilisearch/Typesense se o Postgres se mostrar insuficiente.
 - **IA:** Anthropic API, modelo de extração configurável (`ANTHROPIC_MODEL_EXTRACTION`, padrão `claude-haiku-5-5`), tool use com JSON schema e validação **Zod**.
 - **Testes:** Vitest (unidade, `*.test.ts` ao lado do código) e Playwright (e2e em `tests/e2e/`, projetos `desktop` e `mobile`).
@@ -26,35 +26,61 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ## Comandos
 
-| Comando             | O que faz                                                                     |
-| ------------------- | ----------------------------------------------------------------------------- |
-| `npm run dev`       | Servidor de desenvolvimento (http://localhost:3000)                           |
-| `npm run build`     | Build de produção                                                             |
-| `npm run lint`      | ESLint (`lint:fix` para corrigir)                                             |
-| `npm run format`    | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)      |
-| `npm run typecheck` | Gera os tipos de rota e roda `tsc --noEmit`                                   |
-| `npm test`          | Vitest (`test:watch` em modo watch)                                           |
-| `npm run test:e2e`  | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` |
-| `npm run check`     | format:check + lint + typecheck + test + build (critério de fim de fase)      |
+| Comando               | O que faz                                                                     |
+| --------------------- | ----------------------------------------------------------------------------- |
+| `npm run dev`         | Servidor de desenvolvimento (http://localhost:3000)                           |
+| `npm run build`       | Build de produção                                                             |
+| `npm run lint`        | ESLint (`lint:fix` para corrigir)                                             |
+| `npm run format`      | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)      |
+| `npm run typecheck`   | Gera os tipos de rota e roda `tsc --noEmit`                                   |
+| `npm test`            | Vitest (`test:watch` em modo watch)                                           |
+| `npm run test:e2e`    | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` |
+| `npm run check`       | format:check + lint + typecheck + test + build (critério de fim de fase)      |
+| `npm run db:setup`    | Aplica migrations pendentes e carrega os anúncios fictícios                   |
+| `npm run db:reset`    | **Só local:** apaga tudo, migra e popula de novo                              |
+| `npm run db:generate` | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript  |
 
 ## Estrutura
 
 ```
 src/
-  app/                 rotas (App Router)
-  components/          componentes do site; ui/ = shadcn
+  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar)
+  components/            componentes do site; ui/ = shadcn; search/ = busca e filtros
+  content/               textos editoriais (checklists por modelo, buscas populares)
   lib/
-    env/               validação de env (schema.ts, public.ts, server.ts)
-    site.ts            nome, URL e aviso de marca
-    taxonomy/          (Fase 1) modelos, versões, aliases
-    search/            (Fase 1) parseQuery + consulta
-    extraction/        (Fase 2) pré-filtro, Claude, normalização, dedupe
-    instagram/         (Fase 3) cliente Graph API, jobs, fixtures
-    leads/             (Fase 4) ref codes, redirect, dedupe de cliques
-supabase/migrations/   (Fase 1) SQL versionado
-tests/e2e/             Playwright
-docs/                  PROMPT.md, plano.md, meta-setup.md
+    env/                 validação de env (schema.ts, public.ts, server.ts)
+    taxonomy/            modelos, gerações, motores, versões (data.ts = fonte única)
+    search/              parseQuery, places (UF/cidades), filters (URL ⇄ filtros, chips)
+    listings/            queries (server-only), format (pt-BR)
+    db/                  pool Postgres + asAnon()
+    extraction/          (Fase 2) · instagram/ (Fase 3) · leads/ (Fase 4)
+scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
+supabase/
+  migrations/            SQL versionado (formato Supabase CLI)
+  local/bootstrap.sql    recria roles/schemas do Supabase num Postgres comum (só local)
+  seed.sql               GERADO: anúncios fictícios (nunca em produção)
+tests/
+  integration/           Vitest contra TEST_DATABASE_URL (RLS, buscas de aceitação)
+  unit/                  Vitest sem banco
+  e2e/                   Playwright (desktop + mobile)
+docs/                    PROMPT.md, plano.md, meta-setup.md
 ```
+
+## Banco de dados
+
+- **Postgres direto** (driver `postgres`, sem ORM) via `DATABASE_URL`. No Supabase, use a URL do pooler (modo transaction); o pool já usa `prepare: false`.
+- **Migrations** em `supabase/migrations/AAAAMMDDHHMMSS_nome.sql`. Nunca edite uma migration já aplicada em produção; crie outra. O runner (`scripts/db/lib.ts`) registra em `supabase_migrations.schema_migrations`, a mesma tabela do Supabase CLI.
+- **Taxonomia:** edite `src/lib/taxonomy/data.ts` e rode `npm run db:generate`. Um teste falha se o SQL gerado estiver desatualizado. Itens duvidosos levam `review: "..."`, que vira `-- REVISAR:` no SQL.
+- **RLS em toda tabela nova**: `enable row level security`, `revoke all ... from anon, authenticated`, e só então `grant select (colunas)` + policy para o que for público. Um teste de integração falha se alguma tabela de `public` estiver sem RLS.
+- **Leituras públicas** passam por `asAnon()` (`set local role anon`), então a RLS vale também no servidor. Liste as colunas explicitamente: `anon` tem grants por coluna (telefone, legenda e campos internos ficam de fora).
+- **Escritas** só no servidor, com o papel dono das tabelas. O navegador nunca fala com o banco.
+- Dados fictícios: telefones com DDD 20 (inexistente), sem fotos, sem links para posts reais. `NEXT_PUBLIC_DEMO_MODE=true` mostra o aviso de prévia.
+
+## Busca
+
+- `parseQuery(texto)` é determinístico e sem IA: regex para km/ano/preço, depois um dicionário de aliases (taxonomia + lugares) com n-gramas de até 5 palavras e segmentação de tokens colados ("s60t5"). O que sobra vai para full-text (`pt_unaccent`) com fallback por trigram (erros de digitação).
+- Regras de produto: "v40" inclui o V40 Cross Country (o mesmo vale para S60/V60/V90); "xc40 elétrico" inclui o EX40; "c40" ⇄ "ec40"; "São Paulo"/"Rio de Janeiro" sozinhos = estado, com atalho para a cidade; "cidade de…", "capital" e "sampa" = cidade.
+- URL: `q` é o texto; parâmetros explícitos do painel (`modelo`, `motor`, `versao`, `combustivel`, `cambio`, `vendedor`, `ano_min`, `ano_max`, `preco_min`, `preco_max`, `km_max`, `uf`, `cidade`, `texto`, `ordem`, `pagina`) **sobrescrevem** o que veio do texto, inclusive quando vazios (= "qualquer").
 
 ## Variáveis de ambiente
 

@@ -50,6 +50,20 @@ A Business Verification depende do **CNPJ** e, idealmente, do **domínio**. Vale
 - Para chamadas reais na Fase 3, será preciso liberar `graph.facebook.com`.
 - Docker não roda aqui, então não dá para usar o Supabase CLI local. Para a Fase 1 há duas opções: (a) você cria um projeto Supabase na nuvem e libera o host dele, ou (b) uso o **Postgres 16 local** do container, com as mesmas migrations, e conecto ao Supabase depois. Decidir no início da Fase 1.
 
-## Próxima fase (Fase 1, prévia)
+## Fase 1: decisões
 
-Migrations (taxonomia, listings, leads etc. com RLS), seed da taxonomia com `-- REVISAR`, ~60 anúncios fictícios, `parseQuery` com os 9 casos da seção 5 e mais alguns, e as telas Home, Resultados e Anúncio navegáveis.
+| Tema                       | Decisão                                                                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Banco nesta fase           | Postgres 16 local, compatível com Supabase (bootstrap de roles e schemas). O Supabase entra depois, trocando o `DATABASE_URL` |
+| Acesso a dados             | SQL direto (driver `postgres`), leituras públicas como `anon` para exercitar a RLS                                            |
+| Taxonomia                  | Modelo → geração (com plataforma e faixa de anos); motor e versão separados; Cross Country como variante do modelo base       |
+| Cross Country              | "v40" inclui o V40 Cross Country (idem S60, V60, V90). "v40 cc" busca só o Cross Country                                      |
+| São Paulo / Rio de Janeiro | Sozinhos = estado, com atalho "ver só a cidade". "cidade de…", "capital" e "sampa" = cidade                                   |
+| Elétricos renomeados       | "xc40 elétrico" inclui o EX40; "c40" e "ec40" são o mesmo carro                                                               |
+| Busca                      | Full-text `pt_unaccent` + trigram para erros de digitação. Parâmetros do painel sobrescrevem o texto                          |
+| WhatsApp                   | Botão desativado até a Fase 4                                                                                                 |
+| SEO                        | Página de busca com `noindex` até as páginas por modelo/UF da Fase 7                                                          |
+
+## Próxima fase (Fase 2: extração com IA)
+
+Pré-filtro por regex, extração com Claude (tool use + Zod), normalização (telefone E.164, preço, km, anos), checagem de coerência com a taxonomia, deduplicação e 40 legendas de teste com gabarito. Saída: `npm run extract:eval`.
