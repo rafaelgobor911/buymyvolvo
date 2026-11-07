@@ -8,7 +8,7 @@ const parse = (q: string) => parseQuery(q, { now: NOW });
 describe("parseQuery: acceptance table (PROMPT.md §5)", () => {
   it("s60 t5 → S60 + T5 only", () => {
     const r = parse("s60 t5");
-    expect(r.modelIds).toEqual(["s60", "s60-cc"]);
+    expect(r.modelIds).toEqual(["s60"]);
     expect(r.engineIds).toEqual(["t5"]);
     expect(r.trimIds).toEqual([]);
     expect(r.text).toBe("");
@@ -112,8 +112,8 @@ describe("parseQuery: spelling variants", () => {
     expect(parse("t8 polestar").trimIds).toEqual(["polestar-engineered"]);
   });
 
-  it("s60 polestar keeps both Polestar trims", () => {
-    expect(parse("s60 polestar").trimIds.sort()).toEqual(["polestar", "polestar-engineered"]);
+  it("s60 polestar prefers Polestar Engineered (the 2014–2018 Polestar was not sold in Brazil)", () => {
+    expect(parse("s60 polestar").trimIds).toEqual(["polestar-engineered"]);
   });
 
   it.each([
@@ -288,5 +288,48 @@ describe("parseQuery: leftovers and warnings", () => {
     expect(parse("xc60 particular").sellerType).toBe("particular");
     expect(parse("direto com o dono").sellerType).toBe("particular");
     expect(parse("concessionária").sellerType).toBe("loja");
+  });
+});
+
+describe("parseQuery: Brazilian market (owner review 2026-11-07)", () => {
+  it("still recognizes models never sold in Brazil, with a note", () => {
+    const r = parse("v90 t6");
+    expect(r.modelIds).toEqual(["v90", "v90-cc"]);
+    expect(r.text).toBe("");
+    expect(r.warnings).toContain("O V90 não foi vendido oficialmente no Brasil.");
+  });
+
+  it("does not drag Cross Country variants that never came to Brazil", () => {
+    expect(parse("s60").modelIds).toEqual(["s60"]);
+    expect(parse("v60").modelIds).toEqual(["v60"]);
+    expect(parse("v40").modelIds).toEqual(["v40", "v40-cc"]);
+    expect(parse("v60 cross country").warnings).toContain(
+      "O V60 Cross Country não foi vendido oficialmente no Brasil.",
+    );
+  });
+
+  it.each(["b5", "d4", "t2"])("warns that engine %s was not sold in Brazil", (engine) => {
+    expect(parse(`xc60 ${engine}`).warnings.join(" ")).toMatch(/não foi vendido oficialmente/);
+  });
+
+  it("explains where a restricted engine was offered", () => {
+    expect(parse("xc40 d5").warnings).toContain(
+      "No Brasil, o D5 foi oferecido em: XC60 (2015–2020); XC90 (2018–2020).",
+    );
+    expect(parse("v40 t3 2016").warnings.join(" ")).not.toMatch(/No Brasil/);
+    expect(parse("xc60 d5 2018").warnings.join(" ")).not.toMatch(/No Brasil/);
+  });
+
+  it("Ultimate and Ultra include their Dark variants; 'dark' narrows", () => {
+    expect(parse("xc60 ultimate").trimIds).toEqual(["ultimate", "ultimate-dark"]);
+    expect(parse("xc60 ultimate dark").trimIds).toEqual(["ultimate-dark"]);
+    expect(parse("xc60 ultra").trimIds).toEqual(["ultra", "ultra-dark"]);
+    expect(parse("ex30 ultra").trimIds).toEqual(["ultra"]);
+  });
+
+  it("warns about trims not sold in Brazil", () => {
+    expect(parse("xc90 summum").warnings).toContain(
+      "A versão Summum não foi vendida oficialmente no Brasil.",
+    );
   });
 });

@@ -18,6 +18,7 @@ import {
   TRANSMISSIONS,
   type Transmission,
   TRIMS,
+  trimVariantsOf,
   variantsOf,
 } from "@/lib/taxonomy";
 
@@ -105,6 +106,16 @@ function expandModels(ids: string[]): string[] {
   return out;
 }
 
+/** A base trim selected explicitly also brings its variants (Ultimate → Ultimate Dark). */
+function expandTrims(ids: string[]): string[] {
+  const out: string[] = [];
+  for (const id of ids) {
+    if (!out.includes(id)) out.push(id);
+    for (const v of trimVariantsOf(id)) if (!out.includes(v.id)) out.push(v.id);
+  }
+  return out;
+}
+
 export function resolveSearch(params: RawParams, options: { now?: Date } = {}): SearchFilters {
   const q = (first(params[PARAM.q]) ?? "").trim().slice(0, 200);
   const parsed = parseQuery(q, options);
@@ -134,7 +145,7 @@ export function resolveSearch(params: RawParams, options: { now?: Date } = {}): 
     ),
     trimIds: pick(
       PARAM.trim,
-      () => list(get(PARAM.trim)).filter((id) => TRIM_IDS.has(id)),
+      () => expandTrims(list(get(PARAM.trim)).filter((id) => TRIM_IDS.has(id))),
       parsed.trimIds,
     ),
     fuels: pick(
@@ -230,6 +241,18 @@ export function modelGroupLabel(ids: string[]): string {
   return ids.map((id) => getModel(id)?.name ?? id).join(" / ");
 }
 
+/** "Ultimate (inclui Dark)" when a trim comes with its variants. */
+export function trimGroupLabel(ids: string[]): string {
+  const bases = ids.filter((id) => !getTrim(id)?.parentId || !ids.includes(getTrim(id)!.parentId!));
+  return bases
+    .map((id) => {
+      const hasVariants = trimVariantsOf(id).some((v) => ids.includes(v.id));
+      const name = getTrim(id)?.name ?? id;
+      return hasVariants ? `${name} (inclui Dark)` : name;
+    })
+    .join(" ou ");
+}
+
 export function describeFilters(f: SearchFilters): FilterChip[] {
   const chips: FilterChip[] = [];
   if (f.modelIds.length)
@@ -244,7 +267,7 @@ export function describeFilters(f: SearchFilters): FilterChip[] {
   if (f.trimIds.length) {
     chips.push({
       key: "trim",
-      label: f.trimIds.map((id) => getTrim(id)?.name ?? id).join(" ou "),
+      label: trimGroupLabel(f.trimIds),
       param: PARAM.trim,
     });
   }

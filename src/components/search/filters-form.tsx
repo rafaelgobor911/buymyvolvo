@@ -6,7 +6,7 @@ import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import { modelGroupLabel, PARAM, type SearchFilters } from "@/lib/search/filters";
 import { UF_CODES, UFS } from "@/lib/search/places";
 import {
-  ENGINES,
+  enginesForSelect,
   FUEL_LABELS,
   FUELS,
   type Fuel,
@@ -14,6 +14,8 @@ import {
   TRANSMISSION_LABELS,
   TRANSMISSIONS,
   TRIMS,
+  trimsForSelect,
+  trimVariantsOf,
   variantsOf,
 } from "@/lib/taxonomy";
 
@@ -79,8 +81,30 @@ const MODEL_OPTIONS: Option[] = modelsForSelect().map(({ model, isVariant }) => 
       ? `${model.name} (todas)`
       : model.name,
 }));
-const ENGINE_OPTIONS: Option[] = ENGINES.map((e) => ({ value: e.id, label: e.name }));
-const TRIM_OPTIONS: Option[] = TRIMS.map((t) => ({ value: t.id, label: t.name }));
+const ENGINE_OPTIONS: Option[] = enginesForSelect().map((e) => ({ value: e.id, label: e.name }));
+const TRIM_OPTIONS: Option[] = trimsForSelect().map(({ trim, isVariant }) => ({
+  value: trim.id,
+  label: isVariant
+    ? `${trim.name} (só)`
+    : trimVariantsOf(trim.id).length
+      ? `${trim.name} (todas)`
+      : trim.name,
+}));
+
+/** Collapses [base, ...its variants] back to the base id so the select shows "Ultimate". */
+function trimSelectValue(ids: string[]): string {
+  const [base] = ids;
+  const variants = base ? trimVariantsOf(base) : [];
+  if (
+    base &&
+    variants.length &&
+    ids.length === 1 + variants.length &&
+    variants.every((v) => ids.includes(v.id))
+  ) {
+    return base;
+  }
+  return ids.join(",");
+}
 const FUEL_OPTIONS: Option[] = FUELS.map((f) => ({ value: f, label: FUEL_LABELS[f] }));
 const TRANSMISSION_OPTIONS: Option[] = TRANSMISSIONS.map((t) => ({
   value: t,
@@ -119,7 +143,7 @@ export function FiltersForm({ filters, idPrefix }: { filters: SearchFilters; idP
           <Select
             id={id("versao")}
             name={PARAM.trim}
-            value={filters.trimIds.join(",")}
+            value={trimSelectValue(filters.trimIds)}
             options={TRIM_OPTIONS}
             customLabel={filters.trimIds
               .map((t) => TRIMS.find((x) => x.id === t)?.name)

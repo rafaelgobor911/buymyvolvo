@@ -12,14 +12,19 @@
  */
 import {
   aliasKey,
+  describeBrazilOffers,
   ENGINES,
   type Fuel,
+  getEngine,
   getModel,
+  getTrim,
   isEngineCompatible,
+  isEngineOfferedInBrazil,
   isTrimCompatible,
   MODELS,
   TRIMS,
   type Transmission,
+  trimVariantsOf,
   variantsOf,
 } from "@/lib/taxonomy";
 
@@ -650,8 +655,11 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
   }
 
   // An alias like "polestar" maps to several trims: keep the ones that fit the
-  // models/engines/years in the query (XC60 T8 → Polestar Engineered).
-  for (const group of ambiguousTrimGroups) {
+  // models/engines/years in the query (XC60 T8 → Polestar Engineered), and
+  // prefer those sold in Brazil (the 2014–2018 Polestar series was not).
+  for (const fullGroup of ambiguousTrimGroups) {
+    const inBrazil = fullGroup.filter((id) => getTrim(id)?.brazil !== false);
+    const group = inBrazil.length > 0 ? inBrazil : fullGroup;
     const fits = group.filter((trimId) => {
       const trim = TRIMS.find((t) => t.id === trimId);
       if (!trim) return false;
@@ -670,6 +678,18 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
     for (const id of fits.length > 0 ? fits : group) pushUnique(result.trimIds, id);
   }
 
+  // A base trim also brings its variants (Ultimate → Ultimate Dark) when they fit the models.
+  for (const id of [...result.trimIds]) {
+    for (const variant of trimVariantsOf(id)) {
+      if (
+        result.modelIds.length === 0 ||
+        result.modelIds.some((m) => isTrimCompatible(variant.id, m, yearWindow))
+      ) {
+        pushUnique(result.trimIds, variant.id);
+      }
+    }
+  }
+
   for (const engineId of result.engineIds) {
     if (
       result.modelIds.length > 0 &&
@@ -678,6 +698,38 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
       const engine = ENGINES.find((e) => e.id === engineId);
       const names = result.modelIds.map((m) => getModel(m)?.name ?? m).join("/");
       result.warnings.push(`Não conhecemos ${names} com motor ${engine?.name ?? engineId}.`);
+    }
+  }
+
+  // Market notes: things never sold officially in Brazil stay searchable, with a heads-up.
+  const typedModels = result.modelIds.filter(
+    (id) => !getModel(id)?.parentId || !result.modelIds.includes(getModel(id)!.parentId!),
+  );
+  for (const id of typedModels) {
+    const model = getModel(id);
+    if (model?.brazil === false) {
+      result.warnings.push(`O ${model.name} não foi vendido oficialmente no Brasil.`);
+    }
+  }
+  for (const engineId of result.engineIds) {
+    const engine = getEngine(engineId);
+    if (!engine) continue;
+    if (engine.brazil === false) {
+      result.warnings.push(`O motor ${engine.name} não foi vendido oficialmente no Brasil.`);
+    } else if (
+      Array.isArray(engine.brazil) &&
+      result.modelIds.length > 0 &&
+      !result.modelIds.some((m) => isEngineOfferedInBrazil(engineId, m, yearWindow))
+    ) {
+      result.warnings.push(
+        `No Brasil, o ${engine.name} foi oferecido em: ${describeBrazilOffers(engine.brazil)}.`,
+      );
+    }
+  }
+  for (const trimId of result.trimIds) {
+    const trim = getTrim(trimId);
+    if (trim?.brazil === false) {
+      result.warnings.push(`A versão ${trim.name} não foi vendida oficialmente no Brasil.`);
     }
   }
 
