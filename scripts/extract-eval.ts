@@ -21,7 +21,7 @@ import { normalizeExtraction } from "@/lib/extraction/normalize";
 import { prefilter } from "@/lib/extraction/prefilter";
 import { EXTRACTION_PROMPT_VERSION } from "@/lib/extraction/prompt";
 
-import { EVAL_CASES } from "../evals/extraction/dataset";
+import { EVAL_CASES, type EvalCase } from "../evals/extraction/dataset";
 import { type CaseResult, renderMarkdown, scoreResults } from "../evals/extraction/score";
 import { loadLocalEnv } from "./db/lib";
 
@@ -71,7 +71,7 @@ async function main() {
   const client = offline ? null : new Anthropic();
   let done = 0;
 
-  const results = await pool(cases, offline ? 1 : concurrency, async (c): Promise<CaseResult> => {
+  const runCase = async (c: EvalCase): Promise<CaseResult> => {
     const filter = prefilter(c.caption);
     const base: CaseResult = {
       id: c.id,
@@ -110,6 +110,16 @@ async function main() {
       done++;
       if (!offline) process.stderr.write(`\r${done}/${cases.length} casos`);
     }
+  };
+
+  // Warm the prompt cache with one call before going parallel; otherwise each of
+  // the first concurrent calls pays a cache write, which production (sequential) does not.
+  const results: CaseResult[] = new Array(cases.length);
+  const warm = offline ? -1 : cases.findIndex((c) => prefilter(c.caption).pass);
+  if (warm >= 0) results[warm] = await runCase(cases[warm]!);
+  const rest = cases.flatMap((c, i) => (i === warm ? [] : [{ c, i }]));
+  await pool(rest, offline ? 1 : concurrency, async ({ c, i }) => {
+    results[i] = await runCase(c);
   });
   if (!offline) process.stderr.write("\n");
 

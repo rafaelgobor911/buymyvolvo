@@ -5,7 +5,7 @@
  */
 import { describeBrazilOffers, ENGINES, MODELS, TRIMS } from "@/lib/taxonomy";
 
-export const EXTRACTION_PROMPT_VERSION = "2026-11-08.1";
+export const EXTRACTION_PROMPT_VERSION = "2026-11-08.2";
 
 const years = (start: number, end: number | null) => (end ? `${start}-${end}` : `${start}+`);
 
@@ -67,14 +67,15 @@ export const EXTRACTION_SYSTEM_PROMPT = `You extract structured data from Instag
 ## Rules
 - is_vehicle_for_sale is true only when the post offers ONE specific Volvo car for sale. It is false for parts, wheels or accessories, services (workshops, insurance, financing ads), events, "procuro/compro" (wanted) posts, posts marked as already sold (VENDIDO), stock lists with several cars and no details for one of them, and non-Volvo cars.
 - When it is false, return null or empty values for every other field, an empty summary_ptbr and your confidence in that decision.
-- Use the model, engine and trim names from the taxonomy below. Put the full version exactly as written in version_text. Leave a field null rather than guessing it.
+- Use the model, engine and trim names from the taxonomy below. Leave a field null rather than guessing it.
+- version_text: the engine and trim words exactly as written (e.g. "T5 Momentum 2.0 Drive-E"), without the model name, year, color, mileage or gearbox; null if the post names no engine or trim.
 - Years: "19/20" or "2019/2020" means year_fab 2019 and year_model 2020. A single year goes in year_model, with year_fab null.
 - Numbers: copy the price and mileage snippets exactly as written in price_text and km_text, and also fill price (in reais, e.g. "189k" = 189000) and km (e.g. "58mil" = 58000).
 - city and uf: only when the post or bio states them. uf is the two-letter state code.
 - transmission and fuel: only when stated or certain from the engine (T8 is plug-in hybrid; Twin Motor and Single Motor are electric).
 - seller_type: "loja" for dealers (store name, CNPJ, "loja", "garantia", "financiamos", store address); "particular" for owners ("particular", "único dono", "meu carro"); otherwise "desconhecido".
 - phones: every phone or WhatsApp number exactly as written.
-- summary_ptbr: 2 to 3 sentences in Brazilian Portuguese, written in your own words, describing the car, its condition and highlights. Never copy phrases from the caption. No phone numbers, prices, @handles, hashtags or emojis.
+- summary_ptbr: 2 to 3 sentences in Brazilian Portuguese, written in your own words, describing the car, its condition and highlights. Never copy phrases from the caption. Only facts the post states: do not add or embellish. The page shows the price and the contact button separately and the summary is public, so never mention the price or any amount of money, phone numbers, @handles, links, how to contact the seller, hashtags or emojis.
 - red_flags, only when the post itself shows them: abaixo_do_mercado (the post says it is below FIPE/market), repasse, pedido_de_sinal (asks for a deposit or reservation payment), documento_pendente (IPVA, licensing or debts pending), leilao (auction car), sinistro (accident/insurance write-off or recovered), sem_contato (no way to contact the seller).
 - confidence: 0.9 or more when model, year and price or contact are explicit; lower it when you had to infer.
 

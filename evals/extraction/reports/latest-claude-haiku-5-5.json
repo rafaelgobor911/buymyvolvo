@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-08T12:10:50.765Z",
-  "promptVersion": "2026-11-08.1",
+  "date": "2026-11-08T12:16:28.295Z",
+  "promptVersion": "2026-11-08.2",
   "report": {
     "model": "claude-haiku-5-5",
     "cases": 40,
@@ -79,15 +79,15 @@
     "mismatches": [],
     "usage": {
       "inputTokens": 3199,
-      "outputTokens": 8895,
-      "cacheWriteTokens": 21620,
-      "cacheReadTokens": 156745
+      "outputTokens": 8605,
+      "cacheWriteTokens": 0,
+      "cacheReadTokens": 182094
     },
     "extractedCalls": 33,
-    "costUsd": 0.00903735,
-    "costPer1000PostsUsd": 0.22593375,
-    "costPer1000ExtractionsUsd": 0.2738590909090909,
-    "avgLatencyMs": 1887.8325875757578
+    "costUsd": 0.0064433400000000005,
+    "costPer1000PostsUsd": 0.16108350000000002,
+    "costPer1000ExtractionsUsd": 0.1952527272727273,
+    "avgLatencyMs": 1526.0812866363638
   },
   "results": [
     {
@@ -96,9 +96,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 155,
-        "outputTokens": 328,
-        "cacheWriteTokens": 5405,
-        "cacheReadTokens": 0
+        "outputTokens": 323,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -115,17 +115,17 @@
         "color": null,
         "transmission": "automatico",
         "fuel": "hibrido_plugin",
-        "options": ["teto panorâmico", "som Bowers & Wilkins", "painel head-up"],
+        "options": ["teto solar panorâmico", "som Bowers & Wilkins", "painel de projeção HUD"],
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000001",
         "contactIgUsername": null,
-        "summary": "SUV híbrido plug-in de 2020 com cerca de 41 mil quilômetros e revisões feitas na concessionária. Traz teto panorâmico, sistema de som premium e projeção no para-brisa. O anunciante aceita veículo na troca e oferece financiamento.",
+        "summary": "SUV híbrido plug-in de 2020 com 41 mil km e revisões feitas na concessionária. Traz teto panorâmico, sistema de som premium e projeção HUD. O anunciante aceita veículo na troca e oferece financiamento.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 5477.550678
+      "latencyMs": 3280.013003
     },
     {
       "id": "c02",
@@ -133,9 +133,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 94,
-        "outputTokens": 267,
-        "cacheWriteTokens": 5405,
-        "cacheReadTokens": 0
+        "outputTokens": 256,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -156,13 +156,13 @@
         "sellerType": "particular",
         "contactPhone": "+5541900000002",
         "contactIgUsername": null,
-        "summary": "Sedan Volvo S60 de 2019 com único dono e baixa quilometragem, em excelente estado de conservação. Versão Momentum com motor T5 a gasolina. Vendido por particular em Curitiba.",
+        "summary": "Sedan de 2019 em estado impecável, com apenas um dono anterior e cerca de 48 mil quilômetros rodados. A venda é feita diretamente pelo proprietário.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 4226.268294
+      "latencyMs": 1440.9847
     },
     {
       "id": "c03",
@@ -170,16 +170,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 117,
-        "outputTokens": 293,
-        "cacheWriteTokens": 5405,
-        "cacheReadTokens": 0
+        "outputTokens": 282,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "xc40",
         "engineId": "twin-motor",
         "trimId": null,
-        "versionText": "XC40 Recharge Pure Electric P8",
+        "versionText": "Recharge Pure Electric P8",
         "yearFab": null,
         "yearModel": 2022,
         "km": 28000,
@@ -193,13 +193,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000003",
         "contactIgUsername": null,
-        "summary": "SUV elétrico de 2022 com pouco uso e bateria em excelente estado, segundo o anúncio. Acompanha carregador de parede. Contato disponível por direct ou telefone.",
+        "summary": "SUV elétrico de 2022 com cerca de 28 mil km rodados e bateria em perfeito estado de saúde. O anúncio inclui o carregador de parede.",
         "redFlags": [],
-        "confidence": 0.9,
+        "confidence": 0.85,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 5332.134096999999
+      "latencyMs": 1443.2634919999996
     },
     {
       "id": "c04",
@@ -207,9 +207,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 113,
-        "outputTokens": 285,
-        "cacheWriteTokens": 5405,
-        "cacheReadTokens": 0
+        "outputTokens": 280,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -230,13 +230,13 @@
         "sellerType": "loja",
         "contactPhone": "+554130000004",
         "contactIgUsername": null,
-        "summary": "SUV híbrido plug-in de 2021 com sete lugares e suspensão a ar, com 38 mil km rodados. Oferecido por loja com garantia de três meses, em Curitiba.",
+        "summary": "SUV híbrido plug-in de 2021 com sete lugares e suspensão pneumática, com 38 mil km rodados. A venda é feita por loja com garantia de três meses.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 4504.960588
+      "latencyMs": 1668.356562
     },
     {
       "id": "c05",
@@ -244,16 +244,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 91,
-        "outputTokens": 272,
+        "outputTokens": 252,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "v40",
         "engineId": "t4",
         "trimId": "r-design",
-        "versionText": "T4 R-Desing",
+        "versionText": "T4 R-Design",
         "yearFab": null,
         "yearModel": 2016,
         "km": 68000,
@@ -267,13 +267,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000005",
         "contactIgUsername": null,
-        "summary": "Volvo V40 de 2016 na cor branca, com cerca de 68 mil km rodados e pneus novos. O vendedor aceita troca por SUV. Anúncio com localização em São Paulo.",
+        "summary": "Volvo V40 branco de 2016 com 68 mil km rodados e pneus novos. O anunciante aceita veículo na troca por SUV.",
         "redFlags": [],
         "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1658.131652
+      "latencyMs": 1391.2197570000003
     },
     {
       "id": "c06",
@@ -281,16 +281,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 99,
-        "outputTokens": 287,
+        "outputTokens": 265,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "850",
         "engineId": "t5r",
         "trimId": null,
-        "versionText": "850 T-5R",
+        "versionText": "T-5R",
         "yearFab": null,
         "yearModel": 1995,
         "km": 180000,
@@ -304,13 +304,13 @@
         "sellerType": "particular",
         "contactPhone": "+5511900000006",
         "contactIgUsername": null,
-        "summary": "Volvo 850 T-5R de 1995 com cerca de 180 mil quilômetros originais e câmbio manual, em cor amarela creme. Veículo apresentado como de colecionador, anunciado por um proprietário particular em São Paulo.",
+        "summary": "Volvo 850 de 1995 em estado de colecionador, com 180 mil quilômetros originais e câmbio manual. Pintura amarelo creme e veículo de proprietário particular.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1939.6877679999998
+      "latencyMs": 1406.042335
     },
     {
       "id": "c07",
@@ -318,16 +318,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 85,
-        "outputTokens": 269,
+        "outputTokens": 258,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "c30",
         "engineId": "t5",
         "trimId": null,
-        "versionText": "T5 manual 6 marchas",
+        "versionText": "T5",
         "yearFab": null,
         "yearModel": 2010,
         "km": 92000,
@@ -341,13 +341,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5541900000007",
         "contactIgUsername": null,
-        "summary": "C30 2010 com câmbio manual de 6 marchas e motor T5, à venda por 55 mil reais. Tem 92 mil km rodados e pintura laranja, descrita como um modelo raro.",
+        "summary": "Hatch C30 de 2010 com motor T5 e câmbio manual de 6 marchas, na cor laranja. Trata-se de um modelo considerado raro, com 92 mil km rodados.",
         "redFlags": [],
-        "confidence": 0.85,
+        "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1581.2705839999999
+      "latencyMs": 1473.4843869999995
     },
     {
       "id": "c08",
@@ -355,16 +355,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 102,
-        "outputTokens": 279,
+        "outputTokens": 264,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "xc60",
         "engineId": "t5",
         "trimId": null,
-        "versionText": "XC60 T5 2014",
+        "versionText": "T5",
         "yearFab": null,
         "yearModel": 2014,
         "km": 102000,
@@ -378,13 +378,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5562900000008",
         "contactIgUsername": null,
-        "summary": "SUV Volvo XC60 T5 de 2014 com cerca de 102 mil km, que precisa de troca de pneus. O anunciante quer vender rapidamente e pede sinal via Pix para reserva.",
+        "summary": "SUV XC60 de 2014 com cerca de 102 mil quilômetros, que precisa de troca de pneus. O anunciante pede um sinal via Pix para reservar o veículo.",
         "redFlags": ["repasse", "pedido_de_sinal"],
         "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1462.4862209999992
+      "latencyMs": 1379.2828170000003
     },
     {
       "id": "c09",
@@ -392,9 +392,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 101,
-        "outputTokens": 289,
+        "outputTokens": 284,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -415,13 +415,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5534900000009",
         "contactIgUsername": null,
-        "summary": "SUV a diesel de 2017 com tração integral e cerca de 110 mil km rodados. O anúncio informa que o IPVA de 2026 está em atraso. Vendido em Uberlândia, MG.",
+        "summary": "SUV a diesel de 2017 com tração 4x4 e cerca de 110 mil km rodados. O IPVA de 2026 está em atraso, o que deve ser verificado antes da compra.",
         "redFlags": ["documento_pendente"],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1537.0552360000001
+      "latencyMs": 1436.6458789999997
     },
     {
       "id": "c10",
@@ -429,16 +429,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 96,
-        "outputTokens": 308,
+        "outputTokens": 292,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "ex30",
         "engineId": "twin-motor",
         "trimId": "ultra",
-        "versionText": "EX30 Ultra Twin Motor Performance",
+        "versionText": "Twin Motor Performance Ultra",
         "yearFab": null,
         "yearModel": 2025,
         "km": 5000,
@@ -452,13 +452,13 @@
         "sellerType": "particular",
         "contactPhone": null,
         "contactIgUsername": "fulano.ex30",
-        "summary": "SUV elétrico Volvo EX30 2025 com cerca de 5 mil km, descrito pelo proprietário como em estado de novo. Versão Ultra com motor Twin Motor Performance. Anúncio de venda particular em Curitiba, com contato por mensagem direta.",
+        "summary": "Volvo EX30 elétrico 2025 com cerca de 5 mil km, em estado de novo, segundo o anunciante. Versão Ultra com motor Twin Motor Performance. Venda feita por proprietário particular em Curitiba.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1655.2267859999993
+      "latencyMs": 1459.9843359999995
     },
     {
       "id": "c11",
@@ -466,16 +466,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 124,
-        "outputTokens": 274,
+        "outputTokens": 268,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "s90",
         "engineId": "t8",
         "trimId": "inscription",
-        "versionText": "S90 T8 Inscription",
+        "versionText": "T8 Inscription",
         "yearFab": null,
         "yearModel": 2019,
         "km": 48000,
@@ -483,19 +483,19 @@
         "city": "Brasília",
         "uf": "DF",
         "color": "azul",
-        "transmission": "automatico",
+        "transmission": null,
         "fuel": "hibrido_plugin",
         "options": [],
         "sellerType": "loja",
         "contactPhone": "+5561900000011",
         "contactIgUsername": null,
-        "summary": "Sedã híbrido plug-in de 2019 com 48 mil km, oferecido por uma loja de Brasília. A loja informa possibilidade de financiamento em até 60 vezes.",
+        "summary": "Sedã híbrido plug-in de 2019 com 48 mil km rodados, na versão Inscription. Veículo de cor azul disponível em Brasília, com opção de financiamento.",
         "redFlags": [],
-        "confidence": 0.95,
+        "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1370.6750530000008
+      "latencyMs": 1912.8220810000003
     },
     {
       "id": "c12",
@@ -503,9 +503,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 82,
-        "outputTokens": 265,
+        "outputTokens": 253,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -526,13 +526,13 @@
         "sellerType": "particular",
         "contactPhone": "+5543900000012",
         "contactIgUsername": null,
-        "summary": "SUV XC40 de 2020 na versão Momentum, cor branca, com cerca de 46 mil quilômetros rodados. Anúncio de venda com preço negociável, localizado em Londrina, PR.",
+        "summary": "SUV XC40 branco de 2020 com cerca de 46 mil quilômetros rodados, na versão Momentum com motor T4. O anúncio indica que o preço é negociável.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1610.8746699999992
+      "latencyMs": 1329.2843660000008
     },
     {
       "id": "c13",
@@ -540,16 +540,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 102,
-        "outputTokens": 280,
+        "outputTokens": 252,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "v60",
         "engineId": "t5",
         "trimId": "momentum",
-        "versionText": "V60 T5 Momentum",
+        "versionText": "T5 Momentum",
         "yearFab": null,
         "yearModel": 2017,
         "km": 64000,
@@ -559,17 +559,17 @@
         "color": "cinza",
         "transmission": null,
         "fuel": "gasolina",
-        "options": ["revisado", "aceita troca"],
+        "options": [],
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000013",
         "contactIgUsername": null,
-        "summary": "Perua V60 de 2017 na versão T5 Momentum, cor cinza, com cerca de 64 mil km rodados e histórico de revisões. O anunciante aceita veículo na troca.",
+        "summary": "Perua V60 de 2017 na cor cinza, com 64 mil km rodados e revisões em dia. O vendedor aceita veículo na troca.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1459.1066109999992
+      "latencyMs": 1378.0023140000003
     },
     {
       "id": "c14",
@@ -577,9 +577,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 82,
-        "outputTokens": 265,
+        "outputTokens": 263,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -600,13 +600,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5562900000014",
         "contactIgUsername": null,
-        "summary": "SUV Volvo XC90 diesel de 2019 com sete lugares e cerca de 95 mil km rodados. Versão Inscription, anunciada em Goiânia.",
+        "summary": "SUV diesel de 7 lugares, ano 2018/2019, com cerca de 95 mil km rodados. Versão Inscription, anunciada em Goiânia.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1447.38515
+      "latencyMs": 1288.5674169999993
     },
     {
       "id": "c15",
@@ -614,9 +614,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 119,
-        "outputTokens": 327,
+        "outputTokens": 317,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -637,13 +637,13 @@
         "sellerType": "loja",
         "contactPhone": "+5541900000015",
         "contactIgUsername": null,
-        "summary": "SUV híbrido plug-in de 2022 na versão Polestar Engineered, com pouco mais de 18 mil quilômetros rodados. Traz freios Akebono e suspensão Öhlins de alta performance. Anunciado por uma loja de Curitiba, que pede consulta para informar o valor.",
+        "summary": "SUV híbrido plug-in de 2022 com apenas 18 mil quilômetros rodados, na versão Polestar Engineered. Traz freios Akebono e suspensão Öhlins de alto desempenho. A oferta é anunciada por uma loja de Curitiba.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1609.511649
+      "latencyMs": 2277.6992850000006
     },
     {
       "id": "c16",
@@ -651,16 +651,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 87,
-        "outputTokens": 298,
+        "outputTokens": 268,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "s60",
         "engineId": null,
         "trimId": "r",
-        "versionText": "S60 R 2005 AWD 300cv manual",
+        "versionText": "R",
         "yearFab": null,
         "yearModel": 2005,
         "km": 140000,
@@ -669,18 +669,18 @@
         "uf": null,
         "color": "preto",
         "transmission": "manual",
-        "fuel": "gasolina",
+        "fuel": null,
         "options": ["tração integral AWD", "300cv"],
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000016",
         "contactIgUsername": null,
-        "summary": "Sedã S60 R de 2005 com tração integral, câmbio manual e cerca de 140 mil km rodados. O anúncio informa que a documentação está em dia. O veículo é apresentado como proveniente de leilão.",
+        "summary": "Sedã de 2005 com tração integral, câmbio manual e cerca de 300cv, na cor preta. O anúncio informa que o veículo é de leilão e que a documentação está em dia.",
         "redFlags": ["leilao"],
         "confidence": 0.85,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1627.6598159999994
+      "latencyMs": 1422.9814129999995
     },
     {
       "id": "c17",
@@ -688,16 +688,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 92,
-        "outputTokens": 288,
+        "outputTokens": 275,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "c40",
         "engineId": "twin-motor",
         "trimId": null,
-        "versionText": "C40 Recharge Twin",
+        "versionText": "Recharge Twin",
         "yearFab": null,
         "yearModel": 2023,
         "km": 21000,
@@ -711,13 +711,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000017",
         "contactIgUsername": null,
-        "summary": "SUV elétrica C40 Recharge de 2023 na cor verde, com cerca de 21 mil km rodados. O veículo ainda está coberto pela garantia de fábrica, que vai até 2027.",
+        "summary": "SUV elétrico de 2023 com baixa quilometragem e garantia de fábrica válida até 2027. Veículo em cor verde, com motorização de tração integral dupla.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1445.7153819999985
+      "latencyMs": 1423.8782159999992
     },
     {
       "id": "c18",
@@ -725,9 +725,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 102,
-        "outputTokens": 326,
+        "outputTokens": 325,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -744,17 +744,17 @@
         "color": "preto",
         "transmission": "automatico",
         "fuel": "hibrido_plugin",
-        "options": ["som Bowers & Wilkins", "ar-condicionado 4 zonas"],
+        "options": ["som Bowers & Wilkins", "ar-condicionado de 4 zonas"],
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000018",
         "contactIgUsername": null,
-        "summary": "SUV híbrido plug-in de 2024 na cor preta, com cerca de 15 mil quilômetros rodados. Equipado com sistema de som premium e climatização em quatro zonas. O vendedor aceita a troca por veículo de menor valor.",
+        "summary": "SUV híbrido plug-in de 2024, na cor preta, com cerca de 15 mil quilômetros rodados. Traz sistema de som premium e climatização de quatro zonas. O anunciante aceita um veículo de menor valor na troca.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1660.401160999998
+      "latencyMs": 1979.334644999999
     },
     {
       "id": "c19",
@@ -762,16 +762,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 92,
-        "outputTokens": 254,
+        "outputTokens": 251,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "240",
         "engineId": null,
         "trimId": null,
-        "versionText": "240 GL perua",
+        "versionText": "GL",
         "yearFab": null,
         "yearModel": 1992,
         "km": 250000,
@@ -785,13 +785,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5541900000019",
         "contactIgUsername": null,
-        "summary": "Perua 240 de 1992 na cor vermelha, com mecânica revisada e câmbio manual. Tem alta quilometragem, mas o motor foi recentemente revisado.",
+        "summary": "Perua 240 GL de 1992 na cor vermelha, com mecânica revisada e câmbio manual. Tem alta quilometragem, mas o motor passou por revisão recente.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1666.0439539999988
+      "latencyMs": 1393.1056069999995
     },
     {
       "id": "c20",
@@ -799,9 +799,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 92,
-        "outputTokens": 277,
+        "outputTokens": 274,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -822,13 +822,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5562900000020",
         "contactIgUsername": null,
-        "summary": "SUV Volvo XC60 de 2013 na cor preta, com cerca de 102 mil quilômetros e equipamentos completos. O anunciante aceita propostas e o carro está em Goiânia.",
+        "summary": "SUV Volvo XC60 de 2013 na cor preta, com cerca de 102 mil quilômetros e equipamentos completos. O anunciante aceita propostas e está em Goiânia.",
         "redFlags": [],
-        "confidence": 0.9,
+        "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1489.8947890000018
+      "latencyMs": 1638.7073789999995
     },
     {
       "id": "c21",
@@ -836,9 +836,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 72,
-        "outputTokens": 258,
+        "outputTokens": 279,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -859,7 +859,7 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5516900000021",
         "contactIgUsername": null,
-        "summary": "SUV Volvo XC60 2022 importado com cerca de 30 mil quilômetros rodados. O anúncio oferece o veículo à venda com contato direto pelo telefone informado.",
+        "summary": "SUV Volvo XC60 modelo 2022, de origem importada, com cerca de 30 mil quilômetros rodados. O anúncio oferece o veículo diretamente, sem informações adicionais sobre equipamentos ou estado de conservação.",
         "redFlags": [],
         "confidence": 0.65,
         "issues": [
@@ -871,7 +871,7 @@
         ]
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1354.802649000001
+      "latencyMs": 1525.4325449999997
     },
     {
       "id": "c22",
@@ -879,16 +879,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 83,
-        "outputTokens": 273,
+        "outputTokens": 250,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "ex40",
         "engineId": "single-motor",
         "trimId": "plus",
-        "versionText": "EX40 Plus Single Motor",
+        "versionText": "Plus Single Motor",
         "yearFab": null,
         "yearModel": 2025,
         "km": 9000,
@@ -896,19 +896,19 @@
         "city": null,
         "uf": null,
         "color": "branco",
-        "transmission": "automatico",
+        "transmission": null,
         "fuel": "eletrico",
         "options": [],
         "sellerType": "loja",
         "contactPhone": "+554130000022",
         "contactIgUsername": null,
-        "summary": "SUV elétrico seminovo de 2025 com cerca de 9 mil quilômetros rodados, anunciado por uma concessionária. Versão Plus com motor de tração única e pintura branca.",
+        "summary": "SUV elétrico de 2025 na cor branca, com cerca de 9 mil quilômetros rodados. Anunciado por uma concessionária.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1512.2812029999986
+      "latencyMs": 1867.1763910000009
     },
     {
       "id": "c23",
@@ -916,16 +916,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 90,
-        "outputTokens": 277,
+        "outputTokens": 285,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "v40-cc",
         "engineId": "t5",
         "trimId": null,
-        "versionText": "T5 AWD",
+        "versionText": "T5",
         "yearFab": null,
         "yearModel": 2018,
         "km": 39000,
@@ -939,13 +939,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5511900000023",
         "contactIgUsername": null,
-        "summary": "Perua V40 Cross Country 2018 com tração integral e baixa quilometragem, à venda em São Paulo. O anúncio destaca o motor T5 e a cor azul.",
+        "summary": "Perua Volvo V40 Cross Country de 2018 na cor azul, com tração integral e cerca de 39 mil quilômetros rodados. Motor T5 à gasolina, anunciada em São Paulo.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1529.1219769999989
+      "latencyMs": 1447.0813560000006
     },
     {
       "id": "c24",
@@ -953,16 +953,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 97,
-        "outputTokens": 297,
+        "outputTokens": 278,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "xc60",
         "engineId": "t6",
         "trimId": "r-design",
-        "versionText": "XC60 T6 R-Design",
+        "versionText": "T6 R-Design",
         "yearFab": null,
         "yearModel": 2016,
         "km": 84000,
@@ -976,13 +976,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5561900000024",
         "contactIgUsername": null,
-        "summary": "SUV Volvo XC60 de 2016 com 84 mil km, anunciado com histórico de sinistro já recuperado na lateral. O anúncio destaca preço abaixo da tabela FIPE e localização em Brasília.",
+        "summary": "SUV de 2016 com acabamento R-Design e cerca de 84 mil quilômetros rodados. O veículo teve reparo de lateral após sinistro e é anunciado em Brasília.",
         "redFlags": ["abaixo_do_mercado", "sinistro"],
         "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1547.1424530000004
+      "latencyMs": 1591.4682119999998
     },
     {
       "id": "c25",
@@ -990,16 +990,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 87,
-        "outputTokens": 285,
+        "outputTokens": 255,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
         "modelId": "s40",
         "engineId": "t5",
         "trimId": null,
-        "versionText": "S40 T5",
+        "versionText": "T5",
         "yearFab": null,
         "yearModel": 2009,
         "km": 110000,
@@ -1009,17 +1009,17 @@
         "color": "preto",
         "transmission": "automatico",
         "fuel": "gasolina",
-        "options": ["bancos de couro", "teto solar"],
+        "options": ["couro", "teto solar"],
         "sellerType": "desconhecido",
         "contactPhone": "+5571900000025",
         "contactIgUsername": null,
-        "summary": "Sedã S40 T5 de 2009 na cor preta, com câmbio automático, interior em couro e teto solar. Veículo com cerca de 110 mil quilômetros rodados, anunciado em Salvador.",
+        "summary": "Sedã S40 T5 de 2009 preto com cerca de 110 mil km e câmbio automático. Traz interior em couro e teto solar.",
         "redFlags": [],
         "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1594.8932270000005
+      "latencyMs": 1468.892919
     },
     {
       "id": "c26",
@@ -1027,9 +1027,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 75,
-        "outputTokens": 265,
+        "outputTokens": 266,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -1050,13 +1050,13 @@
         "sellerType": "desconhecido",
         "contactPhone": "+5581900000026",
         "contactIgUsername": null,
-        "summary": "SUV de 7 lugares, modelo 2017, com cerca de 78 mil km rodados. Anunciado em Recife com cor azul e versão Momentum com motor T6.",
+        "summary": "SUV de 7 lugares do ano 2017 na cor azul, com cerca de 78 mil quilômetros rodados. Versão T6 Momentum, à venda em Recife.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1468.2182260000009
+      "latencyMs": 1340.0221330000004
     },
     {
       "id": "c27",
@@ -1064,9 +1064,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 113,
-        "outputTokens": 312,
+        "outputTokens": 285,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -1080,20 +1080,20 @@
         "priceCents": 14500000,
         "city": null,
         "uf": "RJ",
-        "color": "vermelha",
+        "color": "vermelho",
         "transmission": null,
         "fuel": "gasolina",
-        "options": ["teto preto", "rodas 20"],
+        "options": ["teto preto", "rodas de 20 polegadas"],
         "sellerType": "desconhecido",
         "contactPhone": "+5521900000027",
         "contactIgUsername": null,
-        "summary": "SUV compacto Volvo de 2019 na versão R-Design, com cor vermelha e baixa quilometragem. Possui teto preto e rodas de 20 polegadas. Anunciado no Rio de Janeiro com contato pelo WhatsApp.",
+        "summary": "SUV de 2019 na versão R-Design, em cor vermelha, com 52 mil km rodados. Possui teto preto e rodas de 20 polegadas.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1591.548393000001
+      "latencyMs": 1673.0907060000009
     },
     {
       "id": "c28",
@@ -1101,9 +1101,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 95,
-        "outputTokens": 270,
+        "outputTokens": 265,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -1124,13 +1124,13 @@
         "sellerType": "loja",
         "contactPhone": "+5513900000028",
         "contactIgUsername": null,
-        "summary": "SUV híbrido plug-in de 2021 com cerca de 41 mil quilômetros, em cor azul e acabamento R-Design. Anunciado por uma loja em Santos, SP.",
+        "summary": "SUV híbrido plug-in de 2021 na cor azul, com 41 mil quilômetros rodados, à venda em Santos. O anúncio é de uma loja especializada.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1374.2005869999994
+      "latencyMs": 1446.0636110000014
     },
     {
       "id": "c29",
@@ -1151,7 +1151,7 @@
         "inputTokens": 84,
         "outputTokens": 161,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": false,
@@ -1178,7 +1178,7 @@
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1035.9374050000006
+      "latencyMs": 1142.7172419999988
     },
     {
       "id": "c31",
@@ -1243,7 +1243,7 @@
         "inputTokens": 70,
         "outputTokens": 171,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": false,
@@ -1270,7 +1270,7 @@
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1115.9569340000016
+      "latencyMs": 995.8225919999986
     },
     {
       "id": "c37",
@@ -1280,7 +1280,7 @@
         "inputTokens": 98,
         "outputTokens": 168,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": false,
@@ -1307,7 +1307,7 @@
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 983.5523379999977
+      "latencyMs": 1009.1547140000002
     },
     {
       "id": "c38",
@@ -1328,7 +1328,7 @@
         "inputTokens": 79,
         "outputTokens": 161,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": false,
@@ -1355,7 +1355,7 @@
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1045.393411000001
+      "latencyMs": 982.7728709999992
     },
     {
       "id": "c40",
@@ -1363,9 +1363,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 129,
-        "outputTokens": 266,
+        "outputTokens": 279,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5405
+        "cacheReadTokens": 5518
       },
       "normalized": {
         "isListing": true,
@@ -1382,17 +1382,17 @@
         "color": null,
         "transmission": null,
         "fuel": "gasolina",
-        "options": ["pneus novos"],
+        "options": ["pneus novos", "revisões em dia"],
         "sellerType": "desconhecido",
         "contactPhone": "+5541900000040",
         "contactIgUsername": null,
-        "summary": "SUV Volvo XC60 de 2019 com 61 mil km rodados, pneus novos e revisões em dia. O anúncio indica venda em Curitiba.",
+        "summary": "SUV Volvo XC60 de 2019 com 61 mil km rodados, pneus novos e revisões em dia. O anúncio indica que o carro está à venda em Curitiba.",
         "redFlags": [],
-        "confidence": 0.95,
+        "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1383.386448000001
+      "latencyMs": 1447.3271759999989
     }
   ]
 }
