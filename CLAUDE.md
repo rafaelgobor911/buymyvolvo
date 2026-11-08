@@ -92,6 +92,7 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - Ordem do pipeline (`src/lib/extraction/pipeline.ts`): blocklist → pré-filtro (regex, sem IA) → Claude → normalização e coerência → blocklist do telefone → deduplicação → publica (`confidence ≥ publish_confidence_threshold` e campos mínimos) ou manda para moderação. Cada `raw_post` sai de `pending` uma única vez.
 - A normalização é a fonte da verdade: re-lê preço/km dos trechos originais (`price_text`, `km_text`), casa a taxonomia, valida telefone (E.164, DDD válido) e **reduz a confiança** em combinações impossíveis ou não vendidas no Brasil.
 - O resumo precisa ser em palavras próprias: se repetir 8 palavras seguidas da legenda, a confiança cai e o anúncio vai para moderação.
+- O resumo é público (página e meta description) e o telefone não: frases que só dizem como contatar saem; telefone, @ ou link no resumo mandam para moderação; preço no resumo reduz a confiança.
 - Um anúncio `removed` nunca volta: uma repostagem do mesmo carro é ignorada.
 
 ## Variáveis de ambiente

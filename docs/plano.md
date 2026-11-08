@@ -48,6 +48,8 @@ A Business Verification depende do **CNPJ** e, idealmente, do **domínio**. Vale
 
 - Hosts liberados no ambiente Default: `ui.shadcn.com` (componentes) e `developers.facebook.com` (documentação).
 - Para chamadas reais na Fase 3, será preciso liberar `graph.facebook.com`.
+- A sessão na nuvem não repassa `ANTHROPIC_API_KEY` aos comandos. A chave fica também em `BUYMYVOLVO_ANTHROPIC_API_KEY` (variável do ambiente, não lida pelo código) e a avaliação roda com `ANTHROPIC_API_KEY="$BUYMYVOLVO_ANTHROPIC_API_KEY" npm run extract:eval`.
+- E2E aqui: `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium npm run test:e2e`. Ao retomar uma sessão, o Postgres pode estar parado: `pg_ctlcluster 16 main start`.
 - Docker não roda aqui, então não dá para usar o Supabase CLI local. Para a Fase 1 há duas opções: (a) você cria um projeto Supabase na nuvem e libera o host dele, ou (b) uso o **Postgres 16 local** do container, com as mesmas migrations, e conecto ao Supabase depois. Decidir no início da Fase 1.
 
 ## Fase 1: decisões
@@ -77,17 +79,24 @@ Segunda rodada: Polestar Engineered na XC60 (2019–2026) e no S60 (2019–2022)
 
 ## Fase 2: decisões
 
-| Tema                | Decisão                                                                                                                                      |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Formato da resposta | Structured outputs (`output_config.format`) com o schema Zod, em vez de forçar uma tool call; Zod valida de novo e há 1 retry                |
-| "Temperatura baixa" | O Haiku 5.5 rejeita `temperature`; usamos raciocínio desligado + esforço baixo                                                               |
-| Números             | O modelo devolve o número e o trecho original (`price_text`, `km_text`); a normalização re-lê o trecho ("189k", "58mil", emojis de dígitos)  |
-| Coerência           | Penalidades na confiança: motor/versão/ano impossíveis, itens não vendidos no Brasil, resumo copiado da legenda, combustível incoerente      |
-| Duplicados          | Chave exata (modelo, motor, ano, km arredondado a 5 mil, contato) + regra aproximada (mesmo vendedor/modelo/ano e km até 3 mil de diferença) |
-| Custo               | Haiku 5.5: US$ 0,10/M entrada, US$ 0,50/M saída; cache estimado com multiplicadores padrão (1,25×/0,1×)                                      |
-| Chave da API        | Não aceita pelo formulário seguro (host da própria Anthropic); vai como variável do ambiente `buymyvolvo`                                    |
+| Tema                | Decisão                                                                                                                                                                       |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Formato da resposta | Structured outputs (`output_config.format`) com o schema Zod, em vez de forçar uma tool call; Zod valida de novo e há 1 retry                                                 |
+| "Temperatura baixa" | O Haiku 5.5 rejeita `temperature`; usamos raciocínio desligado + esforço baixo                                                                                                |
+| Números             | O modelo devolve o número e o trecho original (`price_text`, `km_text`); a normalização re-lê o trecho ("189k", "58mil", emojis de dígitos)                                   |
+| Coerência           | Penalidades na confiança: motor/versão/ano impossíveis, itens não vendidos no Brasil, resumo copiado da legenda, combustível incoerente                                       |
+| Duplicados          | Chave exata (modelo, motor, ano, km arredondado a 5 mil, contato) + regra aproximada (mesmo vendedor/modelo/ano e km até 3 mil de diferença)                                  |
+| Custo               | Haiku 5.5: US$ 0,10/M entrada, US$ 0,50/M saída; cache estimado com multiplicadores padrão (1,25×/0,1×)                                                                       |
+| Chave da API        | Não aceita pelo formulário seguro (host da própria Anthropic); vai como variável do ambiente `buymyvolvo`                                                                     |
+| Resumo público      | O resumo vai para a página e para a meta description; o telefone não. Frases que só falam de contato saem; telefone, @ ou link manda para moderação; preço no resumo penaliza |
+| `version_text`      | Só motor e versão como escritos ("T5 Momentum"), sem modelo, ano, cor, km ou câmbio, porque aparece como "Versão" quando a taxonomia não casa                                 |
 
-Pendente: rodar `npm run extract:eval` com a chave para medir acurácia por campo e custo por 1.000 posts.
+### Avaliação (`npm run extract:eval`, 08/11/2026, prompt `2026-11-08.2`)
+
+- **Acurácia:** 100% em todos os 13 campos medidos (modelo, motor, versão, anos, km, preço, cidade, UF, câmbio, combustível, tipo de vendedor, telefone), 100% em "é anúncio?", 6/6 sinais de alerta, 0 erros.
+- **Custo (Haiku 5.5):** cerca de US$ 0,16–0,18 por 1.000 posts (com pré-filtro; no gabarito 33 de 40 posts passam) e US$ 0,20 por 1.000 extrações. A saída domina o custo (~260 tokens por post); o prompt de sistema (~5,5 mil tokens) vem do cache.
+- **Publicação:** 28 de 29 anúncios passam do limite de 0,85; o XC60 B5 (motor não vendido no Brasil) vai para moderação, como esperado.
+- O placar não mede resumo, cor nem `version_text`; esses foram revisados à mão em cada uma das quatro rodadas (relatório final em `evals/extraction/reports/latest-claude-haiku-5-5.md`).
 
 ## Próxima fase (Fase 2: extração com IA)
 
