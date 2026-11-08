@@ -29,5 +29,7 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // Contact clicks hash IP/UA with HASH_SALT; tests use a throwaway one.
+    env: { HASH_SALT: process.env.HASH_SALT || "e2e-only-salt-not-a-secret-0000000000" },
   },
 });

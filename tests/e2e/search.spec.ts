@@ -26,8 +26,8 @@ test.describe("Busca e anúncio", () => {
     await expect(page.getByRole("link", { name: "Reivindicar" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Compre com segurança" })).toBeVisible();
     await expect(
-      page.getByRole("button", { name: /Falar com o vendedor no WhatsApp/ }),
-    ).toBeDisabled();
+      page.getByRole("link", { name: "Falar com o vendedor no WhatsApp" }),
+    ).toHaveAttribute("href", /^\/r\/[a-z0-9]+$/);
   });
 
   test("repasse: selo na busca e quadro de cuidados no anúncio", async ({ page }) => {

@@ -27,6 +27,8 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/buymyvolvo_test
       NEXT_PUBLIC_DEMO_MODE: "true"
+      # Test-only value (contact clicks hash IP/UA with it); production sets its own.
+      HASH_SALT: ci-only-salt-not-a-secret-000000000000
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

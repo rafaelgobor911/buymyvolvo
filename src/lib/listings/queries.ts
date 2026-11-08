@@ -58,6 +58,10 @@ export interface ListingDetail extends ListingCard {
   expiresAt: Date | null;
   soldAt: Date | null;
   instagramUsername: string | null;
+  /** Code used by /r/<code> (contact click) and /a/<code> (short link). */
+  shortId: string;
+  /** Whether the WhatsApp button applies; the number itself stays server-side. */
+  hasPhone: boolean;
   sourcePermalink: string | null;
   sourceUsername: string | null;
   /** Active, backed only by hashtag posts (never re-read) older than the configured days. */
@@ -227,13 +231,15 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
         expires_at: Date | null;
         sold_at: Date | null;
         contact_ig_username: string | null;
+        short_id: string;
+        has_phone: boolean;
         source_permalink: string | null;
         source_username: string | null;
         possibly_unavailable: boolean;
       })[]
     >`
       select ${CARD_COLUMNS(tx)}, l.engine_id, l.trim_id, l.color, l.options, l.summary_ptbr,
-        l.last_seen_at, l.expires_at, l.sold_at, l.contact_ig_username,
+        l.last_seen_at, l.expires_at, l.sold_at, l.contact_ig_username, l.short_id, l.has_phone,
         s.display_name as seller_name, src.permalink as source_permalink, src.ig_username as source_username,
         (l.status = 'active' and l.origin = 'instagram'
           and l.first_seen_at < now() - make_interval(days => ${staleDays})
@@ -267,6 +273,8 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
       expiresAt: row.expires_at,
       soldAt: row.sold_at,
       instagramUsername: row.contact_ig_username,
+      shortId: row.short_id,
+      hasPhone: row.has_phone,
       sourcePermalink: row.source_permalink,
       sourceUsername: row.source_username,
       possiblyUnavailable: row.possibly_unavailable,

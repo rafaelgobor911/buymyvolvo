@@ -10,10 +10,9 @@ import { ListingGrid, listingTitle, RepasseBadge } from "@/components/listing-ca
 import { ModelPlate } from "@/components/model-plate";
 import { SafetyTips } from "@/components/safety-tips";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { checklistFor, checklistTitle, MADE_BY_SWEDEN_URL } from "@/content/checklists";
-import { publicEnv } from "@/lib/env/public";
 import {
   formatKm,
   formatPlace,
@@ -23,6 +22,7 @@ import {
 } from "@/lib/listings/format";
 import { getListingBySlug, getSimilarListings, type ListingDetail } from "@/lib/listings/queries";
 import { site } from "@/lib/site";
+import { cn } from "@/lib/utils";
 import { FUEL_LABELS, getModel, TRANSMISSION_LABELS } from "@/lib/taxonomy";
 
 const loadListing = cache(getListingBySlug);
@@ -310,19 +310,33 @@ function FactsTable({ listing, now }: { listing: ListingDetail; now: Date }) {
   );
 }
 
-/** WhatsApp lead flow (/r/[ref]) arrives in Phase 4; until then the button is disabled. */
+/**
+ * Contact button: /r/<code> records the lead and redirects to WhatsApp (or to
+ * Instagram when the post has no phone). The phone never reaches the HTML.
+ * A plain <a> (not next/link) so nothing prefetches the click.
+ */
 function ContactActions({ listing }: { listing: ListingDetail }) {
   if (listing.status !== "active") return null;
-  const note = publicEnv.NEXT_PUBLIC_DEMO_MODE
-    ? "Prévia: o contato pelo WhatsApp é ativado na Fase 4."
-    : "Contato pelo WhatsApp disponível em breve.";
+  const hasInstagram = !!(
+    listing.instagramUsername ||
+    listing.sourceUsername ||
+    listing.sourcePermalink
+  );
+  if (!listing.hasPhone && !hasInstagram) return null;
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col gap-2 border-t border-border bg-background/95 p-4 backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:p-0">
-      <Button className="h-12 w-full rounded-xl text-base" disabled aria-describedby="contato-nota">
+      <a
+        href={`/r/${listing.shortId}`}
+        rel="nofollow"
+        aria-describedby="contato-nota"
+        className={cn(buttonVariants(), "h-12 w-full rounded-xl text-base")}
+      >
         <MessageCircle aria-hidden />
-        Falar com o vendedor no WhatsApp
-      </Button>
-      {listing.sourcePermalink && (
+        {listing.hasPhone
+          ? "Falar com o vendedor no WhatsApp"
+          : "Falar com o vendedor no Instagram"}
+      </a>
+      {listing.hasPhone && listing.sourcePermalink && (
         <a
           href={listing.sourcePermalink}
           target="_blank"
@@ -333,7 +347,7 @@ function ContactActions({ listing }: { listing: ListingDetail }) {
         </a>
       )}
       <p id="contato-nota" className="text-center text-xs text-muted-foreground lg:text-left">
-        {note}
+        Não guardamos dados seus neste clique.
       </p>
     </div>
   );
