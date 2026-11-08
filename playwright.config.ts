@@ -37,6 +37,10 @@ export default defineConfig({
       HASH_SALT: process.env.HASH_SALT || "e2e-only-salt-not-a-secret-0000000000",
       ADMIN_EMAILS: [process.env.ADMIN_EMAILS, E2E_ADMIN].filter(Boolean).join(","),
       ADMIN_TEST_LOGIN_EMAIL: E2E_ADMIN,
+      SELLER_TEST_LOGIN_EMAIL: "vendedor.teste@example.com",
+      // Tests never talk to the real Supabase project (Google login shows as unavailable).
+      NEXT_PUBLIC_SUPABASE_URL: "",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
     },
   },
 });
