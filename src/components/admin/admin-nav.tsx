@@ -9,6 +9,12 @@ const ITEMS = [
   { href: "/admin", label: "Início" },
   { href: "/admin/moderacao", label: "Moderação" },
   { href: "/admin/anuncios", label: "Anúncios" },
+  { href: "/admin/fontes", label: "Fontes" },
+  { href: "/admin/leads", label: "Leads" },
+  { href: "/admin/jobs", label: "Jobs" },
+  { href: "/admin/remocoes", label: "Remoções" },
+  { href: "/admin/blocklist", label: "Blocklist" },
+  { href: "/admin/vendedores", label: "Vendedores" },
   { href: "/admin/configuracoes", label: "Configurações" },
 ] as const;
 

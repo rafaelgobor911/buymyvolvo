@@ -61,9 +61,12 @@ export async function loadDashboard(sql: Sql): Promise<Dashboard> {
       alerts.push({
         tone: "error",
         text: `O job ${run.job_name} falhou: ${run.error ?? "erro sem mensagem"}`,
+        href: `/admin/jobs?job=${run.job_name}`,
       });
     }
-    for (const text of run.alerts ?? []) alerts.push({ tone: "warning", text });
+    for (const text of run.alerts ?? []) {
+      alerts.push({ tone: "warning", text, href: `/admin/jobs?job=${run.job_name}` });
+    }
   }
 
   const failing = await sql<{ handle: string; type: string; last_error: string | null }[]>`
@@ -74,6 +77,7 @@ export async function loadDashboard(sql: Sql): Promise<Dashboard> {
     alerts.push({
       tone: "error",
       text: `A fonte ${name} falhou 3 vezes seguidas: ${s.last_error ?? ""}`.trim(),
+      href: "/admin/fontes",
     });
   }
 
@@ -85,6 +89,7 @@ export async function loadDashboard(sql: Sql): Promise<Dashboard> {
     alerts.push({
       tone: "warning",
       text: `Orçamento de hashtags: ${budget.used} de ${budget.max} usadas nos últimos 7 dias.`,
+      href: "/admin/fontes",
     });
   }
 
@@ -94,6 +99,7 @@ export async function loadDashboard(sql: Sql): Promise<Dashboard> {
     alerts.push({
       tone: "error",
       text: `${removals.n} pedido(s) de remoção para confirmar (prazo de 48h).`,
+      href: "/admin/remocoes",
     });
   }
 

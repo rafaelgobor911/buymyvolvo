@@ -10,6 +10,7 @@ import type { RedFlag } from "@/lib/extraction/schema";
 import { listingSlug } from "@/lib/listings/format";
 import { getEngine, getModel, getTrim } from "@/lib/taxonomy";
 
+import { blockListingContacts } from "./blocklist";
 import { type ListingPatch, publishable } from "./listing-form";
 
 type Sql = postgres.Sql;
@@ -447,7 +448,14 @@ export async function saveListing(
  */
 export async function setListingStatus(
   sql: Sql,
-  input: { id: string; status: AdminStatus; actor: string; note?: string | null },
+  input: {
+    id: string;
+    status: AdminStatus;
+    actor: string;
+    note?: string | null;
+    /** With 'removed': also block the phone, @ and posts so they are not re-imported. */
+    block?: boolean;
+  },
 ): Promise<SaveResult> {
   if (!ADMIN_STATUSES.includes(input.status)) return { ok: false, error: "Status inválido." };
   const note = input.note?.trim().slice(0, 500) || null;
@@ -476,6 +484,9 @@ export async function setListingStatus(
       changes: { status: { from: row.status, to: input.status } },
       note,
     });
+    if (input.status === "removed" && input.block) {
+      await blockListingContacts(tx, row.id, { reason: note ?? "Removido pelo admin" });
+    }
     return { ok: true, changed: 1 };
   });
 }

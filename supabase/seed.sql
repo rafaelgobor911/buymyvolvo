@@ -111,3 +111,9 @@ values
   ('00000000-0000-4000-8000-000000000064', '00000000-0000-4000-a000-000000000064', true),
   ('00000000-0000-4000-8000-000000000065', '00000000-0000-4000-a000-000000000065', true)
 on conflict (raw_post_id) do nothing;
+
+delete from public.blocklist where removal_request_id = '00000000-0000-4000-c000-000000000001';
+insert into public.removal_requests (id, listing_id, requester_contact, reason, status, created_at)
+values ('00000000-0000-4000-c000-000000000001', '00000000-0000-4000-8000-000000000061', 'vendedor.ficticio@example.com',
+  'Já vendi o carro, podem tirar o anúncio.', 'pending', now() - interval '1 day')
+on conflict (id) do update set status = 'pending', processed_at = null, processed_by = null;

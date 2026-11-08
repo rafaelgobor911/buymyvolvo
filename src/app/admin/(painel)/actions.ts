@@ -87,6 +87,7 @@ export async function setStatusAction(_prev: FormState, form: FormData): Promise
     status,
     actor: actorOf(admin),
     note: str(form, "detalhe"),
+    block: str(form, "bloquear") === "on",
   });
   if (!result.ok) return { status: "error", message: result.error };
   refresh();

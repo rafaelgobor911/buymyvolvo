@@ -168,6 +168,7 @@ export const fixturePostId = (index: number) =>
 /** Inactive source that owns the fictitious posts waiting in moderation. */
 export const FIXTURE_SOURCE_ID = "00000000-0000-4000-b000-000000000001";
 export const FIXTURE_SOURCE_HANDLE = "anuncios.ficticios";
+export const FIXTURE_REMOVAL_REQUEST_ID = "00000000-0000-4000-c000-000000000001";
 
 export const fixturePhone = (index: number) => `+55209${String(1000_0000 + index + 1).slice(-8)}`;
 
@@ -332,6 +333,19 @@ export function generateSeedSql(): string {
         .map(({ i }) => `  (${lit(fixtureListingId(i))}, ${lit(fixturePostId(i))}, true)`)
         .join(",\n"),
       "on conflict (raw_post_id) do nothing;",
+      "",
+    );
+  }
+  // A removal request waiting for the admin (fictitious seller and contact). Re-seeding
+  // puts it back to pending and drops the blocklist entries its confirmation created.
+  const removedIndex = FIXTURE_LISTINGS.findIndex((l) => l.status === "removed");
+  if (removedIndex >= 0) {
+    out.push(
+      `delete from public.blocklist where removal_request_id = ${lit(FIXTURE_REMOVAL_REQUEST_ID)};`,
+      "insert into public.removal_requests (id, listing_id, requester_contact, reason, status, created_at)",
+      `values (${lit(FIXTURE_REMOVAL_REQUEST_ID)}, ${lit(fixtureListingId(removedIndex))}, 'vendedor.ficticio@example.com',`,
+      "  'Já vendi o carro, podem tirar o anúncio.', 'pending', now() - interval '1 day')",
+      "on conflict (id) do update set status = 'pending', processed_at = null, processed_by = null;",
       "",
     );
   }

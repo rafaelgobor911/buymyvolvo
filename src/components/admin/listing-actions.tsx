@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 
 import { rejectListingAction, setStatusAction } from "@/app/admin/(painel)/actions";
 import { Button } from "@/components/ui/button";
@@ -77,11 +77,18 @@ export function StatusForm({
   statuses: Option[];
 }) {
   const [state, formAction, pending] = useActionState(setStatusAction, IDLE);
+  const [selected, setSelected] = useState(status);
   return (
     <form onSubmit={submitInTransition(formAction)} className="flex flex-col gap-3">
       <input type="hidden" name="id" value={id} />
       <Field id="s-status" label="Status">
-        <NativeSelect id="s-status" name="status" defaultValue={status} className="w-full">
+        <NativeSelect
+          id="s-status"
+          name="status"
+          value={selected}
+          onChange={(e) => setSelected(e.target.value)}
+          className="w-full"
+        >
           {statuses.map((s) => (
             <NativeSelectOption key={s.value} value={s.value}>
               {s.label}
@@ -92,6 +99,17 @@ export function StatusForm({
       <Field id="s-detalhe" label="Motivo (obrigatório para rejeitar)">
         <Input id="s-detalhe" name="detalhe" maxLength={300} />
       </Field>
+      {selected === "removed" && status !== "removed" && (
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="bloquear"
+            defaultChecked
+            className="mt-0.5 size-4 accent-primary"
+          />
+          Bloquear também o telefone, o @ e os posts deste anúncio na coleta
+        </label>
+      )}
       <FormMessage state={state} />
       <Button
         type="submit"
