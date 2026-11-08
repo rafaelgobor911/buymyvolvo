@@ -95,6 +95,11 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
             {listing.summary && (
               <p className="text-pretty text-muted-foreground">{listing.summary}</p>
             )}
+            {listing.summary && listing.origin === "instagram" && !listing.isClaimed && (
+              <p className="text-xs text-muted-foreground">
+                Resumo automático do post; confira no original.
+              </p>
+            )}
             {listing.options.length > 0 && (
               <ul className="flex flex-wrap gap-2 pt-1" aria-label="Destaques">
                 {listing.options.map((option) => (
