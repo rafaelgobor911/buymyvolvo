@@ -52,6 +52,8 @@ interface RawPostRow {
   caption: string | null;
   ig_username: string | null;
   posted_at: Date | null;
+  /** Bio of the account (Business Discovery sources): contact and city fallback. */
+  bio?: string | null;
 }
 
 const DEFAULT_THRESHOLD = 0.85;
@@ -172,6 +174,7 @@ export async function processRawPost(
     result = await deps.extract({
       caption,
       igUsername: username,
+      bio: post.bio ?? null,
       postedAt: post.posted_at?.toISOString() ?? null,
     });
   } catch (error) {
@@ -188,7 +191,12 @@ export async function processRawPost(
     return { outcome: "error", usage };
   }
 
-  const n = normalizeExtraction(result.output, { caption, igUsername: username, now });
+  const n = normalizeExtraction(result.output, {
+    caption,
+    igUsername: username,
+    bio: post.bio ?? null,
+    now,
+  });
   const details = { ...base, prefilter: filter, extraction: result.output, normalized: n };
 
   if (!n.isListing || !n.modelId) {
@@ -256,10 +264,11 @@ export async function processPendingRawPosts(
 ): Promise<PipelineStats> {
   const threshold = await publishThreshold(sql);
   const posts = await sql<RawPostRow[]>`
-    select id, ig_media_id, caption, ig_username, posted_at
-    from public.raw_posts
-    where processing_status = 'pending'
-    order by fetched_at, id
+    select rp.id, rp.ig_media_id, rp.caption, rp.ig_username, rp.posted_at, s.ig_biography as bio
+    from public.raw_posts rp
+    left join public.sources s on s.id = rp.source_id and s.type = 'ig_business_account'
+    where rp.processing_status = 'pending' and rp.gone_at is null
+    order by rp.fetched_at, rp.id
     limit ${options.limit ?? 50}`;
 
   const stats: PipelineStats = {

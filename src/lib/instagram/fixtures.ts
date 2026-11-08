@@ -196,7 +196,7 @@ export function createFixtureWorld(now = new Date()): FixtureWorld {
     },
     unavailable: ["perfil.pessoal.demo"],
     hashtags: {
-      volvoavenda: {
+      volvoavenda_demo: {
         id: "fxh_volvoavenda",
         posts: [
           {
@@ -227,7 +227,7 @@ export function createFixtureWorld(now = new Date()): FixtureWorld {
           },
         ],
       },
-      volvoseminovo: {
+      volvoseminovo_demo: {
         id: "fxh_volvoseminovo",
         posts: [
           {

@@ -82,7 +82,7 @@ describe("scanBusinessAccount", () => {
 describe("hashtags", () => {
   it("looks up IDs, reads the last 24 hours and records the searches", async () => {
     const { world, client } = setup();
-    const id = await hashtagId(client, FIXTURE_IG_USER_ID, "volvoseminovo");
+    const id = await hashtagId(client, FIXTURE_IG_USER_ID, "volvoseminovo_demo");
     expect(id).toBe("fxh_volvoseminovo");
     const media = await recentHashtagMedia(client, FIXTURE_IG_USER_ID, id!);
     expect(media.map((m) => m.id)).toEqual(["fxm_tag_05"]);

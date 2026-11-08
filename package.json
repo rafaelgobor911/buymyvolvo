@@ -20,7 +20,9 @@
     "db:seed": "tsx scripts/db/cli.ts seed",
     "db:setup": "tsx scripts/db/cli.ts setup",
     "db:reset": "tsx scripts/db/cli.ts reset",
-    "extract:eval": "tsx scripts/extract-eval.ts"
+    "extract:eval": "tsx scripts/extract-eval.ts",
+    "job": "tsx scripts/job.ts",
+    "sources": "tsx scripts/sources.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",
