@@ -1,8 +1,8 @@
 # Avaliação da extração
 
-- Data: 2026-11-08T16:38:42.792Z
+- Data: 2026-11-08T16:52:45.057Z
 - Modelo: claude-haiku-5-5
-- Versão do prompt: 2026-11-08.6
+- Versão do prompt: 2026-11-09.1
 - Casos: 35 (conjunto em `evals/extraction/dataset-real.ts`)
 
 ## Resumo
@@ -16,10 +16,10 @@
 | Resumos que copiam a legenda                | 0              |
 | Resumos que falam do vendedor ou do negócio | 0              |
 | Erros de extração                           | 0              |
-| Custo desta rodada                          | US$ 0.0064     |
-| Custo por 1.000 posts (com pré-filtro)      | US$ 0.1819     |
-| Custo por 1.000 extrações                   | US$ 0.2893     |
-| Latência média por extração                 | 1724 ms        |
+| Custo desta rodada                          | US$ 0.0065     |
+| Custo por 1.000 posts (com pré-filtro)      | US$ 0.1847     |
+| Custo por 1.000 extrações                   | US$ 0.2939     |
+| Latência média por extração                 | 1732 ms        |
 
 ## Acurácia por campo
 
@@ -41,7 +41,7 @@
 
 ## Tokens
 
-Entrada 12481 · saída 7664 · gravação em cache 0 · leitura de cache 128480. Custos de cache estimados com os multiplicadores padrão (ver `src/lib/extraction/cost.ts`).
+Entrada 12481 · saída 7826 · gravação em cache 0 · leitura de cache 130372. Custos de cache estimados com os multiplicadores padrão (ver `src/lib/extraction/cost.ts`).
 
 ## Pré-filtro
 

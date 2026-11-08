@@ -9,9 +9,11 @@ import {
   normalizePhoneBR,
   normalizePrice,
   normalizeYears,
+  writtenSaleType,
   yearPairFromCaption,
 } from "./normalize";
 import type { Extraction } from "./schema";
+import { foldText } from "./text";
 
 const NOW = new Date("2026-11-08T12:00:00-03:00");
 
@@ -300,6 +302,42 @@ describe("normalizeExtraction", () => {
       "Volvo S60 T8 R-Design 20/20, 53.000 km, R$ 192.000",
     );
     expect([n.yearFab, n.yearModel]).toEqual([2020, 2020]);
+  });
+
+  it.each([
+    ["REPASSE ⚠️ XC60 T5 2014 com 102.000 km", { repasse: true, agio: false }],
+    ["Repasso meu XC60, preço de ocasião", { repasse: true, agio: false }],
+    ["Valor de repasse 70k, pra vender logo", { repasse: true, agio: false }],
+    ["Não é repasse! Carro de garagem, revisado", { repasse: false, agio: false }],
+    ["Nada de repasse: carro impecável, laudo aprovado", { repasse: false, agio: false }],
+    ["Repasse, aceito troca. Não é leilão", { repasse: true, agio: false }],
+    ["Vendo ágio XC40 2022, assumir 30 parcelas de 3.200", { repasse: false, agio: true }],
+    ["Transfiro o financiamento do meu XC60", { repasse: false, agio: true }],
+    ["XC40 quitado, sem ágio", { repasse: false, agio: false }],
+    ["Revisões em dia, IPVA pago", { repasse: false, agio: false }],
+  ])("writtenSaleType(%j)", (caption, expected) => {
+    expect(writtenSaleType(foldText(caption))).toEqual(expected);
+  });
+
+  it("shows repasse only when the caption says so, and reviews repasse with a deposit", () => {
+    const guessed = norm(
+      { red_flags: ["repasse"] },
+      "XC60 T8 Inscription 19/20, R$ 239.900, abaixo da FIPE",
+    );
+    expect(guessed.redFlags).not.toContain("repasse");
+    expect(guessed.redFlags).toContain("abaixo_do_mercado");
+
+    const written = norm({ red_flags: [] }, "REPASSE XC60 T8 Inscription 19/20, R$ 199.900");
+    expect(written.redFlags).toContain("repasse");
+    expect(written.issues).toEqual([]);
+
+    const deposit = norm(
+      { red_flags: [] },
+      "REPASSE XC60 T8 19/20, R$ 199.900. Somente pix de sinal pra reservar",
+    );
+    expect(deposit.redFlags).toEqual(expect.arrayContaining(["repasse", "pedido_de_sinal"]));
+    expect(deposit.issues.map((i) => i.code)).toContain("repasse_com_sinal");
+    expect(deposit.confidence).toBeLessThan(0.85);
   });
 
   it("prefers the price snippet over a wrong number from the model", () => {

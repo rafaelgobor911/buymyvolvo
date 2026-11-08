@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-08T16:38:42.792Z",
-  "promptVersion": "2026-11-08.6",
+  "date": "2026-11-08T16:52:45.057Z",
+  "promptVersion": "2026-11-09.1",
   "report": {
     "model": "claude-haiku-5-5",
     "cases": 35,
@@ -80,15 +80,15 @@
     "mismatches": [],
     "usage": {
       "inputTokens": 12481,
-      "outputTokens": 7664,
+      "outputTokens": 7826,
       "cacheWriteTokens": 0,
-      "cacheReadTokens": 128480
+      "cacheReadTokens": 130372
     },
     "extractedCalls": 22,
-    "costUsd": 0.006364900000000001,
-    "costPer1000PostsUsd": 0.18185428571428575,
-    "costPer1000ExtractionsUsd": 0.2893136363636364,
-    "avgLatencyMs": 1724.0313254090909
+    "costUsd": 0.0064648200000000005,
+    "costPer1000PostsUsd": 0.18470914285714285,
+    "costPer1000ExtractionsUsd": 0.2938554545454546,
+    "avgLatencyMs": 1732.1374906818187
   },
   "results": [
     {
@@ -97,9 +97,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 451,
-        "outputTokens": 368,
+        "outputTokens": 359,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -115,29 +115,28 @@
         "uf": "SP",
         "color": null,
         "transmission": "automatico",
-        "fuel": "hibrido_plugin",
+        "fuel": null,
         "options": [
-          "blindagem nível III-A",
-          "vidros AGP B33",
-          "teto solar translúcido não funcional",
+          "teto solar translúcido",
           "bancos em couro",
           "sensor de chuva",
           "controle automático de velocidade",
           "controle de tração",
           "sensor de estacionamento",
           "computador de bordo",
-          "rodas de liga leve"
+          "rodas de liga leve",
+          "blindagem nível III-A"
         ],
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "autolandbrasil",
-        "summary": "SUV de 2021 com cerca de 38 mil km, blindagem de nível III-A e vidros especiais. Traz bancos de couro, sensores e controles de conforto e segurança, e laudo cautelar aprovado.",
+        "summary": "SUV XC40 de 2021 com 38 mil km, blindado no nível III-A com vidros AGP, e laudo cautelar aprovado. Traz bancos de couro, teto solar translúcido não funcional e diversos itens de conforto e segurança.",
         "redFlags": [],
-        "confidence": 0.93,
+        "confidence": 0.85,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1769.36775
+      "latencyMs": 1746.033493
     },
     {
       "id": "r02",
@@ -145,9 +144,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 422,
-        "outputTokens": 344,
+        "outputTokens": 338,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -159,16 +158,15 @@
         "yearModel": 2019,
         "km": 95000,
         "priceCents": 16590000,
-        "city": null,
+        "city": "São Paulo",
         "uf": "SP",
         "color": null,
         "transmission": "automatico",
         "fuel": "hibrido_plugin",
         "options": [
           "teto solar translúcido",
-          "bancos de couro",
+          "bancos em couro",
           "sensor de chuva",
-          "vidros elétricos",
           "controle automático de velocidade",
           "controle de tração",
           "sensor de estacionamento",
@@ -178,13 +176,13 @@
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "autolandbrasil",
-        "summary": "SUV híbrido plug-in de 2019 com laudo cautelar aprovado e poucos quilômetros rodados. Traz itens de conforto e segurança como teto solar, bancos de couro e sensor de estacionamento.",
+        "summary": "SUV híbrido plug-in de 2019 com cerca de 95 mil km e laudo cautelar aprovado. Traz bancos em couro, teto solar, sensores de chuva e estacionamento e controle de tração.",
         "redFlags": [],
-        "confidence": 0.93,
+        "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1810.1937480000001
+      "latencyMs": 1607.086624
     },
     {
       "id": "r03",
@@ -192,17 +190,17 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 434,
-        "outputTokens": 351,
+        "outputTokens": 344,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
         "modelId": "xc60",
         "engineId": "t8",
         "trimId": "ultimate-dark",
-        "versionText": "T8 Recharge Ultimate Dark AWD Geartronic",
-        "yearFab": null,
+        "versionText": "2.0 T8 Recharge Ultimate Dark AWD",
+        "yearFab": 2023,
         "yearModel": 2023,
         "km": 59000,
         "priceCents": 25490000,
@@ -222,13 +220,13 @@
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "autolandbrasil",
-        "summary": "SUV híbrido plug-in de 2023 com pouco mais de 59 mil quilômetros, sem retoques de pintura e com laudo cautelar aprovado. Traz teto solar, bancos de couro e sistemas de assistência à condução.",
+        "summary": "SUV híbrido plug-in de 2023 com pouco mais de 59 mil km, sem retoque de pintura e laudo cautelar aprovado. Traz teto solar, bancos em couro e sistemas de assistência ao motorista.",
         "redFlags": [],
-        "confidence": 0.93,
+        "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1627.70523
+      "latencyMs": 1624.9909669999997
     },
     {
       "id": "r04",
@@ -236,9 +234,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 409,
-        "outputTokens": 309,
+        "outputTokens": 328,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -260,19 +258,21 @@
           "bancos em couro",
           "sensor de chuva",
           "controle automático de velocidade",
+          "controle de tração",
           "sensor de estacionamento",
+          "computador de bordo",
           "rodas de liga leve"
         ],
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "autolandbrasil",
-        "summary": "SUV elétrico de 2024 com baixa quilometragem e laudo cautelar aprovado. Traz teto solar, bancos de couro e pacote completo de assistências à direção.",
+        "summary": "SUV elétrico de 2024 com cerca de 25 mil km e laudo cautelar aprovado. Traz teto solar, bancos em couro e diversos itens de assistência à condução e conforto.",
         "redFlags": [],
         "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1612.809831
+      "latencyMs": 1768.569962
     },
     {
       "id": "r05",
@@ -280,9 +280,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 468,
-        "outputTokens": 319,
+        "outputTokens": 335,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -302,20 +302,21 @@
         "options": [
           "teto solar",
           "bancos em couro",
-          "controle automático de velocidade",
+          "sensor de chuva",
           "sensor de estacionamento",
+          "controle automático de velocidade",
           "rodas de liga leve"
         ],
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "autolandbrasil",
-        "summary": "SUV híbrido plug-in de 2025 com baixa quilometragem e garantia de fábrica válida até fevereiro de 2027. Revisões feitas em concessionária, pintura original e laudo cautelar aprovado.",
+        "summary": "SUV híbrido plug-in de 2025 com baixa quilometragem, revisões feitas em concessionária e laudo cautelar aprovado. Traz garantia de fábrica ainda válida e equipamentos como teto solar e bancos de couro.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1747.122693
+      "latencyMs": 1846.21268
     },
     {
       "id": "r06",
@@ -323,16 +324,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 455,
-        "outputTokens": 340,
+        "outputTokens": 348,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
         "modelId": "xc90",
         "engineId": "t8",
         "trimId": "inscription",
-        "versionText": "T8 HYBRID INSCRIPTION EXPRESSION AWD",
+        "versionText": "2.0 T8 HYBRID INSCRIPTION EXPRESSION AWD",
         "yearFab": null,
         "yearModel": 2022,
         "km": 39000,
@@ -347,20 +348,19 @@
           "bancos em couro",
           "sensor de chuva",
           "controle automático de velocidade",
-          "controle de tração",
           "sensor de estacionamento",
           "rodas de liga leve"
         ],
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "autolandbrasil",
-        "summary": "SUV híbrido plug-in de sete lugares, bem cuidado, com laudo cautelar aprovado. Traz teto solar, bancos de couro e diversos sistemas de assistência à condução.",
+        "summary": "SUV híbrido plug-in de 2022 com sete lugares, pouco rodado e bem conservado, com laudo cautelar aprovado. Traz teto solar, bancos de couro e diversos recursos de assistência à condução.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1968.0155359999994
+      "latencyMs": 1697.2808020000002
     },
     {
       "id": "r07",
@@ -368,9 +368,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 971,
-        "outputTokens": 408,
+        "outputTokens": 432,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -389,24 +389,26 @@
         "fuel": "hibrido_plugin",
         "options": [
           "teto solar panorâmico",
+          "central multimídia de 9 polegadas com Apple CarPlay e Android Auto",
           "bancos esportivos em couro e alcântara",
-          "câmera de ré",
-          "painel digital de 12,3\"",
-          "som Harman Kardon",
+          "sensores de estacionamento com câmera de ré",
+          "painel digital de 12,3 polegadas",
+          "chave presencial",
+          "sistema de som Harman Kardon",
           "faróis Full LED",
           "piloto automático adaptativo",
-          "rodas de liga leve aro 19\""
+          "rodas de liga leve aro 19"
         ],
         "sellerType": "loja",
         "contactPhone": "+5519900000101",
         "contactIgUsername": "bslmotors",
-        "summary": "Sedã híbrido plug-in com tração integral, versão esportiva R-Design, de 2021, com baixa quilometragem e todas as revisões feitas em concessionária. Traz itens de conforto e segurança como teto solar, bancos em couro e alcântara, faróis Full LED e assistentes de direção.",
+        "summary": "Sedã híbrido plug-in de 2021 com tração integral, versão esportiva R-Design e manutenções feitas em concessionária. Traz pneus novos e conta com equipamentos de conforto, segurança e tecnologia.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1853.2486009999998
+      "latencyMs": 1916.0306550000005
     },
     {
       "id": "r08",
@@ -414,9 +416,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 564,
-        "outputTokens": 338,
+        "outputTokens": 358,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -434,7 +436,7 @@
         "transmission": "automatico",
         "fuel": "hibrido_plugin",
         "options": [
-          "Google built-in",
+          "Google Built-in",
           "atualizações OTA",
           "volante bicolor",
           "acabamento em madeira Grey Ash"
@@ -442,13 +444,13 @@
         "sellerType": "loja",
         "contactPhone": "+5516900000102",
         "contactIgUsername": "matellimotors",
-        "summary": "SUV híbrido plug-in de 2024 com 462 cv e autonomia elétrica de cerca de 65 km, com interior blond e acabamento em madeira clara. Possui revisões feitas na rede autorizada e pintura azul metálica.",
+        "summary": "SUV híbrido plug-in de 2024 com 462 cv combinados e autonomia elétrica de cerca de 65 km, praticamente sem uso. Interior em tom claro com volante bicolor e acabamento em madeira, além de sistema Google integrado e revisões feitas na rede autorizada.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1631.73913
+      "latencyMs": 1768.233867
     },
     {
       "id": "r09",
@@ -458,7 +460,7 @@
         "inputTokens": 202,
         "outputTokens": 167,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": false,
@@ -485,7 +487,7 @@
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 909.0349210000004
+      "latencyMs": 967.3843959999995
     },
     {
       "id": "r10",
@@ -495,7 +497,7 @@
         "inputTokens": 207,
         "outputTokens": 167,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": false,
@@ -518,11 +520,11 @@
         "contactIgUsername": "matellimotors",
         "summary": "",
         "redFlags": [],
-        "confidence": 0.85,
+        "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1198.4680950000002
+      "latencyMs": 991.4049489999998
     },
     {
       "id": "r11",
@@ -530,9 +532,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 368,
-        "outputTokens": 376,
+        "outputTokens": 373,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -550,8 +552,8 @@
         "transmission": "automatico",
         "fuel": "hibrido_plugin",
         "options": [
-          "teto solar panorâmico",
           "som Bowers & Wilkins",
+          "teto solar panorâmico",
           "câmera 360°",
           "bancos dianteiros elétricos",
           "Apple CarPlay",
@@ -559,19 +561,18 @@
           "ar-condicionado quadri zone",
           "porta-malas elétrico",
           "pneus Michelin",
-          "suspensão a ar",
-          "tração integral"
+          "suspensão a ar"
         ],
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "nattamotors",
-        "summary": "SUV híbrido plug-in de 2026 com baixa quilometragem, único dono e revisões feitas na concessionária. Tem tração integral, suspensão a ar e acabamento de alto padrão, com conforto e tecnologia completos.",
+        "summary": "SUV híbrido plug-in de 2026 com tração integral e suspensão a ar, de único dono e com histórico de revisões na concessionária. Traz itens de conforto e tecnologia como teto panorâmico, som premium e câmera 360°.",
         "redFlags": [],
-        "confidence": 0.95,
+        "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1751.7253890000002
+      "latencyMs": 1741.6511959999998
     },
     {
       "id": "r12",
@@ -579,16 +580,16 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 323,
-        "outputTokens": 312,
+        "outputTokens": 322,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
         "modelId": "ex30",
         "engineId": null,
         "trimId": "core",
-        "versionText": "Core",
+        "versionText": "E60 Core",
         "yearFab": null,
         "yearModel": 2024,
         "km": 34596,
@@ -610,13 +611,13 @@
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": "nattamotors",
-        "summary": "SUV elétrico compacto de 2024 com 272 cv, único dono e baixa quilometragem, com revisões feitas em concessionária. Traz blindagem, vidros Vertico, som premium e conectividade completa.",
+        "summary": "SUV elétrico compacto de 2024, de único dono, com cerca de 34 mil km e revisões feitas na concessionária. Traz blindagem com vidros especiais, sistema de som premium, conectividade e porta-malas elétrico.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1476.1430209999999
+      "latencyMs": 1566.1509850000002
     },
     {
       "id": "r13",
@@ -624,9 +625,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 730,
-        "outputTokens": 445,
+        "outputTokens": 446,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -647,7 +648,7 @@
           "teto panorâmico",
           "câmera 360°",
           "assistente semiautônomo de estacionamento",
-          "bancos dianteiros com ajuste elétrico e aquecimento no motorista",
+          "bancos dianteiros com ajustes elétricos e aquecimento do motorista",
           "som Harman Kardon",
           "central multimídia de 12,3 polegadas com Google integrado",
           "Apple CarPlay",
@@ -660,13 +661,13 @@
         "sellerType": "loja",
         "contactPhone": "+5575900000105",
         "contactIgUsername": "safetycarmotors",
-        "summary": "SUV elétrico de 2024 com menos de 20 mil quilômetros, emplacado em 2026 e com primeira revisão ainda por fazer. Traz uma lista extensa de itens de conforto, multimídia e assistências de condução.",
+        "summary": "SUV elétrico de 2024 com apenas 18 mil quilômetros rodados, com garantia de fábrica e da bateria ainda vigentes. Traz pacote completo de equipamentos de conforto, multimídia e assistências de direção.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1965.4436529999994
+      "latencyMs": 1992.4625910000004
     },
     {
       "id": "r14",
@@ -674,45 +675,45 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 736,
-        "outputTokens": 416,
+        "outputTokens": 390,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
         "modelId": "xc60",
         "engineId": "t8",
         "trimId": "ultimate-dark",
-        "versionText": "T8 ULTIMATE DARK HíBRIDO",
+        "versionText": "T8 Ultimate Dark",
         "yearFab": 2023,
         "yearModel": 2024,
         "km": 26000,
         "priceCents": 28500000,
         "city": null,
         "uf": null,
-        "color": "preto",
+        "color": null,
         "transmission": "automatico",
         "fuel": "hibrido_plugin",
         "options": [
           "teto solar panorâmico",
           "som Harman/Kardon",
+          "bancos com aquecimento",
+          "rodas aro 21",
           "câmera de ré 360°",
           "faróis de LED",
-          "bancos elétricos e aquecidos",
-          "rodas aro 21",
-          "central multimídia",
-          "sistema City Safety com frenagem autônoma"
+          "bancos elétricos",
+          "central multimídia"
         ],
         "sellerType": "loja",
         "contactPhone": "+5575900000106",
         "contactIgUsername": "safetycarmotors",
-        "summary": "SUV híbrido plug-in de 2024 com baixa quilometragem, câmbio automático de 8 marchas e cerca de 462 cv combinando motor elétrico e a combustão. Traz acabamento interno com detalhes amadeirados, rodas de 21 polegadas e uma ampla lista de itens de conforto e segurança.",
+        "summary": "SUV híbrido plug-in de 2024 com baixa quilometragem, potência combinada de 462 cv e aceleração de 0 a 100 km/h em 4,8 segundos. Traz teto solar panorâmico, sistema de som Harman/Kardon, rodas de 21 polegadas e câmera de ré 360°.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 2022.94927
+      "latencyMs": 1880.8380980000002
     },
     {
       "id": "r15",
@@ -720,9 +721,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 641,
-        "outputTokens": 377,
+        "outputTokens": 353,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -741,26 +742,24 @@
         "fuel": "gasolina",
         "options": [
           "tração integral",
-          "painel digital TFT",
-          "bancos de couro Nappa",
           "teto solar panorâmico",
-          "faróis Full LED",
+          "bancos em couro",
+          "painel digital TFT",
+          "faróis full LED",
           "rodas de liga leve 20\"",
           "piloto automático adaptativo",
-          "Apple CarPlay e Android Auto",
-          "keyless entry e start",
-          "porta-malas elétrico"
+          "câmera de ré"
         ],
         "sellerType": "loja",
         "contactPhone": "+5511900000107",
         "contactIgUsername": "webcarsbrasil",
-        "summary": "SUV de 2019 com motor turbo de 254 cv e tração integral, equipado com pacote completo de conforto, multimídia e segurança ativa. Traz bancos de couro, teto panorâmico e faróis full LED.",
+        "summary": "SUV de 2019 com tração integral, motor turbo de 254 cv e pouco mais de 84 mil quilômetros rodados. Traz bancos de couro, teto panorâmico, painel digital e um amplo pacote de assistências à condução.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1765.653373
+      "latencyMs": 1834.1160840000002
     },
     {
       "id": "r16",
@@ -768,9 +767,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 575,
-        "outputTokens": 375,
+        "outputTokens": 416,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -791,25 +790,26 @@
           "teto solar panorâmico",
           "tração integral",
           "7 lugares",
-          "head up display",
-          "sistema de visão 360°",
+          "head-up display",
+          "visão 360°",
           "cockpit digital de 12,3\"",
           "controle de cruzeiro adaptativo",
-          "bancos com ajuste elétrico",
+          "sistema de áudio de alta performance",
+          "aquecimento nos bancos traseiros",
+          "ar condicionado digital de 4 zonas",
           "porta-malas elétrico",
-          "faróis full LED",
-          "rodas de 19\""
+          "faróis full LED"
         ],
         "sellerType": "loja",
         "contactPhone": "+5511900000108",
         "contactIgUsername": "webcarsbrasil",
-        "summary": "SUV de sete lugares com motor 2.0 turbo de 320 cv e tração integral, revisado recentemente e sem retoques na pintura. Traz painel digital, sistema de visão 360° e faróis full LED.",
+        "summary": "SUV de 2018 com cerca de 90 mil quilômetros, recém-revisado e sem retoques na pintura. Traz tração integral, sete lugares e um pacote completo de conforto e tecnologia, incluindo painel digital e assistências de condução.",
         "redFlags": [],
-        "confidence": 0.9,
+        "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1720.5695360000009
+      "latencyMs": 1967.773988
     },
     {
       "id": "r17",
@@ -817,9 +817,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 836,
-        "outputTokens": 420,
+        "outputTokens": 440,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -839,27 +839,27 @@
         "options": [
           "rodas de 22 polegadas",
           "câmbio de cristal Orrefors",
-          "head-up display",
-          "tração integral",
-          "alerta de ponto cego",
-          "freios Akebono",
-          "sistema de som Harman Kardon",
           "teto duplo panorâmico",
-          "bancos dianteiros ventilados",
-          "suspensão esportiva Öhlins",
+          "som Harman Kardon",
+          "interior em couro Soft",
           "câmera 360 graus",
+          "head-up display",
+          "tração integral 4x4",
+          "controle de cruzeiro adaptativo",
+          "alerta de ponto cego",
+          "suspensão esportiva Öhlins",
           "garantia estendida Volvo até 12/2027"
         ],
         "sellerType": "loja",
         "contactPhone": "+5511900000109",
         "contactIgUsername": "webcarsbrasil",
-        "summary": "SUV híbrido plug-in de 2024 com baixa quilometragem, pintura prata e pacote completo de tecnologias de assistência ao motorista. Traz suspensão esportiva, interior em couro e garantia de fábrica estendida.",
+        "summary": "SUV híbrido plug-in de 2024 com cerca de 18 mil quilômetros rodados, pintura prata e versão Polestar. Traz tração integral, suspensão esportiva Öhlins, bancos ventilados e um amplo pacote de assistências de segurança e conectividade.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 2163.0448069999993
+      "latencyMs": 2083.2711120000013
     },
     {
       "id": "r18",
@@ -867,9 +867,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 812,
-        "outputTokens": 370,
+        "outputTokens": 398,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -888,24 +888,26 @@
         "fuel": "hibrido_plugin",
         "options": [
           "tração integral",
+          "farol full LED",
+          "alerta de ponto cego",
           "teto solar panorâmico",
           "sistema de som Harman Kardon",
-          "alerta de ponto cego",
-          "controle de cruzeiro adaptativo",
           "câmera de ré",
+          "controle de cruzeiro adaptativo",
+          "frenagem automática de emergência",
           "bancos elétricos com memória",
-          "revisões em concessionária"
+          "revisões feitas em concessionária"
         ],
         "sellerType": "loja",
         "contactPhone": "+5511900000110",
         "contactIgUsername": "webcarsbrasil",
-        "summary": "Sedã híbrido plug-in de 2020 com cerca de 53 mil quilômetros e todas as revisões feitas na rede autorizada. Traz tração integral, teto panorâmico, som premium e um pacote completo de assistências à condução.",
+        "summary": "Sedã híbrido plug-in de 2020 com cerca de 53 mil quilômetros rodados e todas as revisões feitas na rede autorizada. Traz tração integral, teto panorâmico, sistema de som premium e um amplo pacote de assistências à condução.",
         "redFlags": [],
         "confidence": 0.93,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1887.0719230000004
+      "latencyMs": 2033.2829720000009
     },
     {
       "id": "r19",
@@ -924,9 +926,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 942,
-        "outputTokens": 364,
+        "outputTokens": 347,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -948,20 +950,21 @@
           "teto solar elétrico",
           "chave presencial",
           "central multimídia Sensus Connect",
-          "GPS integrado",
           "piloto automático",
-          "City Safety de frenagem automática"
+          "City Safety com frenagem automática",
+          "sensores de estacionamento traseiros",
+          "faróis de xenônio"
         ],
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": null,
-        "summary": "Perua premium de 2015 com único dono e histórico de revisões na concessionária, apresentada com pintura envelopada em cinza fosco. Traz motor turbo de 245 cv, câmbio automático de oito marchas e equipamentos de conforto e segurança como couro, teto solar e frenagem automática de emergência.",
+        "summary": "Perua premium de 2015 com único dono, baixa quilometragem e revisões feitas na concessionária. Veículo com envelopamento cinza fosco, motor de 245 cv e equipamentos de conforto e segurança.",
         "redFlags": ["sem_contato"],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1687.5780489999997
+      "latencyMs": 1656.560034
     },
     {
       "id": "r21",
@@ -969,9 +972,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 395,
-        "outputTokens": 311,
+        "outputTokens": 299,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -992,13 +995,13 @@
         "sellerType": "loja",
         "contactPhone": null,
         "contactIgUsername": null,
-        "summary": "SUV híbrido plug-in de 2024 com pouco mais de 16 mil quilômetros rodados, com desempenho elevado e acabamento de alto padrão. Possui tração integral e câmbio automático de oito marchas.",
-        "redFlags": ["pedido_de_sinal", "sem_contato"],
-        "confidence": 0.93,
+        "summary": "SUV híbrido plug-in de 2024 com baixa quilometragem e potência combinada de 462 cv. Traz tração integral e câmbio automático de oito marchas, com foco em desempenho aliado ao conforto.",
+        "redFlags": ["sem_contato"],
+        "confidence": 0.9,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1428.953023
+      "latencyMs": 1499.3915369999995
     },
     {
       "id": "r22",
@@ -1028,9 +1031,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 898,
-        "outputTokens": 414,
+        "outputTokens": 492,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -1038,7 +1041,7 @@
         "engineId": "t5",
         "trimId": "momentum",
         "versionText": "T5 Momentum AWD",
-        "yearFab": 2019,
+        "yearFab": null,
         "yearModel": 2019,
         "km": null,
         "priceCents": 12490000,
@@ -1049,27 +1052,28 @@
         "fuel": "gasolina",
         "options": [
           "tração integral AWD",
-          "bancos de couro",
+          "bancos revestidos em couro",
+          "banco do motorista com ajustes elétricos e memória",
+          "suporte lombar elétrico",
+          "ar-condicionado digital de duas zonas",
           "painel digital de 12,3 polegadas",
-          "central multimídia de 9 polegadas",
+          "central multimídia Sensus de 9 polegadas",
           "Apple CarPlay e Android Auto",
-          "piloto automático",
-          "câmera de ré",
-          "faróis Full LED",
-          "rodas de 19 polegadas",
-          "frenagem automática de emergência",
-          "partida sem chave"
+          "carregador por indução",
+          "som High Performance com 8 alto-falantes",
+          "partida sem chave",
+          "piloto automático"
         ],
         "sellerType": "loja",
         "contactPhone": "+5551900000111",
         "contactIgUsername": null,
-        "summary": "SUV premium de 2019 com motor turbo de 2.0 litros, câmbio automático de 8 marchas e tração integral. Traz bancos de couro, painel digital, multimídia com conectividade, pacote completo de assistências de segurança e iluminação em LED.",
+        "summary": "SUV premium de 2019 com motor turbo e tração integral, equipado com câmbio automático de 8 marchas e interior em couro. Traz pacote completo de conforto, tecnologia e itens de segurança ativa.",
         "redFlags": [],
-        "confidence": 0.97,
+        "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 2109.3538310000004
+      "latencyMs": 2180.149593
     },
     {
       "id": "r25",
@@ -1110,9 +1114,9 @@
       "prefilterReason": "ok",
       "usage": {
         "inputTokens": 642,
-        "outputTokens": 373,
+        "outputTokens": 374,
         "cacheWriteTokens": 0,
-        "cacheReadTokens": 5840
+        "cacheReadTokens": 5926
       },
       "normalized": {
         "isListing": true,
@@ -1137,20 +1141,20 @@
           "painel digital",
           "adaptive cruise control",
           "câmera 360°",
-          "keyless",
           "Apple CarPlay",
+          "keyless",
           "rodas 20 polegadas"
         ],
         "sellerType": "desconhecido",
         "contactPhone": "+5543900000113",
         "contactIgUsername": null,
-        "summary": "SUV híbrido plug-in de 2024 com baixa quilometragem, único dono e revisões feitas na rede Volvo. Traz pacote de assistências à condução, painel digital e acabamento completo com sistema de som premium.",
+        "summary": "SUV híbrido plug-in de 2024 com baixíssima quilometragem, único dono e revisões em dia na rede Volvo. Conta com ampla lista de equipamentos de conforto, tecnologia e assistências à condução.",
         "redFlags": [],
         "confidence": 0.95,
         "issues": []
       },
       "model": "claude-haiku-5-5",
-      "latencyMs": 1822.497749
+      "latencyMs": 1738.1482099999994
     },
     {
       "id": "r29",

@@ -5,6 +5,7 @@ import { FUELS } from "@/lib/taxonomy";
 export const RED_FLAGS = [
   "abaixo_do_mercado",
   "repasse",
+  "agio",
   "pedido_de_sinal",
   "documento_pendente",
   "leilao",
@@ -16,6 +17,7 @@ export type RedFlag = (typeof RED_FLAGS)[number];
 export const RED_FLAG_LABELS: Record<RedFlag, string> = {
   abaixo_do_mercado: "Preço anunciado como muito abaixo do mercado/FIPE",
   repasse: "Repasse",
+  agio: "Venda de ágio (o comprador assume o financiamento)",
   pedido_de_sinal: "Pede sinal ou reserva antecipada",
   documento_pendente: "Documento, IPVA ou débitos pendentes",
   leilao: "Veículo de leilão",

@@ -293,8 +293,23 @@ function checkSummary(
 // Red flags found by rule (in addition to the model's)
 // ---------------------------------------------------------------------------
 
+/**
+ * Repasse and ágio are shown to buyers, so they need the caption's own words:
+ * the model's flag alone is not enough, and "não é repasse" does not count.
+ */
+const REPASSE = /\b(repasse|repasses|repasso|repassando|repassar|repassamos)\b/;
+const AGIO =
+  /\bagio\b|\bassum(ir|e|a|o) (as |a |suas )?(parcelas|prestacoes|financiamento)\b|\b(transfiro|passo|repasso) (o )?financiamento\b/;
+const NEGATED =
+  /\b(nao (e|eh|sou|faco|fazemos|trabalho com|trabalhamos com|aceito)|nada de|sem|nunca)\s+(\w+\s+){0,2}?(repass\w*|agio)\b/g;
+
+/** Whether the caption itself (negations removed) calls the sale a repasse / an ágio. */
+export function writtenSaleType(folded: string): { repasse: boolean; agio: boolean } {
+  const text = folded.replace(NEGATED, " ");
+  return { repasse: REPASSE.test(text), agio: AGIO.test(text) };
+}
+
 const RED_FLAG_RULES: Array<[RedFlag, RegExp]> = [
-  ["repasse", /\brepasse\b/],
   [
     "pedido_de_sinal",
     /\b(sinal|reserva)\b.{0,40}\b(pix|deposit|transfer|antecipad)|\b(pix|deposit)\w*.{0,40}\b(sinal|reserva)\b/,
@@ -480,8 +495,21 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
   const folded = foldText(ctx.caption);
   const redFlags = new Set<RedFlag>(x.red_flags.filter((f) => RED_FLAGS.includes(f)));
   for (const [flag, re] of RED_FLAG_RULES) if (re.test(folded)) redFlags.add(flag);
+  const saleType = writtenSaleType(folded);
+  for (const flag of ["repasse", "agio"] as const) {
+    if (saleType[flag]) redFlags.add(flag);
+    else redFlags.delete(flag);
+  }
   if (!contactPhone && !contactIgUsername) redFlags.add("sem_contato");
   else redFlags.delete("sem_contato");
+  // A repasse or ágio that asks for a deposit up front is a common scam pattern.
+  if ((redFlags.has("repasse") || redFlags.has("agio")) && redFlags.has("pedido_de_sinal")) {
+    issue(
+      "repasse_com_sinal",
+      "Repasse ou ágio com pedido de sinal: padrão comum de golpe, revisar antes de publicar.",
+      0.5,
+    );
+  }
 
   // Compliance: the summary must be in our own words.
   const summary = stripContactSentences(x.summary_ptbr.trim());
