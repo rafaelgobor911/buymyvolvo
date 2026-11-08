@@ -26,26 +26,28 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ## Comandos
 
-| Comando                | O que faz                                                                                    |
-| ---------------------- | -------------------------------------------------------------------------------------------- |
-| `npm run dev`          | Servidor de desenvolvimento (http://localhost:3000)                                          |
-| `npm run build`        | Build de produção                                                                            |
-| `npm run lint`         | ESLint (`lint:fix` para corrigir)                                                            |
-| `npm run format`       | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)                     |
-| `npm run typecheck`    | Gera os tipos de rota e roda `tsc --noEmit`                                                  |
-| `npm test`             | Vitest (`test:watch` em modo watch)                                                          |
-| `npm run test:e2e`     | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`                |
-| `npm run check`        | format:check + lint + typecheck + test + build (critério de fim de fase)                     |
-| `npm run db:setup`     | Aplica migrations pendentes e carrega os anúncios fictícios                                  |
-| `npm run db:reset`     | **Só local:** apaga tudo, migra e popula de novo                                             |
-| `npm run db:generate`  | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript                 |
-| `npm run extract:eval` | Avalia a extração com IA nas 40 legendas de teste (`-- --offline`: só pré-filtro, sem custo) |
+| Comando                     | O que faz                                                                                                |
+| --------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `npm run dev`               | Servidor de desenvolvimento (http://localhost:3000)                                                      |
+| `npm run build`             | Build de produção                                                                                        |
+| `npm run lint`              | ESLint (`lint:fix` para corrigir)                                                                        |
+| `npm run format`            | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)                                 |
+| `npm run typecheck`         | Gera os tipos de rota e roda `tsc --noEmit`                                                              |
+| `npm test`                  | Vitest (`test:watch` em modo watch)                                                                      |
+| `npm run test:e2e`          | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`                            |
+| `npm run check`             | format:check + lint + typecheck + test + build (critério de fim de fase)                                 |
+| `npm run db:setup`          | Aplica migrations pendentes e carrega os anúncios fictícios                                              |
+| `npm run db:reset`          | **Só local:** apaga tudo, migra e popula de novo                                                         |
+| `npm run db:generate`       | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript                             |
+| `npm run extract:eval`      | Avalia a extração com IA nas 40 legendas de teste (`-- --offline`: só pré-filtro, sem custo)             |
+| `npm run job -- <job\|all>` | Jobs de coleta e manutenção (`--dry-run`, `--fixtures`, `--force`, `--only=@loja`, `--limit=N`)          |
+| `npm run sources -- <cmd>`  | Contas e hashtags monitoradas: `list`, `add @loja`, `add-hashtag tag`, `pause`, `resume`, `add-fixtures` |
 
 ## Estrutura
 
 ```
 src/
-  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar)
+  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /api/cron/[job]
   components/            componentes do site; ui/ = shadcn; search/ = busca e filtros
   content/               textos editoriais (checklists por modelo, buscas populares)
   lib/
@@ -55,9 +57,12 @@ src/
     listings/            queries (server-only), format (pt-BR)
     db/                  pool Postgres + asAnon()
     extraction/          pré-filtro, schema, prompt, extract (Claude), normalize, dedupe, pipeline
-    instagram/           (Fase 3) · leads/ (Fase 4)
+    instagram/           cliente da Graph API (graph.ts), recursos (api.ts) e Instagram fictício (fixtures.ts)
+    jobs/                executor (trava + job_runs + dry-run), coleta, manutenção e registro dos jobs
+    leads/               (Fase 4)
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
 scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
+scripts/job.ts           roda jobs localmente · scripts/sources.ts: fontes monitoradas
 evals/extraction/        40 legendas fictícias com gabarito + cálculo do placar
 supabase/
   migrations/            SQL versionado (formato Supabase CLI)
@@ -96,6 +101,17 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - "Único dono" descreve o histórico do carro, não o vendedor (lojas também usam): não define `seller_type`.
 - Um anúncio `removed` nunca volta: uma repostagem do mesmo carro é ignorada.
 
+## Coleta do Instagram (Fase 3)
+
+- Jobs em `src/lib/jobs/` (registro em `index.ts`), disparados por `npm run job` ou por `GET/POST /api/cron/<job>` com `Authorization: Bearer <CRON_SECRET>` (`?dry_run=1` para ensaio): `collect-business-discovery` (2–3h), `collect-hashtags` (1h), `process-posts`, `token-health` e `expire-listings` (diários).
+- Todo job roda por `runJob()`: trava com prazo em `job_locks` (rodada concorrente vira `skipped`), registro em `job_runs` (estatísticas, tokens, custo de IA, alertas). Escritas só via `ctx.write()`, que no `--dry-run` desfaz a transação no final.
+- Jobs recebem `sql` e `JobDeps` por parâmetro e não importam `server-only`: o mesmo código roda no CLI, nos testes e no Next. Credenciais são exigidas só quando o job usa (`requireKeys` dentro de `createJobDeps`).
+- Cliente da Graph (`instagram/graph.ts`): token **no header**, nunca na URL; `appsecret_proof` quando há `META_APP_SECRET`; erros classificados (`rate_limit`, `auth`, `permission`, `not_found`, `transient`). Não peça `media_url` nem métricas.
+- **Fixtures:** `--fixtures` usa o Instagram fictício de `instagram/fixtures.ts` e só toca fontes terminadas em `.demo`/`_demo`; sem a flag, essas fontes são ignoradas. Novos casos de API entram primeiro nas fixtures, com o formato observado na API real.
+- **Orçamento de hashtags:** qualquer consulta a uma hashtag nova gasta uma das 30 vagas por 7 dias da conta (`ig_hashtag_search` já conta). Não teste hashtags reais à toa; o dry-run com a API real não consulta hashtags que gastariam vaga nova.
+- Ciclo de vida: legenda editada para "vendido" → `sold`; post que sumiu do trecho lido → `expired`; anúncio só de hashtag mostra "pode não estar mais disponível" após `hashtag_stale_after_days` e expira após `hashtag_expire_after_days`.
+- Nesta sandbox, o `fetch` do Node precisa de `NODE_USE_ENV_PROXY=1` para chegar à API; `ANTHROPIC_API_KEY` vem de `BUYMYVOLVO_ANTHROPIC_API_KEY` (ver `docs/plano.md`).
+
 ## Variáveis de ambiente
 
 - Segredos **só** em variáveis de ambiente. **Nunca** commite `.env*` (o `.gitignore` já bloqueia). Mantenha `.env.example` atualizado a cada variável nova.
@@ -120,6 +136,9 @@ Também não faça:
 - Não pule fases.
 
 ## Fatos da API da Meta (conferidos em nov/2026; detalhes em `docs/meta-setup.md`)
+
+- **Conta:** @buymyvolvo, app "Buy My Volvo" em modo de desenvolvimento, token de usuário de 60 dias (vence 07/01/2027). Página no Business Suite ⇒ o token precisa também de `business_management` e `ads_read`.
+- **Confirmado em 08/11/2026:** Business Discovery funciona com _Standard Access_ (sem App Review, sem CNPJ). Hashtag Search também respondeu em modo de desenvolvimento (contrariando a doc); tratar como bônus. Conta inexistente, pessoal ou com restrição de idade responde `110`/`2207013`.
 
 - Graph API vigente: **v27.0** (`META_GRAPH_VERSION`).
 - **Business Discovery:** `GET /{IG_USER_ID}?fields=business_discovery.username(x){...}`. Permissões: `instagram_basic`, `instagram_manage_insights`, `pages_read_engagement`. Paginação por `before`/`after` montados à mão. Contas age-gated e pessoais não retornam. `GET` direto num media retornado falha.

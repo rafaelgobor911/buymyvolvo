@@ -2,12 +2,39 @@
 
 > **Conferido em 07/11/2026** na documentação oficial (developers.facebook.com, Instagram Platform). A Meta muda telas e nomes com frequência, então os nomes de menus podem variar um pouco. Quando algo divergir, vale o que está no painel. Os pontos que só um teste real confirma estão marcados com **⚠️ confirmar**.
 
-## Resumo em 30 segundos
+## Resumo em 30 segundos (status em 08/11/2026)
 
-1. **O que temos que fazer já:** decidir qual conta do Instagram será a "dona" da integração, criar o portfólio empresarial (com CNPJ), criar o app na Meta e **começar a Verificação da Empresa** (Business Verification). A verificação é o item mais lento e não depende de código.
-2. **O Business Discovery (fonte principal) provavelmente não precisa de App Review.** A Meta diz que, se o app só usa a sua própria conta profissional, o _Standard Access_ basta. Nosso app consulta outras contas **a partir da nossa** conta, então deve funcionar sem revisão. **⚠️ confirmar** com uma chamada real no Graph API Explorer (passo 12).
-3. **O Hashtag Search (fonte complementar) exige App Review** do recurso _Instagram Public Content Access_. A revisão pede um site público com política de privacidade e um screencast do fluxo funcionando, então só faz sentido enviar quando as Fases 3 e 5 estiverem prontas e publicadas.
-4. **Token:** em vez do token de usuário de 60 dias, recomendo um **token de System User** do nosso portfólio, que pode não expirar. O código suporta os dois e o job de monitoramento alerta antes de qualquer expiração.
+1. **Conectado:** a conta **@buymyvolvo** (profissional, ligada à Página "Buy My Volvo" no Meta Business Suite) faz as consultas pelo app **"Buy My Volvo"**, em modo de desenvolvimento.
+2. **Business Discovery confirmado sem App Review e sem Verificação da Empresa** (_Standard Access_): 6 lojas reais lidas (300 posts) no teste da Fase 3. É a fonte principal.
+3. **Hashtag Search também respondeu** em modo de desenvolvimento, com o token da nossa própria conta (`ig_hashtag_search`, `top_media`, `recent_media`), embora a documentação peça o App Review de _Instagram Public Content Access_. Tratamos como bônus: se a Meta passar a exigir, o job registra o erro de permissão e segue.
+4. **CNPJ e Verificação da Empresa** só são necessários para o _Advanced Access_ (App Review). Hoje nada do que usamos depende deles.
+5. **Token:** token de usuário de 60 dias gerado no Graph API Explorer (o atual vence em **07/01/2027**). O job `token-health` alerta 10 dias antes. O token de System User exige portfólio e pode substituir este depois, sem mudar código.
+
+## Caminho mínimo, sem CNPJ (o que fizemos)
+
+1. Instagram → Configurações → _Tipo de conta e ferramentas_ → **conta profissional (Empresa)**.
+2. **Página do Facebook** ligada à conta (Instagram → Editar perfil → Página). A Página pode ser criada pelo perfil pessoal ou pelo Meta Business Suite.
+3. developers.facebook.com → **Criar app** do tipo **Business** → produto **Instagram** → _configuração da API com login do Facebook_. Anote o **App ID** e o **App Secret** (32 caracteres, em _Configurações do app → Básico_).
+4. **Graph API Explorer** → escolha o app → _Obter token de acesso do usuário_ com `pages_show_list`, `pages_read_engagement`, `instagram_basic` e `instagram_manage_insights`. **Se a Página está num portfólio do Business Suite**, inclua também `business_management` e `ads_read` (sem elas, `me/accounts` volta vazio e o Business Discovery recusa). Na janela de autorização, **marque a Página e a conta do Instagram**.
+5. No Explorer, `me/accounts?fields=name,instagram_business_account{id,username}` mostra o **`IG_BUSINESS_USER_ID`** (começa com `1784`).
+6. Ícone ⓘ do token → _Ferramenta de Token de Acesso_ → **Estender token de acesso**: é o `IG_LONG_LIVED_TOKEN` (~60 dias).
+7. Variáveis: `META_APP_ID`, `META_APP_SECRET`, `IG_BUSINESS_USER_ID`, `IG_LONG_LIVED_TOKEN`. Para conferir tudo: `npm run job -- token-health`.
+
+**Renovação (a cada ~2 meses, ou quando o `token-health` avisar):** repita os passos 4 e 6 e troque `IG_LONG_LIVED_TOKEN`.
+
+## Comportamentos observados na API real (08/11/2026)
+
+| Situação                                                    | Resposta                                                                                    |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Conta inexistente, pessoal ou com restrição de idade        | HTTP 400, `code 110`, `error_subcode 2207013` ("Invalid user id")                           |
+| Erro temporário                                             | HTTP 500, `code 2`, `is_transient: true`: o cliente tenta de novo com espera crescente      |
+| Token no header `Authorization: Bearer` + `appsecret_proof` | Aceito (o token nunca vai na URL)                                                           |
+| Paginação do Business Discovery                             | Só cursores; a página seguinte é `media.after(<cursor>).limit(n)`, sem repetir posts        |
+| `recently_searched_hashtags`                                | Devolve só os IDs das hashtags (sem o nome)                                                 |
+| Cabeçalhos de uso                                           | Business Discovery devolve `X-App-Usage`; `me/accounts` devolve `X-Business-Use-Case-Usage` |
+| Hashtag consultada                                          | Conta no limite de 30/7 dias já na busca do ID (`ig_hashtag_search`)                        |
+
+As etapas A a E abaixo continuam valendo como **caminho completo** (portfólio com CNPJ, Verificação da Empresa, System User e App Review), para quando ele for necessário.
 
 ## O que mudou em relação ao PROMPT.md
 
@@ -43,7 +70,7 @@ As três variantes oficiais:
 1. **Escolha a conta do Instagram** que fará as consultas: @madebysweden.br ou uma conta nova do marketplace (**pendente**). Todo o orçamento de hashtags (30 por 7 dias) é dessa conta.
 2. **Garanta que ela é profissional:** no app do Instagram, Configurações → _Tipo de conta e ferramentas_ → _Mudar para conta profissional_ → **Empresa** (Business).
 3. **Crie (ou use) uma Página do Facebook** para o marketplace e vincule a conta do Instagram a ela: na Página, Configurações → _Contas vinculadas_ → Instagram. Quem for administrar precisa ter controle total da Página.
-4. **Crie o portfólio empresarial** em business.facebook.com (Meta Business Suite) **com o CNPJ que vai operar o marketplace**. Adicione a Página e a conta do Instagram como ativos do portfólio.
+4. _(Caminho completo; não é necessário para o Business Discovery.)_ **Crie o portfólio empresarial** em business.facebook.com (Meta Business Suite) **com o CNPJ que vai operar o marketplace**. Adicione a Página e a conta do Instagram como ativos do portfólio.
 5. **Ative a autenticação em dois fatores** em todas as contas de administrador. A Meta exige isso para várias ações do portfólio.
 
 ### Etapa B: app no Meta for Developers
@@ -58,7 +85,7 @@ As três variantes oficiais:
 9. Anote o **App ID** e o **App Secret**. Eles vão para as variáveis de ambiente (`META_APP_ID` e `META_APP_SECRET`) **na Vercel/no `.env.local`**. Não envie por chat, e-mail nem commit.
 10. Em _Funções do app_, adicione como administradores ou testadores as pessoas que vão operar o sistema.
 
-### Etapa C: Verificação da Empresa (comece já)
+### Etapa C: Verificação da Empresa (quando houver CNPJ)
 
 11. Em business.facebook.com → _Configurações do negócio_ → _Central de segurança_ → **Iniciar verificação**. Você vai precisar de:
     - razão social e CNPJ exatamente como na Receita

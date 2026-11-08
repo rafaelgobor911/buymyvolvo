@@ -2,15 +2,15 @@
 
 ## Decisões tomadas
 
-| Tema                          | Decisão                                                                                                      |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Nome e domínio                | **Provisório**: `NEXT_PUBLIC_SITE_NAME` (padrão `[NOME_DO_SITE]`). Definir até a Fase 7                      |
-| Relação com a Made by Sweden  | **Domínio próprio + links cruzados** (conteúdo "o que checar neste modelo", divulgação na comunidade)        |
-| Conta do Instagram para a API | **Pendente** (@madebysweden.br ou conta nova). O desenvolvimento segue com fixtures                          |
-| Repositório                   | GitHub (você cria e conecta; eu faço o push)                                                                 |
-| Gerenciador de pacotes        | npm (Node 22)                                                                                                |
-| UI                            | shadcn/ui no estilo `base-nova` (primitivas Base UI), Geist, neutros + azul-aço, claro/escuro                |
-| Next.js                       | 16.4 com Cache Components + Partial Prefetching (padrão do create-next-app; serão o padrão na próxima major) |
+| Tema                          | Decisão                                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Nome e domínio                | **Provisório**: `NEXT_PUBLIC_SITE_NAME` (padrão `[NOME_DO_SITE]`). Definir até a Fase 7                            |
+| Relação com a Made by Sweden  | **Domínio próprio + links cruzados** (conteúdo "o que checar neste modelo", divulgação na comunidade)              |
+| Conta do Instagram para a API | **@buymyvolvo**, ligada à Página "Buy My Volvo" (Business Suite) e ao app "Buy My Volvo" (modo de desenvolvimento) |
+| Repositório                   | GitHub (você cria e conecta; eu faço o push)                                                                       |
+| Gerenciador de pacotes        | npm (Node 22)                                                                                                      |
+| UI                            | shadcn/ui no estilo `base-nova` (primitivas Base UI), Geist, neutros + azul-aço, claro/escuro                      |
+| Next.js                       | 16.4 com Cache Components + Partial Prefetching (padrão do create-next-app; serão o padrão na próxima major)       |
 
 ## Ajustes propostos ao PROMPT.md (para sua aprovação)
 
@@ -47,7 +47,9 @@ A Business Verification depende do **CNPJ** e, idealmente, do **domínio**. Vale
 ## Ambiente desta sessão (nuvem)
 
 - Hosts liberados no ambiente Default: `ui.shadcn.com` (componentes) e `developers.facebook.com` (documentação).
-- Para chamadas reais na Fase 3, será preciso liberar `graph.facebook.com`.
+- `graph.facebook.com` está liberado no ambiente `buymyvolvo`. **Salvar variáveis nas configurações do ambiente tem apagado essa liberação**: no início de cada sessão, conferir e liberar de novo se for preciso.
+- O `fetch` do Node só passa pelo proxy desta sandbox com `NODE_USE_ENV_PROXY=1` (em produção não é necessário): `NODE_USE_ENV_PROXY=1 npm run job -- ...`.
+- Variáveis da Meta no ambiente: `META_APP_ID`, `META_APP_SECRET`, `IG_LONG_LIVED_TOKEN`, `IG_BUSINESS_USER_ID`.
 - A sessão na nuvem não repassa `ANTHROPIC_API_KEY` aos comandos. A chave fica também em `BUYMYVOLVO_ANTHROPIC_API_KEY` (variável do ambiente, não lida pelo código) e a avaliação roda com `ANTHROPIC_API_KEY="$BUYMYVOLVO_ANTHROPIC_API_KEY" npm run extract:eval`.
 - E2E aqui: `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium npm run test:e2e`. Ao retomar uma sessão, o Postgres pode estar parado: `pg_ctlcluster 16 main start`.
 - Docker não roda aqui, então não dá para usar o Supabase CLI local. Para a Fase 1 há duas opções: (a) você cria um projeto Supabase na nuvem e libera o host dele, ou (b) uso o **Postgres 16 local** do container, com as mesmas migrations, e conecto ao Supabase depois. Decidir no início da Fase 1.
@@ -100,6 +102,41 @@ Segunda rodada: Polestar Engineered na XC60 (2019–2026) e no S60 (2019–2022)
 - **"Único dono" (prompt `.3`):** em 4 legendas fictícias fora do gabarito, 3 repetições cada, o prompt `.2` acertou 9/12 ("único dono" sozinho virava particular) e o `.3` acertou 12/12, sem mudar o placar do gabarito.
 - O placar não mede resumo, cor nem `version_text`; esses foram revisados à mão em cada rodada (relatório final em `evals/extraction/reports/latest-claude-haiku-5-5.md`).
 
-## Próxima fase (Fase 2: extração com IA)
+## Fase 3: decisões
 
-Pré-filtro por regex, extração com Claude (tool use + Zod), normalização (telefone E.164, preço, km, anos), checagem de coerência com a taxonomia, deduplicação e 40 legendas de teste com gabarito. Saída: `npm run extract:eval`.
+| Tema                  | Decisão                                                                                                                                                                               |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acesso à Meta         | Business Discovery com _Standard Access_ (sem App Review, sem CNPJ). Hashtag Search respondeu em modo de desenvolvimento; tratado como bônus                                          |
+| Token                 | Usuário, 60 dias (vence 07/01/2027), renovação manual pelo Graph API Explorer; `token-health` diário alerta 10 dias antes. System User quando houver portfólio                        |
+| Cliente               | `fetch` + Zod, sem SDK. Token no header `Authorization` + `appsecret_proof`. Lê `X-App-Usage` e `X-Business-Use-Case-Usage` e para a coleta em 90%                                    |
+| Erros                 | Limite (4, 17, 32, 613, 80000–80014) e temporários (`is_transient`, 1, 2, 5xx): espera exponencial. Token inválido (190): o job falha. Conta pessoal (110): registra na fonte e segue |
+| Dados pedidos         | Sem `media_url` nem métricas: id, legenda, tipo, permalink e data                                                                                                                     |
+| Jobs                  | `collect-business-discovery` (2–3h), `collect-hashtags` (1h), `process-posts`, `token-health` e `expire-listings` (diários). Trava por prazo em `job_locks`, registro em `job_runs`   |
+| Dry-run               | O mesmo código numa transação desfeita. Com a API real, hashtags que gastariam vaga nova não são consultadas (a vaga da Meta não volta)                                               |
+| Ciclo de vida         | Legenda editada para "vendido" → `sold`. Post sumido do trecho lido → `expired`, se não houver outra fonte viva. Só de hashtag: aviso aos 14 dias, expira aos 30                      |
+| Orçamento de hashtags | Teto 25 de 30 (`hashtag_budget_max`), sincronizado com `recently_searched_hashtags`; buscas feitas fora do sistema entram como `ext_<id>`                                             |
+| Fixtures              | Mundo fictício com as respostas e erros reais; fontes terminadas em `.demo`/`_demo` (`npm run sources -- add-fixtures`, `npm run job -- all --fixtures`)                              |
+| Agendamento           | Rotas `/api/cron/<job>` (GET/POST) com `CRON_SECRET`. O agendador de produção fica para a Fase 7                                                                                      |
+
+### Teste real (08/11/2026)
+
+- **Coleta:** 6 lojas (@matellimotors, @nattamotors, @bslmotors, @autolandbrasil, @webcarsbrasil, @safetycarmotors), 300 posts em 12 requisições (~10 s), nenhum erro. O dry-run anterior não gravou nada.
+- **Pré-filtro:** 285 descartados sem IA: carros de outras marcas (cinco lojas são multimarca), vídeos de conteúdo sem venda (Matelli) e 4 posts "VENDIDO".
+- **Extração:** 15 posts → 11 anúncios publicados, 1 em moderação (o resumo repetiu 8 palavras da legenda) e 3 duplicados juntados ao anúncio original. Custo: US$ 0,0052.
+- **Conferência manual dos 12 anúncios:** modelo, motor, versão, ano, km e preço corretos. A cidade vem da bio quando a legenda não traz (Vinhedo, Ribeirão Preto).
+- **Hashtag:** #volvoavenda (1 de 25 vagas), sem posts nas últimas 24h.
+- **Token:** válido por mais 59 dias, com todas as permissões.
+
+### Pendências da Fase 3
+
+- **Aviso de prévia:** com dados reais no banco, o aviso "anúncios fictícios" (`NEXT_PUBLIC_DEMO_MODE`) fica incorreto. Desligar quando houver dados reais em produção (Fase 7).
+- **Resumo:** às vezes cita a loja ("entrega para todo o Brasil", "oferece blindagem"). Ajustar o prompt com um gabarito de legendas reais.
+- **Motor inferido:** "EX30 Ultra" virou `single-motor` sem a legenda dizer. Mesmo ajuste.
+- **Legenda editada** (além de "vendido") não reprocessa o anúncio, por exemplo numa mudança de preço.
+- **Lista de hashtags** a validar (sugestões em `docs/PROMPT.md` §7.3) antes de gastar vagas.
+- **Alertas** (token, orçamento, limite da Meta) hoje ficam em `job_runs` e no log; a notificação por e-mail entra com o admin (Fase 5) ou na Fase 7.
+- **Agendador de produção:** confirmar o limite de crons do plano da Vercel; alternativas: `pg_cron` do Supabase ou GitHub Actions (Fase 7).
+
+## Próxima fase (Fase 4: leads e WhatsApp)
+
+Rota `/r/[ref]`, registro de lead (IP e user agent só em hash com salt), deduplicação de cliques, mensagem configurável e fallback para o Instagram quando não houver telefone. Saída: o clique gera um lead e abre o WhatsApp com a mensagem certa (testado no celular).

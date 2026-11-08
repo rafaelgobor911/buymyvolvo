@@ -66,6 +66,8 @@ Isso aplica as migrations e carrega ~60 anúncios **fictícios**. Abra http://lo
 | `npm run db:setup` / `db:reset`           | Migrations + dados fictícios (`db:reset` apaga tudo; só funciona em banco local)                                          |
 | `npm run db:generate`                     | Regera a migration da taxonomia e o `supabase/seed.sql`                                                                   |
 | `npm run extract:eval`                    | Avalia a extração com IA nas 40 legendas de teste (precisa de `ANTHROPIC_API_KEY`; `-- --offline` avalia só o pré-filtro) |
+| `npm run job -- <job\|all>`               | Roda os jobs de coleta e manutenção (`--dry-run`, `--fixtures`, `--force`, `--only=@loja`, `--limit=N`); ver `CLAUDE.md`  |
+| `npm run sources -- <comando>`            | Contas e hashtags monitoradas: `list`, `add @loja`, `add-hashtag tag`, `pause`, `resume`, `add-fixtures`                  |
 
 ## Documentação
 
