@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { emptyUsage } from "@/lib/extraction/cost";
 import { type ExtractInput, ExtractionError, type ExtractResult } from "@/lib/extraction/extract";
-import { processPendingRawPosts } from "@/lib/extraction/pipeline";
+import { processPendingRawPosts, reprocessEditedCaptions } from "@/lib/extraction/pipeline";
 import type { Extraction } from "@/lib/extraction/schema";
 
 const url = process.env.TEST_DATABASE_URL;
@@ -64,6 +64,8 @@ const ANSWERS: Record<string, Extraction | "error"> = {
     fuel: "gasolina",
     phones: ["(41) 90000-0103"],
   },
+  // The seller edited the caption of [a]: new price and km.
+  "[r]": { ...base, price: 229900, price_text: "R$ 229.900", km: 42000, km_text: "42.000 km" },
 };
 
 const extract = vi.fn(async (input: ExtractInput): Promise<ExtractResult> => {
@@ -230,5 +232,32 @@ describe.skipIf(!url)("extraction pipeline (database)", () => {
       action: "listing.reopen",
       changes: { status: { from: "rejected", to: "pending_review" } },
     });
+  });
+
+  it("an edited caption is re-extracted once: price and km follow it, with the old values kept", async () => {
+    const a = (await listingOf("test-a"))!;
+    await sql`
+      update raw_posts set
+        caption = '[r] Vendo XC60 T8 Inscription 19/20, 42.000 km, agora R$ 229.900. (41) 90000-0101',
+        caption_changed_at = ${NOW}
+      where ig_media_id = 'test-a'`;
+    const stats = await reprocessEditedCaptions(sql, { extract, now: () => NOW });
+    expect(stats).toMatchObject({ checked: 1, updated: 1, errors: 0 });
+    const [row] = await sql<{ price_cents: string; km: number }[]>`
+      select price_cents, km from listings where id = ${a.id}`;
+    expect(row).toEqual({ price_cents: "22990000", km: 42000 });
+    const [entry] = await sql<{ action: string; changes: unknown; note: string }[]>`
+      select action, changes, note from audit_log
+      where entity = 'listing' and entity_id = ${a.id} order by at desc, id desc limit 1`;
+    expect(entry).toEqual({
+      action: "listing.caption_update",
+      changes: {
+        priceCents: { from: 23990000, to: 22990000 },
+        km: { from: 41000, to: 42000 },
+      },
+      note: "Legenda editada no Instagram",
+    });
+    // The same edit is not processed twice.
+    expect((await reprocessEditedCaptions(sql, { extract, now: () => NOW })).checked).toBe(0);
   });
 });

@@ -316,3 +316,110 @@ export async function processPendingRawPosts(
   }
   return stats;
 }
+
+export interface ReprocessStats {
+  checked: number;
+  updated: number;
+  errors: number;
+  usage: TokenUsage;
+  costUsd: number;
+}
+
+/**
+ * Captions edited on Instagram after extraction (raw_posts.caption_changed_at):
+ * re-extract once per edit and update the price and km of listings that are
+ * still the pipeline's work (not claimed by a seller). The previous values go
+ * to audit_log. "Vendido" edits are handled at collection time (ingest).
+ */
+export async function reprocessEditedCaptions(
+  sql: postgres.Sql,
+  deps: PipelineDeps,
+  options: { limit?: number } = {},
+): Promise<ReprocessStats> {
+  const posts = await sql<
+    (RawPostRow & { listing_id: string; price_cents: string | null; km: number | null })[]
+  >`
+    select rp.id, rp.ig_media_id, rp.caption, rp.ig_username, rp.posted_at,
+      s.type as source_type,
+      case when s.type = 'ig_business_account' then s.ig_biography end as bio,
+      l.id as listing_id, l.price_cents, l.km
+    from public.raw_posts rp
+    join public.listing_sources ls on ls.raw_post_id = rp.id and ls.is_primary
+    join public.listings l on l.id = ls.listing_id
+    left join public.sources s on s.id = rp.source_id
+    where rp.caption_changed_at is not null
+      and (rp.reprocessed_at is null or rp.reprocessed_at < rp.caption_changed_at)
+      and rp.processing_status = 'extracted' and rp.gone_at is null
+      and l.status in ('active', 'pending_review') and not l.is_claimed
+    order by rp.caption_changed_at, rp.id
+    limit ${options.limit ?? 20}`;
+
+  const stats: ReprocessStats = {
+    checked: 0,
+    updated: 0,
+    errors: 0,
+    usage: emptyUsage(),
+    costUsd: 0,
+  };
+  for (const post of posts) {
+    const now = deps.now?.() ?? new Date();
+    stats.checked++;
+    const caption = post.caption ?? "";
+    const done = () =>
+      sql`update public.raw_posts set reprocessed_at = ${now} where id = ${post.id}`;
+    if (!prefilter(caption, { origin: prefilterOrigin(post.source_type) }).pass) {
+      await done();
+      continue;
+    }
+    let result: ExtractResult;
+    try {
+      result = await deps.extract({
+        caption,
+        igUsername: post.ig_username?.toLowerCase() ?? null,
+        bio: post.bio ?? null,
+        postedAt: post.posted_at?.toISOString() ?? null,
+      });
+    } catch (error) {
+      stats.errors++;
+      if (error instanceof ExtractionError) stats.usage = addUsage(stats.usage, error.usage);
+      await done();
+      continue;
+    }
+    stats.usage = addUsage(stats.usage, result.usage);
+    stats.costUsd += estimateCostUsd(result.model, result.usage) || 0;
+    const n = normalizeExtraction(result.output, {
+      caption,
+      igUsername: post.ig_username?.toLowerCase() ?? null,
+      bio: post.bio ?? null,
+      now,
+    });
+
+    const before = {
+      priceCents: post.price_cents === null ? null : Number(post.price_cents),
+      km: post.km,
+    };
+    const changes: Record<string, { from: number | null; to: number }> = {};
+    if (n.isListing && n.priceCents !== null && n.priceCents !== before.priceCents) {
+      changes.priceCents = { from: before.priceCents, to: n.priceCents };
+    }
+    if (n.isListing && n.km !== null && n.km !== before.km)
+      changes.km = { from: before.km, to: n.km };
+
+    await sql.begin(async (tx) => {
+      if (Object.keys(changes).length) {
+        await tx`
+          update public.listings set
+            price_cents = ${changes.priceCents?.to ?? before.priceCents},
+            km = ${changes.km?.to ?? before.km}
+          where id = ${post.listing_id}`;
+        await tx`
+          insert into public.audit_log (actor, action, entity, entity_id, changes, note)
+          values ('system:process-posts', 'listing.caption_update', 'listing', ${post.listing_id},
+            ${tx.json(changes)}, 'Legenda editada no Instagram')`;
+      }
+      await tx`update public.raw_posts set reprocessed_at = ${now} where id = ${post.id}`;
+    });
+    if (Object.keys(changes).length) stats.updated++;
+  }
+  return stats;
+}

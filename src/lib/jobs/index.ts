@@ -3,7 +3,12 @@
  * (/api/cron/<job>). Jobs take `sql` and their deps as parameters, so they run
  * the same way from scripts, tests and Next.js.
  */
-import { prefilterOrigin, processPendingRawPosts } from "@/lib/extraction/pipeline";
+import {
+  prefilterOrigin,
+  processPendingRawPosts,
+  reprocessEditedCaptions,
+} from "@/lib/extraction/pipeline";
+import { addUsage } from "@/lib/extraction/cost";
 import { prefilter } from "@/lib/extraction/prefilter";
 
 import { collectBusinessDiscovery, collectHashtags } from "./collect";
@@ -31,20 +36,42 @@ async function processPosts(
     const toExtract = pending.filter(
       (p) => prefilter(p.caption, { origin: prefilterOrigin(p.source_type) }).pass,
     ).length;
-    return { stats: { pending: pending.length, wouldExtract: toExtract } };
+    const [edited] = await ctx.sql<{ n: number }[]>`
+      select count(*)::int as n from public.raw_posts rp
+      join public.listing_sources ls on ls.raw_post_id = rp.id and ls.is_primary
+      join public.listings l on l.id = ls.listing_id
+      where rp.caption_changed_at is not null
+        and (rp.reprocessed_at is null or rp.reprocessed_at < rp.caption_changed_at)
+        and rp.processing_status = 'extracted' and rp.gone_at is null
+        and l.status in ('active', 'pending_review') and not l.is_claimed`;
+    return {
+      stats: { pending: pending.length, wouldExtract: toExtract, editedCaptions: edited?.n ?? 0 },
+    };
   }
-  const result = await processPendingRawPosts(
-    ctx.sql,
-    { extract: deps.extract(), now: () => ctx.now },
-    { limit },
-  );
-  const u = result.usage;
+  const pipelineDeps = { extract: deps.extract(), now: () => ctx.now };
+  const result = await processPendingRawPosts(ctx.sql, pipelineDeps, { limit });
+  // Captions edited after extraction: price and km follow the post (history in audit_log).
+  const edits = await reprocessEditedCaptions(ctx.sql, pipelineDeps, {
+    limit: Math.max(5, limit - result.processed),
+  });
+  const u = addUsage(result.usage, edits.usage);
+  const worked = result.processed + edits.checked;
   return {
-    status: result.processed ? "succeeded" : "skipped",
-    stats: { processed: result.processed, ...result.outcomes },
+    status: worked ? "succeeded" : "skipped",
+    stats: {
+      processed: result.processed,
+      ...result.outcomes,
+      ...(edits.checked
+        ? {
+            captionsRechecked: edits.checked,
+            captionUpdates: edits.updated,
+            captionErrors: edits.errors,
+          }
+        : {}),
+    },
     tokensIn: u.inputTokens + u.cacheReadTokens + u.cacheWriteTokens,
     tokensOut: u.outputTokens,
-    aiCostUsd: Math.round(result.costUsd * 10_000) / 10_000,
+    aiCostUsd: Math.round((result.costUsd + edits.costUsd) * 10_000) / 10_000,
   };
 }
 

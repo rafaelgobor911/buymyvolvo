@@ -2,7 +2,8 @@ import { BadgeCheck, ExternalLink, Info, MessageCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
+import { headers } from "next/headers";
+import { after, connection } from "next/server";
 import { cache, Suspense } from "react";
 
 import { ListingAlerts } from "@/components/listing-alerts";
@@ -20,7 +21,10 @@ import {
   formatRelativeDays,
   formatYears,
 } from "@/lib/listings/format";
+import { db } from "@/lib/db/client";
+import { isBot, isPrefetch } from "@/lib/leads/request";
 import { getListingBySlug, getSimilarListings, type ListingDetail } from "@/lib/listings/queries";
+import { recordView } from "@/lib/listings/views";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { FUEL_LABELS, getModel, TRANSMISSION_LABELS } from "@/lib/taxonomy";
@@ -54,6 +58,13 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const listing = await loadListing(slug);
   if (!listing) notFound();
+  // Views for the admin's click rate: a daily counter, no visitor data; bots and prefetches skipped.
+  if (listing.status === "active") {
+    const requestHeaders = await headers();
+    if (!isBot(requestHeaders.get("user-agent")) && !isPrefetch(requestHeaders)) {
+      after(() => recordView(db(), listing.id).catch(() => {}));
+    }
+  }
   const now = new Date();
   const similar = await getSimilarListings(listing.modelId, listing.id, 3);
   const title = listingTitle(listing);
