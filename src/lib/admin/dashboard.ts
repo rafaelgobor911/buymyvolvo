@@ -93,6 +93,16 @@ export async function loadDashboard(sql: Sql): Promise<Dashboard> {
     });
   }
 
+  const [claims] = await sql<{ n: number }[]>`
+    select count(*)::int as n from public.listing_claims where status = 'pending'`;
+  if (claims && claims.n > 0) {
+    alerts.push({
+      tone: "warning",
+      text: `${claims.n} reivindicação(ões) de anúncio esperando confirmação.`,
+      href: "/admin/reivindicacoes",
+    });
+  }
+
   const [removals] = await sql<{ n: number }[]>`
     select count(*)::int as n from public.removal_requests where status = 'pending'`;
   if (removals && removals.n > 0) {

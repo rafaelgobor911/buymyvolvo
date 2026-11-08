@@ -8,6 +8,7 @@ import { refresh } from "next/cache";
 
 import { actorOf, requireAdmin } from "@/lib/admin/auth";
 import { addBlock, confirmRemoval, rejectRemoval, removeBlock } from "@/lib/admin/blocklist";
+import { approveClaim, rejectClaim } from "@/lib/admin/claims";
 import type { FormState } from "@/lib/admin/form-state";
 import { addSources, setSourceActive, type SourceType } from "@/lib/admin/sources";
 import { db } from "@/lib/db/client";
@@ -120,4 +121,19 @@ export async function removeBlockAction(form: FormData) {
   const admin = await requireAdmin();
   await removeBlock(db(), { id: str(form, "id"), actor: actorOf(admin) });
   refresh();
+}
+
+export async function claimDecisionAction(_prev: FormState, form: FormData): Promise<FormState> {
+  const admin = await requireAdmin();
+  const id = str(form, "id");
+  const approve = str(form, "decisao") === "aprovar";
+  const result = approve
+    ? await approveClaim(db(), { id, actor: actorOf(admin) })
+    : await rejectClaim(db(), { id, actor: actorOf(admin), note: str(form, "motivo") });
+  if (!result.ok) return { status: "error", message: result.error };
+  refresh();
+  return {
+    status: "saved",
+    message: approve ? "Reivindicação aprovada." : "Reivindicação recusada.",
+  };
 }

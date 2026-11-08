@@ -5,6 +5,7 @@ import { startTransition, useActionState, useState } from "react";
 import {
   addBlockAction,
   addSourcesAction,
+  claimDecisionAction,
   removalAction,
   runJobAction,
 } from "@/app/admin/(painel)/ops-actions";
@@ -154,6 +155,44 @@ export function AddBlockForm({ kinds }: { kinds: Option[] }) {
       <Button type="submit" disabled={pending} className="h-10 self-start rounded-xl px-4">
         Bloquear
       </Button>
+    </form>
+  );
+}
+
+export function ClaimDecision({ id }: { id: string }) {
+  const [state, formAction, pending] = useActionState(claimDecisionAction, IDLE);
+  return (
+    <form onSubmit={submitWith(formAction)} className="flex flex-col gap-2">
+      <input type="hidden" name="id" value={id} />
+      <div className="flex flex-wrap items-end gap-2">
+        <Button
+          type="submit"
+          name="decisao"
+          value="aprovar"
+          disabled={pending}
+          className="h-9 rounded-xl px-3"
+        >
+          Aprovar
+        </Button>
+        <Input
+          name="motivo"
+          aria-label="Motivo da recusa"
+          placeholder="Motivo, se for recusar (o vendedor vê)"
+          className="h-9 w-72"
+          maxLength={500}
+        />
+        <Button
+          type="submit"
+          name="decisao"
+          value="recusar"
+          variant="outline"
+          disabled={pending}
+          className="h-9 rounded-xl px-3"
+        >
+          Recusar
+        </Button>
+      </div>
+      <FormMessage state={state} />
     </form>
   );
 }

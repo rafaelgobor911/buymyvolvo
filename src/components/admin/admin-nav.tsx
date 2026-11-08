@@ -12,6 +12,7 @@ const ITEMS = [
   { href: "/admin/fontes", label: "Fontes" },
   { href: "/admin/leads", label: "Leads" },
   { href: "/admin/jobs", label: "Jobs" },
+  { href: "/admin/reivindicacoes", label: "Reivindicações" },
   { href: "/admin/remocoes", label: "Remoções" },
   { href: "/admin/blocklist", label: "Blocklist" },
   { href: "/admin/vendedores", label: "Vendedores" },
