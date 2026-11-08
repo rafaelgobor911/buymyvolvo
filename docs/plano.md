@@ -249,6 +249,23 @@ Acesso, Início com alertas (fila, jobs com falha ou alerta, fontes falhando, or
 - Login com Google: testar quando existir o projeto do Supabase.
 - O formulário público de remoção (que cria os pedidos) é da Fase 6.
 
-## Próxima fase (Fase 6: vendedor)
+## Fase 6: decisões
 
-Reivindicação do anúncio (login com Instagram, código no WhatsApp ou verificação manual), Termos do Anunciante versionados (rascunho para revisão jurídica), painel do vendedor (anúncios, leads, edição, fotos com licença, "marcar como vendido" com a pergunta sobre o site), formulário de remoção sem login e blocklist.
+Plano apresentado em 08/11/2026. O dono do produto criou o projeto no Supabase (URL, chave pública e `ADMIN_EMAILS` já estão no ambiente), mas ainda não conseguiu criar a credencial OAuth no Google Cloud; seguimos "do jeito que der". O passo a passo está em `docs/login-google.md`.
+
+- **Login do vendedor:** Google via Supabase (pronto, sem teste real até existir a credencial e um endereço público) e login de teste para o e2e.
+- **Prova de posse:** manual por enquanto (código pelo Direct do Instagram do anúncio, conferido pelo admin). Login com Instagram fica para quando o app da Meta tiver o produto e a revisão; código pelo WhatsApp, na Fase 8.
+- **Termos do Anunciante:** rascunho para revisão jurídica, com comissão, planos e foro "[a definir]".
+
+### 6a (entregue)
+
+Remoção sem login (com limite por aparelho e campo armadilha), login do vendedor, reivindicação com perfil, termos versionados e código, fila de Reivindicações no admin (com alerta no Início), painel do vendedor com visitas e contatos e "Marcar como vendido" alimentando o resultado dos leads.
+
+**Pendências da 6a:**
+
+- Login com Google: credencial OAuth no Google Cloud + provedor no Supabase (`docs/login-google.md`); teste de ponta a ponta no deploy.
+- Login com Instagram: depende do produto Instagram Login no app da Meta e da revisão.
+
+### 6b (próxima)
+
+Edição dos dados pelo vendedor, fotos com licença no Supabase Storage (sem metadados/GPS), página pública do anúncio reivindicado (galeria, descrição própria) e a estrutura de planos (Gratuito, Destaque, Loja Pro) sem cobrança. Precisa da chave secreta do Supabase como segredo do ambiente.

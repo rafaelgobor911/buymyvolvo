@@ -48,7 +48,7 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ```
 src/
-  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /api/cron/[job]
+  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /vendedor, /termos-do-anunciante, /auth/callback, /api/cron/[job]
   components/            componentes do site; ui/ = shadcn; search/ = busca e filtros; admin/ = telas do admin
   content/               textos editoriais (checklists por modelo, buscas populares)
   lib/
@@ -62,6 +62,8 @@ src/
     jobs/                executor (trava + job_runs + dry-run), coleta, manutenção e registro dos jobs
     leads/               código do lead, mensagem (message.ts), links (contact.ts), hash/robôs (request.ts), recordClick (record.ts)
     admin/               acesso (auth, access), formulário, anúncios, configurações e painel inicial do admin
+    sellers/             acesso e sessão do vendedor, perfil, termos, reivindicação e painel
+    removals/            pedido de remoção sem login
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
 scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
 scripts/job.ts           roda jobs localmente · scripts/sources.ts: fontes monitoradas
@@ -74,7 +76,7 @@ tests/
   integration/           Vitest contra TEST_DATABASE_URL (RLS, buscas de aceitação)
   unit/                  Vitest sem banco
   e2e/                   Playwright (desktop + mobile)
-docs/                    PROMPT.md, plano.md, meta-setup.md
+docs/                    PROMPT.md, plano.md, meta-setup.md, login-google.md
 ```
 
 ## Banco de dados
@@ -149,6 +151,14 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - **Remoção:** confirmar o pedido põe telefone, @ e posts do anúncio na blocklist (`blockListingContacts`); recusar devolve o anúncio ao ar. Mudar o status para "removido" no admin oferece o mesmo bloqueio.
 - **Legenda editada:** o `process-posts` re-extrai uma vez cada legenda editada (`raw_posts.reprocessed_at`) de anúncios não reivindicados no ar ou em moderação, e atualiza preço e km; os valores anteriores ficam no `audit_log` (`listing.caption_update`).
 - O e2e reaplica o `seed.sql` antes da suíte (`tests/e2e/global-setup.ts`), porque os testes do admin aprovam e rejeitam anúncios fictícios. Capturas de tela do admin usam o banco de teste (só dados fictícios).
+
+## Vendedor (Fase 6)
+
+- **Remoção sem login** (`/anuncio/[slug]/remover`, `lib/removals/create.ts`): o anúncio sai do ar na hora (`removed`) e o pedido espera o admin (48 h). Contra abuso: campo armadilha e limite de pedidos por aparelho (`removal_requests_per_day`, por hash de IP). O contato de quem pede é opcional.
+- **Login do vendedor:** Google via Supabase Auth (`/auth/callback?next=…`) ou login de teste (`SELLER_TEST_LOGIN_EMAIL`, mesmas travas do admin; cookie `bmv_seller_test` assinado com escopo próprio). `requireSellerUser(next)` em toda página e ação do vendedor. O passo a passo do Google está em `docs/login-google.md`.
+- **Reivindicação manual:** o vendedor preenche o perfil, aceita os Termos do Anunciante (versão em `content/seller-terms.ts`, aceite em `terms_acceptances`) e recebe um código `RV-XXXXXX` para mandar pelo Direct do Instagram do anúncio para `@buymyvolvo` (`site.instagramHandle`). O admin aprova em Reivindicações: o anúncio passa a ser do vendedor (`seller_id`, `is_claimed`, selo verificado) com os leads antigos; as outras reivindicações pendentes do mesmo anúncio são recusadas.
+- **Painel** (`/vendedor`): anúncios do vendedor com visitas (30 dias), contatos (data, canal e código, sem dado do comprador) e "Marcar como vendido" com a pergunta "Vendeu para alguém que chegou pelo site?" (`listings.sold_via_site`; com o código do contato, `leads.outcome`).
+- O `audit_log` aceita os atores `seller:<id>` e `public:<origem>`. O e2e limpa o vendedor de teste e os pedidos de remoção que criou antes de reaplicar o seed.
 
 ## Variáveis de ambiente
 
