@@ -58,6 +58,13 @@ function sourceErrorMessage(error: GraphError): string {
   return error.message;
 }
 
+/** True once the job's time budget is spent; the first source always runs. */
+function outOfTime(started: number, options: JobOptions, index: number): boolean {
+  return (
+    index > 0 && options.maxSeconds != null && Date.now() - started > options.maxSeconds * 1000
+  );
+}
+
 const oldestPost = (media: IgMedia[]) =>
   new Date(Math.min(...media.map((m) => parseIgTimestamp(m.timestamp)?.getTime() ?? Infinity)));
 
@@ -83,7 +90,8 @@ export async function collectBusinessDiscovery(
     gone: 0,
     expired: 0,
     blocked: 0,
-    stoppedEarly: null as null | "rate_limit" | "usage",
+    stoppedEarly: null as null | "rate_limit" | "usage" | "time",
+    remaining: 0,
     apiRequests: 0,
   };
   const alerts: string[] = [];
@@ -94,9 +102,17 @@ export async function collectBusinessDiscovery(
   const requestsBefore = client.requests;
   const pages = await numberSetting(ctx.sql, "business_discovery_pages", 2);
 
-  for (const source of sources) {
+  const started = Date.now();
+  for (const [index, source] of sources.entries()) {
+    if (outOfTime(started, options, index)) {
+      stats.stoppedEarly = "time";
+      stats.remaining = sources.length - index;
+      ctx.log(`Tempo esgotado: ${stats.remaining} conta(s) ficam para a próxima execução`);
+      break;
+    }
     if (client.nearLimit(90)) {
       stats.stoppedEarly = "usage";
+      stats.remaining = sources.length - index;
       alerts.push("Uso da API da Meta acima de 90%: coleta interrompida até a próxima execução.");
       break;
     }
@@ -224,7 +240,8 @@ export async function collectHashtags(
     new: 0,
     blocked: 0,
     failed: 0,
-    stoppedEarly: null as null | "rate_limit" | "permission",
+    stoppedEarly: null as null | "rate_limit" | "permission" | "usage" | "time",
+    remaining: 0,
     apiRequests: 0,
   };
   const alerts: string[] = [];
@@ -239,7 +256,22 @@ export async function collectHashtags(
     syncBudget(tx, igUserId, await recentlySearchedHashtags(client, igUserId), ctx.now),
   );
 
-  for (const source of sources) {
+  const started = Date.now();
+  for (const [index, source] of sources.entries()) {
+    if (outOfTime(started, options, index)) {
+      stats.stoppedEarly = "time";
+      stats.remaining = sources.length - index;
+      ctx.log(`Tempo esgotado: ${stats.remaining} hashtag(s) ficam para a próxima execução`);
+      break;
+    }
+    if (client.nearLimit(90)) {
+      stats.stoppedEarly = "usage";
+      stats.remaining = sources.length - index;
+      alerts.push(
+        "Uso da API da Meta acima de 90%: coleta de hashtags interrompida até a próxima execução.",
+      );
+      break;
+    }
     try {
       const outcome = await ctx.write(async (tx) => {
         const active = await activeBudget(tx, igUserId, ctx.now);

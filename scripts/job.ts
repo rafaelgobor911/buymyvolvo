@@ -1,5 +1,5 @@
 /**
- * npm run job -- <job...|all> [--dry-run] [--fixtures] [--force] [--only=a,b] [--limit=N]
+ * npm run job -- <job...|all> [--dry-run] [--fixtures] [--force] [--only=a,b] [--limit=N] [--max-seconds=N]
  *
  * Runs collection/maintenance jobs locally, with the same code as the cron
  * routes. --fixtures uses the fictitious Instagram (sources ending in .demo /
@@ -21,7 +21,7 @@ function flag(name: string): string | undefined {
 function usage(): never {
   console.error(
     [
-      "Uso: npm run job -- <job...|all> [--dry-run] [--fixtures] [--force] [--only=a,b] [--limit=N]",
+      "Uso: npm run job -- <job...|all> [--dry-run] [--fixtures] [--force] [--only=a,b] [--limit=N] [--max-seconds=N]",
       "",
       ...JOB_NAMES.map((name) => `  ${name.padEnd(28)} ${JOBS[name].description}`),
       `  ${"all".padEnd(28)} coleta (contas e hashtags), processa e faz a manutenção, nessa ordem`,
@@ -54,6 +54,7 @@ async function main() {
       .map((h) => h.trim().replace(/^[@#]/, "").toLowerCase())
       .filter(Boolean),
     limit: flag("limit") ? Number(flag("limit")) : undefined,
+    maxSeconds: flag("max-seconds") ? Number(flag("max-seconds")) : undefined,
     log: (message: string) => console.log(`  · ${message}`),
   };
 

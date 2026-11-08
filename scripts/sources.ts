@@ -1,7 +1,7 @@
 /**
  * npm run sources -- list
  * npm run sources -- add @loja1 @loja2 [--interval=180]
- * npm run sources -- add-hashtag volvoavenda [--interval=60]
+ * npm run sources -- add-hashtag volvoxc60 [--interval=1440]
  * npm run sources -- pause @loja1 | resume @loja1
  * npm run sources -- add-fixtures        (the fictitious shops and hashtags)
  *
@@ -60,7 +60,8 @@ async function main() {
         );
         break;
       case "add-hashtag":
-        await add("ig_hashtag", parse(rest, normalizeHashtag), Number(flag("interval") ?? 60));
+        // Once a day by default: recent_media covers 24h and volumes are low (nov/2026).
+        await add("ig_hashtag", parse(rest, normalizeHashtag), Number(flag("interval") ?? 1440));
         break;
       case "add-fixtures": {
         const world = createFixtureWorld();

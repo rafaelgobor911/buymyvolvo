@@ -154,7 +154,10 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
     expect(result.status).toBe("succeeded");
     expect(result.stats).toMatchObject({ processed: 33 });
     expect(Number(result.stats.published)).toBeGreaterThanOrEqual(28);
-    expect(Number(result.stats.prefiltered_out)).toBe(2); // store hours + "VENDIDO" post
+    // "VENDIDO" is dropped by the pre-filter; the store-hours post (curated shop,
+    // so no Brazil check) reaches the extractor, which says it is not a listing.
+    expect(Number(result.stats.prefiltered_out)).toBe(1);
+    expect(Number(result.stats.not_listing)).toBeGreaterThanOrEqual(1);
     const nordica = extracted.find((i) => i.igUsername === "nordica.veiculos.demo");
     expect(nordica?.bio).toContain("Seminovos Volvo em Curitiba");
   });
@@ -241,6 +244,33 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
     expect(Number(result.stats.expired)).toBeGreaterThanOrEqual(1);
     expect((await listingOf("fxm_tag_01"))?.status).toBe("expired");
     expect((await listingOf("fxm_nordica_03"))?.status).toBe("active");
+  });
+
+  it("stops starting new sources when the time budget is spent", async () => {
+    const result = await run("collect-business-discovery", { maxSeconds: 0 });
+    expect(result.stats).toMatchObject({ stoppedEarly: "time", remaining: 3 });
+    // The first source always runs, so every trigger makes progress.
+    expect(Number(result.stats.unavailable) + Number(result.stats.scanned)).toBe(1);
+  });
+
+  it("applies the Brazil rule of each post's origin before extraction", async () => {
+    const caption = "XC40 T5 2020 impecável, 35 mil km, aceito troca. Chama no direct";
+    const [shop] = await sql<{ id: string }[]>`
+      select id from public.sources where handle = 'fiorde.motors.demo'`;
+    const [tag] = await sql<{ id: string }[]>`
+      select id from public.sources where handle = 'volvoseminovo_demo'`;
+    await sql`insert into public.raw_posts (ig_media_id, source_id, permalink, caption, ig_username)
+              values ('fx_origin_shop', ${shop!.id}, 'https://www.instagram.com/p/FIXTURE_origin_shop/', ${caption}, 'fiorde.motors.demo'),
+                     ('fx_origin_tag', ${tag!.id}, 'https://www.instagram.com/p/FIXTURE_origin_tag/', ${caption}, null)`;
+    await run("process-posts", { limit: 100 });
+    const rows = await sql<{ ig_media_id: string; reason: string | null }[]>`
+      select ig_media_id, extraction_json->'prefilter'->>'reason' as reason
+      from public.raw_posts where ig_media_id like 'fx_origin_%' order by ig_media_id`;
+    // Same caption: the shop's post goes on to extraction, the hashtag's is dropped.
+    expect(rows).toEqual([
+      { ig_media_id: "fx_origin_shop", reason: "ok" },
+      { ig_media_id: "fx_origin_tag", reason: "not_brazil" },
+    ]);
   });
 
   it("alerts before the token expires and fails when it is invalid", async () => {

@@ -30,7 +30,8 @@ async function handle(request: Request, ctx: RouteContext<"/api/cron/[job]">) {
   if (!isJobName(job)) return Response.json({ error: "Job desconhecido." }, { status: 404 });
 
   const dryRun = new URL(request.url).searchParams.get("dry_run") === "1";
-  const run = await runNamedJob(db(), job, createJobDeps(env), { dryRun });
+  // Leave room under maxDuration: sources not reached stay due for the next call.
+  const run = await runNamedJob(db(), job, createJobDeps(env), { dryRun, maxSeconds: 240 });
   return Response.json(run, { status: run.status === "failed" ? 500 : 200 });
 }
 

@@ -19,6 +19,12 @@ export interface JobOptions {
   only?: string[];
   /** Max raw_posts per process-posts run. */
   limit?: number;
+  /**
+   * Time budget for collection jobs: after it, no new source is started (at
+   * least one always runs) and the rest stay due for the next trigger.
+   * Hashtag reads take 7–20 s each on the real API.
+   */
+  maxSeconds?: number;
   now?: Date;
   log?: (message: string) => void;
 }
