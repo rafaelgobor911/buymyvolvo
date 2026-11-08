@@ -1,8 +1,9 @@
 /**
- * Runs only on /admin: keeps the admin out of search engines and refreshes
- * the Supabase Auth session cookie (Server Components cannot write cookies).
- * Authorization itself happens in every admin page and Server Action
- * (requireAdmin), never here.
+ * Runs only on the signed-in areas (admin, seller panel, claim page, OAuth
+ * callback): keeps them out of search engines and refreshes the Supabase Auth
+ * session cookie (Server Components cannot write cookies). Authorization
+ * itself happens in every page and Server Action (requireAdmin,
+ * requireSellerUser), never here.
  */
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
@@ -27,10 +28,23 @@ export async function proxy(request: NextRequest) {
       },
     });
     // Validates the session with the Auth server and refreshes expired tokens.
-    await supabase.auth.getUser();
+    try {
+      await supabase.auth.getUser();
+    } catch {
+      // Auth server unreachable: pages treat the visitor as signed out.
+    }
   }
   response.headers.set("X-Robots-Tag", "noindex, nofollow");
   return response;
 }
 
-export const config = { matcher: ["/admin", "/admin/:path*"] };
+export const config = {
+  matcher: [
+    "/admin",
+    "/admin/:path*",
+    "/vendedor",
+    "/vendedor/:path*",
+    "/anuncio/:slug/reivindicar",
+    "/auth/callback",
+  ],
+};

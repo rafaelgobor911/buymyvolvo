@@ -6,6 +6,8 @@ export const site = {
   description:
     "Buscador de anúncios de Volvo seminovos e usados no Brasil, reunindo lojas e particulares em um só lugar.",
   locale: "pt-BR",
+  /** The project's Instagram (claim codes are sent to it by Direct). */
+  instagramHandle: "buymyvolvo",
   /** Mandatory brand disclaimer (compliance rule 6). */
   brandDisclaimer: "Não afiliado à Volvo Car Corporation.",
 } as const;

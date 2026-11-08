@@ -28,22 +28,35 @@ export function testLoginEmail(env: {
 export const TEST_SESSION_COOKIE = "bmv_admin_test";
 export const TEST_SESSION_HOURS = 12;
 
-const sign = (key: string, payload: string) =>
-  createHmac("sha256", `admin-test-session:${key}`).update(payload).digest("base64url");
+/** Admin and seller test sessions are signed apart, so one cannot be used as the other. */
+export type TestSessionScope = "admin" | "seller";
+
+const sign = (key: string, payload: string, scope: TestSessionScope) =>
+  createHmac("sha256", `${scope}-test-session:${key}`).update(payload).digest("base64url");
 
 /** `<base64url(email|expiresAt)>.<hmac>`, signed with HASH_SALT. */
-export function createTestSession(key: string, email: string, now = Date.now()): string {
+export function createTestSession(
+  key: string,
+  email: string,
+  now = Date.now(),
+  scope: TestSessionScope = "admin",
+): string {
   const payload = Buffer.from(`${email}|${now + TEST_SESSION_HOURS * 3600_000}`).toString(
     "base64url",
   );
-  return `${payload}.${sign(key, payload)}`;
+  return `${payload}.${sign(key, payload, scope)}`;
 }
 
-export function readTestSession(key: string, value: string | undefined, now = Date.now()) {
+export function readTestSession(
+  key: string,
+  value: string | undefined,
+  now = Date.now(),
+  scope: TestSessionScope = "admin",
+) {
   if (!value) return null;
   const [payload, mac] = value.split(".");
   if (!payload || !mac) return null;
-  const expected = Buffer.from(sign(key, payload));
+  const expected = Buffer.from(sign(key, payload, scope));
   const given = Buffer.from(mac);
   if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
   const [email, expires] = Buffer.from(payload, "base64url").toString().split("|");

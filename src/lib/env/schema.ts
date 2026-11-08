@@ -78,6 +78,8 @@ export const serverEnvSchema = z.object({
    * production; never set it in a deployed environment.
    */
   ADMIN_TEST_LOGIN_EMAIL: z.preprocess(blankToUndefined, z.email().toLowerCase().optional()),
+  /** Test-only seller login, with the same safeguards as ADMIN_TEST_LOGIN_EMAIL. */
+  SELLER_TEST_LOGIN_EMAIL: z.preprocess(blankToUndefined, z.email().toLowerCase().optional()),
   /** Set by Vercel: "production", "preview" or "development". */
   VERCEL_ENV: z.preprocess(blankToUndefined, z.string().optional()),
 });
