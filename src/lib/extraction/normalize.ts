@@ -80,6 +80,15 @@ function amountFromText(text: string | null | undefined): number | null {
   return Math.round(n * (m[2] ? MULT[m[2]]! : 1));
 }
 
+const FOREIGN_CURRENCY =
+  /€|£|\beur(o|os)?\b|\busd\b|u\$s|us\$|\bkz\b|\bakz\b|kwanza|\bdolares\b|\bdollars?\b/;
+
+/** Folded text quoting a price in another currency and never in reais. */
+export function isForeignCurrency(folded: string): boolean {
+  if (/r\$|\breais\b/.test(folded)) return false;
+  return FOREIGN_CURRENCY.test(folded) || /\$\s?\d/.test(folded);
+}
+
 export const PRICE_RANGE = { min: 3_000, max: 15_000_000 };
 export const KM_RANGE = { min: 0, max: 999_999 };
 
@@ -323,10 +332,21 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
   // Numbers
   const years = normalizeYears(x.year_fab, x.year_model, now);
   if (!years.ok) issue("year_invalid", "Ano de fabricação/modelo incoerente.", 0.15);
-  const price = normalizePrice(x.price_text, x.price);
+  // A price in another currency is not a price in reais: drop it and send the
+  // post to moderation (it is most likely not a Brazilian listing).
+  const foreignCurrency =
+    isForeignCurrency(foldText(x.price_text ?? "")) || isForeignCurrency(foldText(ctx.caption));
+  if (foreignCurrency) {
+    issue(
+      "foreign_currency",
+      "Preço em moeda estrangeira: o anúncio provavelmente não é do Brasil.",
+      0.3,
+    );
+  }
+  const price = foreignCurrency ? null : normalizePrice(x.price_text, x.price);
   // "Consulte valor" (price on request) is no price, not an invalid one.
   const statedPrice = (x.price != null && x.price > 0) || /\d/.test(foldText(x.price_text ?? ""));
-  if (statedPrice && price == null) {
+  if (statedPrice && price == null && !foreignCurrency) {
     issue("price_invalid", "Preço fora da faixa plausível.", 0.1);
   }
   const km = normalizeKm(x.km_text, x.km);

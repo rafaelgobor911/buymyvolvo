@@ -3,7 +3,7 @@
  * (/api/cron/<job>). Jobs take `sql` and their deps as parameters, so they run
  * the same way from scripts, tests and Next.js.
  */
-import { processPendingRawPosts } from "@/lib/extraction/pipeline";
+import { prefilterOrigin, processPendingRawPosts } from "@/lib/extraction/pipeline";
 import { prefilter } from "@/lib/extraction/prefilter";
 
 import { collectBusinessDiscovery, collectHashtags } from "./collect";
@@ -23,11 +23,14 @@ async function processPosts(
   const limit = options.limit ?? 50;
   if (ctx.dryRun) {
     // No AI calls in a dry run: report what would be sent to extraction.
-    const pending = await ctx.sql<{ caption: string | null }[]>`
-      select caption from public.raw_posts
-      where processing_status = 'pending' and gone_at is null
-      order by fetched_at, id limit ${limit}`;
-    const toExtract = pending.filter((p) => prefilter(p.caption).pass).length;
+    const pending = await ctx.sql<{ caption: string | null; source_type: string | null }[]>`
+      select rp.caption, s.type as source_type from public.raw_posts rp
+      left join public.sources s on s.id = rp.source_id
+      where rp.processing_status = 'pending' and rp.gone_at is null
+      order by rp.fetched_at, rp.id limit ${limit}`;
+    const toExtract = pending.filter(
+      (p) => prefilter(p.caption, { origin: prefilterOrigin(p.source_type) }).pass,
+    ).length;
     return { stats: { pending: pending.length, wouldExtract: toExtract } };
   }
   const result = await processPendingRawPosts(

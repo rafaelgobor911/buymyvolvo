@@ -19,7 +19,7 @@ import { addUsage, emptyUsage, estimateCostUsd, type TokenUsage } from "./cost";
 import { dedupeKey, isLikelySameCar } from "./dedupe";
 import { type ExtractInput, type ExtractResult, ExtractionError } from "./extract";
 import { hasMinimumFields, type NormalizedListing, normalizeExtraction } from "./normalize";
-import { prefilter } from "./prefilter";
+import { prefilter, type PrefilterOrigin } from "./prefilter";
 import { EXTRACTION_PROMPT_VERSION } from "./prompt";
 
 type Sql = postgres.Sql | postgres.TransactionSql;
@@ -54,6 +54,17 @@ interface RawPostRow {
   posted_at: Date | null;
   /** Bio of the account (Business Discovery sources): contact and city fallback. */
   bio?: string | null;
+  /** sources.type of the post's source, which sets the pre-filter's Brazil rule. */
+  source_type?: string | null;
+}
+
+/** Pre-filter origin for a source type (null for posts without a known source). */
+export function prefilterOrigin(
+  sourceType: string | null | undefined,
+): PrefilterOrigin | undefined {
+  if (sourceType === "ig_business_account") return "business_discovery";
+  if (sourceType === "ig_hashtag") return "hashtag";
+  return undefined;
 }
 
 const DEFAULT_THRESHOLD = 0.85;
@@ -163,7 +174,7 @@ export async function processRawPost(
     return { outcome: "blocklisted", usage: emptyUsage() };
   }
 
-  const filter = prefilter(caption);
+  const filter = prefilter(caption, { origin: prefilterOrigin(post.source_type) });
   if (!filter.pass) {
     await finish(sql, post.id, "not_listing", { ...base, prefilter: filter });
     return { outcome: "prefiltered_out", usage: emptyUsage() };
@@ -264,9 +275,10 @@ export async function processPendingRawPosts(
 ): Promise<PipelineStats> {
   const threshold = await publishThreshold(sql);
   const posts = await sql<RawPostRow[]>`
-    select rp.id, rp.ig_media_id, rp.caption, rp.ig_username, rp.posted_at, s.ig_biography as bio
+    select rp.id, rp.ig_media_id, rp.caption, rp.ig_username, rp.posted_at, s.type as source_type,
+      case when s.type = 'ig_business_account' then s.ig_biography end as bio
     from public.raw_posts rp
-    left join public.sources s on s.id = rp.source_id and s.type = 'ig_business_account'
+    left join public.sources s on s.id = rp.source_id
     where rp.processing_status = 'pending' and rp.gone_at is null
     order by rp.fetched_at, rp.id
     limit ${options.limit ?? 50}`;

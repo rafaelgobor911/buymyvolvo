@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   extractPhones,
+  isForeignCurrency,
   hasMinimumFields,
   normalizeExtraction,
   normalizeKm,
@@ -192,6 +193,36 @@ describe("normalizeExtraction", () => {
     expect(norm({ summary_ptbr: "Contato só pelo direct." }).summary).toBe(
       "Contato só pelo direct.",
     );
+  });
+
+  it("drops a price quoted in another currency and sends the post to moderation", () => {
+    const euro = norm({ price: 32900, price_text: "32.900€" });
+    expect(euro.priceCents).toBeNull();
+    expect(euro.issues.map((i) => i.code)).toEqual(["foreign_currency"]);
+    expect(euro.confidence).toBeLessThan(0.85);
+    const kwanza = norm(
+      { price: 18_500_000, price_text: "18.500.000" },
+      "VOLVO XC60 2015, viatura impecável. Preço: 18.500.000 Kz. Luanda",
+    );
+    expect(kwanza.priceCents).toBeNull();
+    expect(kwanza.issues.map((i) => i.code)).toContain("foreign_currency");
+    const reais = norm(
+      { price: 139000, price_text: "R$ 139.000" },
+      "XC60 T5 2018, R$ 139.000 (comprado por US$ 40 mil fora)",
+    );
+    expect(reais.priceCents).toBe(13_900_000);
+  });
+
+  it.each([
+    ["32.900€", true],
+    ["$38,500", true],
+    ["17.900 euro", true],
+    ["us$ 40 mil", true],
+    ["r$ 139.000", false],
+    ["189 mil reais", false],
+    ["189k", false],
+  ])("isForeignCurrency(%j) → %s", (text, expected) => {
+    expect(isForeignCurrency(text)).toBe(expected);
   });
 
   it("does not penalize a price on request", () => {
