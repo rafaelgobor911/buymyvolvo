@@ -72,6 +72,14 @@ export const serverEnvSchema = z.object({
       .pipe(z.array(z.email())),
   ),
   HASH_SALT: optionalSecret,
+  /**
+   * Test-only admin login (e2e, screenshots): signs in as this e-mail without
+   * Google. Works only with NEXT_PUBLIC_DEMO_MODE on and outside Vercel
+   * production; never set it in a deployed environment.
+   */
+  ADMIN_TEST_LOGIN_EMAIL: z.preprocess(blankToUndefined, z.email().toLowerCase().optional()),
+  /** Set by Vercel: "production", "preview" or "development". */
+  VERCEL_ENV: z.preprocess(blankToUndefined, z.string().optional()),
 });
 
 export type PublicEnv = z.infer<typeof publicEnvSchema>;
