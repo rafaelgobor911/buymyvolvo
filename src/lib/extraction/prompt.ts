@@ -5,7 +5,7 @@
  */
 import { describeBrazilOffers, ENGINES, MODELS, TRIMS } from "@/lib/taxonomy";
 
-export const EXTRACTION_PROMPT_VERSION = "2026-11-08.2";
+export const EXTRACTION_PROMPT_VERSION = "2026-11-08.3";
 
 const years = (start: number, end: number | null) => (end ? `${start}-${end}` : `${start}+`);
 
@@ -73,7 +73,7 @@ export const EXTRACTION_SYSTEM_PROMPT = `You extract structured data from Instag
 - Numbers: copy the price and mileage snippets exactly as written in price_text and km_text, and also fill price (in reais, e.g. "189k" = 189000) and km (e.g. "58mil" = 58000).
 - city and uf: only when the post or bio states them. uf is the two-letter state code.
 - transmission and fuel: only when stated or certain from the engine (T8 is plug-in hybrid; Twin Motor and Single Motor are electric).
-- seller_type: "loja" for dealers (store name, CNPJ, "loja", "garantia", "financiamos", store address); "particular" for owners ("particular", "único dono", "meu carro"); otherwise "desconhecido".
+- seller_type: "loja" for dealers (store name, CNPJ, "loja", "garantia", "financiamos", store address); "particular" only when the seller says they are the owner ("particular", "meu carro", "vendo meu"); otherwise "desconhecido". "Único dono" describes the car's history, not who is selling (dealers use it too), so it never decides seller_type.
 - phones: every phone or WhatsApp number exactly as written.
 - summary_ptbr: 2 to 3 sentences in Brazilian Portuguese, written in your own words, describing the car, its condition and highlights. Never copy phrases from the caption. Only facts the post states: do not add or embellish. The page shows the price and the contact button separately and the summary is public, so never mention the price or any amount of money, phone numbers, @handles, links, how to contact the seller, hashtags or emojis.
 - red_flags, only when the post itself shows them: abaixo_do_mercado (the post says it is below FIPE/market), repasse, pedido_de_sinal (asks for a deposit or reservation payment), documento_pendente (IPVA, licensing or debts pending), leilao (auction car), sinistro (accident/insurance write-off or recovered), sem_contato (no way to contact the seller).

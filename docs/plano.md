@@ -90,13 +90,15 @@ Segunda rodada: Polestar Engineered na XC60 (2019–2026) e no S60 (2019–2022)
 | Chave da API        | Não aceita pelo formulário seguro (host da própria Anthropic); vai como variável do ambiente `buymyvolvo`                                                                     |
 | Resumo público      | O resumo vai para a página e para a meta description; o telefone não. Frases que só falam de contato saem; telefone, @ ou link manda para moderação; preço no resumo penaliza |
 | `version_text`      | Só motor e versão como escritos ("T5 Momentum"), sem modelo, ano, cor, km ou câmbio, porque aparece como "Versão" quando a taxonomia não casa                                 |
+| Tipo de vendedor    | "Único dono" descreve o histórico do carro, não quem vende (lojas também usam): não define `seller_type`. Particular só com "particular", "meu carro", "vendo meu"            |
 
-### Avaliação (`npm run extract:eval`, 08/11/2026, prompt `2026-11-08.2`)
+### Avaliação (`npm run extract:eval`, 08/11/2026, prompt `2026-11-08.3`)
 
 - **Acurácia:** 100% em todos os 13 campos medidos (modelo, motor, versão, anos, km, preço, cidade, UF, câmbio, combustível, tipo de vendedor, telefone), 100% em "é anúncio?", 6/6 sinais de alerta, 0 erros.
 - **Custo (Haiku 5.5):** cerca de US$ 0,16–0,18 por 1.000 posts (com pré-filtro; no gabarito 33 de 40 posts passam) e US$ 0,20 por 1.000 extrações. A saída domina o custo (~260 tokens por post); o prompt de sistema (~5,5 mil tokens) vem do cache.
 - **Publicação:** 28 de 29 anúncios passam do limite de 0,85; o XC60 B5 (motor não vendido no Brasil) vai para moderação, como esperado.
-- O placar não mede resumo, cor nem `version_text`; esses foram revisados à mão em cada uma das quatro rodadas (relatório final em `evals/extraction/reports/latest-claude-haiku-5-5.md`).
+- **"Único dono" (prompt `.3`):** em 4 legendas fictícias fora do gabarito, 3 repetições cada, o prompt `.2` acertou 9/12 ("único dono" sozinho virava particular) e o `.3` acertou 12/12, sem mudar o placar do gabarito.
+- O placar não mede resumo, cor nem `version_text`; esses foram revisados à mão em cada rodada (relatório final em `evals/extraction/reports/latest-claude-haiku-5-5.md`).
 
 ## Próxima fase (Fase 2: extração com IA)
 
