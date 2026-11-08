@@ -20,25 +20,26 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 - **Tailwind CSS v4** + **shadcn/ui** (estilo `base-nova`, primitivas **Base UI**, não Radix). Para adicionar componentes: `npx shadcn@latest add <nome>`. Os tokens de cor ficam em `src/app/globals.css` (neutros escandinavos + acento azul-aço; claro e escuro via `next-themes`, classe `.dark`).
 - **Supabase** (Postgres, Auth, Storage). Migrations SQL versionadas em `supabase/migrations/`. **RLS em todas as tabelas.**
 - **Busca:** Postgres full-text (`portuguese`) + `unaccent` + `pg_trgm`. Só proponha Meilisearch/Typesense se o Postgres se mostrar insuficiente.
-- **IA:** Anthropic API, modelo de extração configurável (`ANTHROPIC_MODEL_EXTRACTION`, padrão `claude-haiku-5-5`), tool use com JSON schema e validação **Zod**.
+- **IA:** Anthropic API, modelo de extração configurável (`ANTHROPIC_MODEL_EXTRACTION`, padrão `claude-haiku-5-5`), **structured outputs** (`output_config.format` com o schema Zod) e nova validação Zod com 1 retry. O Haiku 5.5 **rejeita `temperature`**: a previsibilidade vem de `thinking: disabled` + `effort: "low"`. O prompt de sistema é gerado da taxonomia, fica byte-estável e vai em cache (`cache_control`); dados do post só na mensagem do usuário, entre aspas, como dado (nunca como instrução). Antes de mexer no código da API, carregue a skill `claude-api`.
 - **Testes:** Vitest (unidade, `*.test.ts` ao lado do código) e Playwright (e2e em `tests/e2e/`, projetos `desktop` e `mobile`).
 - **Deploy:** Vercel + Supabase. Crons protegidos por `CRON_SECRET`, idempotentes e com lock.
 
 ## Comandos
 
-| Comando               | O que faz                                                                     |
-| --------------------- | ----------------------------------------------------------------------------- |
-| `npm run dev`         | Servidor de desenvolvimento (http://localhost:3000)                           |
-| `npm run build`       | Build de produção                                                             |
-| `npm run lint`        | ESLint (`lint:fix` para corrigir)                                             |
-| `npm run format`      | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)      |
-| `npm run typecheck`   | Gera os tipos de rota e roda `tsc --noEmit`                                   |
-| `npm test`            | Vitest (`test:watch` em modo watch)                                           |
-| `npm run test:e2e`    | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` |
-| `npm run check`       | format:check + lint + typecheck + test + build (critério de fim de fase)      |
-| `npm run db:setup`    | Aplica migrations pendentes e carrega os anúncios fictícios                   |
-| `npm run db:reset`    | **Só local:** apaga tudo, migra e popula de novo                              |
-| `npm run db:generate` | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript  |
+| Comando                | O que faz                                                                                    |
+| ---------------------- | -------------------------------------------------------------------------------------------- |
+| `npm run dev`          | Servidor de desenvolvimento (http://localhost:3000)                                          |
+| `npm run build`        | Build de produção                                                                            |
+| `npm run lint`         | ESLint (`lint:fix` para corrigir)                                                            |
+| `npm run format`       | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)                     |
+| `npm run typecheck`    | Gera os tipos de rota e roda `tsc --noEmit`                                                  |
+| `npm test`             | Vitest (`test:watch` em modo watch)                                                          |
+| `npm run test:e2e`     | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`                |
+| `npm run check`        | format:check + lint + typecheck + test + build (critério de fim de fase)                     |
+| `npm run db:setup`     | Aplica migrations pendentes e carrega os anúncios fictícios                                  |
+| `npm run db:reset`     | **Só local:** apaga tudo, migra e popula de novo                                             |
+| `npm run db:generate`  | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript                 |
+| `npm run extract:eval` | Avalia a extração com IA nas 40 legendas de teste (`-- --offline`: só pré-filtro, sem custo) |
 
 ## Estrutura
 
@@ -53,8 +54,11 @@ src/
     search/              parseQuery, places (UF/cidades), filters (URL ⇄ filtros, chips)
     listings/            queries (server-only), format (pt-BR)
     db/                  pool Postgres + asAnon()
-    extraction/          (Fase 2) · instagram/ (Fase 3) · leads/ (Fase 4)
+    extraction/          pré-filtro, schema, prompt, extract (Claude), normalize, dedupe, pipeline
+    instagram/           (Fase 3) · leads/ (Fase 4)
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
+scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
+evals/extraction/        40 legendas fictícias com gabarito + cálculo do placar
 supabase/
   migrations/            SQL versionado (formato Supabase CLI)
   local/bootstrap.sql    recria roles/schemas do Supabase num Postgres comum (só local)
@@ -82,6 +86,13 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - Regras de produto: "v40" inclui o V40 Cross Country; "ultimate"/"ultra" incluem as versões Dark ("ultimate dark" restringe); "xc40 elétrico" inclui o EX40; "c40" ⇄ "ec40"; "polestar" = Polestar Engineered (a série Polestar 2014–2018 não veio ao Brasil); "São Paulo"/"Rio de Janeiro" sozinhos = estado, com atalho para a cidade; "cidade de…", "capital" e "sampa" = cidade.
 - **Mercado brasileiro:** `brazil: false` na taxonomia marca o que nunca foi vendido oficialmente aqui (V90, S60/V60 Cross Country, B4/B5/B6, D3/D4, T2, Summum, Polestar 2014–2018, V70 3ª geração). A busca continua reconhecendo esses termos e mostra um aviso, mas eles saem das opções do painel de filtros. Motores com `brazil: [...]` (T3, T4, D5) só valem nos modelos/anos listados. Os anúncios fictícios só usam combinações vendidas no Brasil (há teste para isso).
 - URL: `q` é o texto; parâmetros explícitos do painel (`modelo`, `motor`, `versao`, `combustivel`, `cambio`, `vendedor`, `ano_min`, `ano_max`, `preco_min`, `preco_max`, `km_max`, `uf`, `cidade`, `texto`, `ordem`, `pagina`) **sobrescrevem** o que veio do texto, inclusive quando vazios (= "qualquer").
+
+## Extração (Fase 2)
+
+- Ordem do pipeline (`src/lib/extraction/pipeline.ts`): blocklist → pré-filtro (regex, sem IA) → Claude → normalização e coerência → blocklist do telefone → deduplicação → publica (`confidence ≥ publish_confidence_threshold` e campos mínimos) ou manda para moderação. Cada `raw_post` sai de `pending` uma única vez.
+- A normalização é a fonte da verdade: re-lê preço/km dos trechos originais (`price_text`, `km_text`), casa a taxonomia, valida telefone (E.164, DDD válido) e **reduz a confiança** em combinações impossíveis ou não vendidas no Brasil.
+- O resumo precisa ser em palavras próprias: se repetir 8 palavras seguidas da legenda, a confiança cai e o anúncio vai para moderação.
+- Um anúncio `removed` nunca volta: uma repostagem do mesmo carro é ignorada.
 
 ## Variáveis de ambiente
 

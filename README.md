@@ -6,16 +6,16 @@ Buscador de anúncios de Volvo à venda no Brasil. Reúne posts de venda publica
 
 ## Status
 
-| Fase | Escopo                                      | Situação                |
-| ---- | ------------------------------------------- | ----------------------- |
-| 0    | Setup, convenções, guia da Meta             | ✅ aprovada             |
-| 1    | Taxonomia, banco, busca com dados fictícios | ✅ aguardando aprovação |
-| 2    | Extração com IA                             | ⏳                      |
-| 3    | Conectores do Instagram                     | ⏳                      |
-| 4    | Leads e WhatsApp                            | ⏳                      |
-| 5    | Admin e moderação                           | ⏳                      |
-| 6    | Vendedor                                    | ⏳                      |
-| 7    | Produção                                    | ⏳                      |
+| Fase | Escopo                                      | Situação                  |
+| ---- | ------------------------------------------- | ------------------------- |
+| 0    | Setup, convenções, guia da Meta             | ✅ aprovada               |
+| 1    | Taxonomia, banco, busca com dados fictícios | ✅ aguardando aprovação   |
+| 2    | Extração com IA                             | 🔄 falta a avaliação real |
+| 3    | Conectores do Instagram                     | ⏳                        |
+| 4    | Leads e WhatsApp                            | ⏳                        |
+| 5    | Admin e moderação                           | ⏳                        |
+| 6    | Vendedor                                    | ⏳                        |
+| 7    | Produção                                    | ⏳                        |
 
 ## Stack
 
@@ -53,18 +53,19 @@ Isso aplica as migrations e carrega ~60 anúncios **fictícios**. Abra http://lo
 
 ## Scripts
 
-| Comando                                   | O que faz                                                                                     |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `npm run dev`                             | Servidor de desenvolvimento                                                                   |
-| `npm run build` / `npm start`             | Build e servidor de produção                                                                  |
-| `npm run lint` / `npm run lint:fix`       | ESLint                                                                                        |
-| `npm run format` / `npm run format:check` | Prettier (com ordenação de classes Tailwind)                                                  |
-| `npm run typecheck`                       | Checagem de tipos                                                                             |
-| `npm test`                                | Testes de unidade (Vitest)                                                                    |
-| `npm run test:e2e`                        | Testes e2e (Playwright, desktop + mobile). Na primeira vez: `npx playwright install chromium` |
-| `npm run check`                           | Tudo acima, menos e2e (critério de fim de fase)                                               |
-| `npm run db:setup` / `db:reset`           | Migrations + dados fictícios (`db:reset` apaga tudo; só funciona em banco local)              |
-| `npm run db:generate`                     | Regera a migration da taxonomia e o `supabase/seed.sql`                                       |
+| Comando                                   | O que faz                                                                                                                 |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                             | Servidor de desenvolvimento                                                                                               |
+| `npm run build` / `npm start`             | Build e servidor de produção                                                                                              |
+| `npm run lint` / `npm run lint:fix`       | ESLint                                                                                                                    |
+| `npm run format` / `npm run format:check` | Prettier (com ordenação de classes Tailwind)                                                                              |
+| `npm run typecheck`                       | Checagem de tipos                                                                                                         |
+| `npm test`                                | Testes de unidade (Vitest)                                                                                                |
+| `npm run test:e2e`                        | Testes e2e (Playwright, desktop + mobile). Na primeira vez: `npx playwright install chromium`                             |
+| `npm run check`                           | Tudo acima, menos e2e (critério de fim de fase)                                                                           |
+| `npm run db:setup` / `db:reset`           | Migrations + dados fictícios (`db:reset` apaga tudo; só funciona em banco local)                                          |
+| `npm run db:generate`                     | Regera a migration da taxonomia e o `supabase/seed.sql`                                                                   |
+| `npm run extract:eval`                    | Avalia a extração com IA nas 40 legendas de teste (precisa de `ANTHROPIC_API_KEY`; `-- --offline` avalia só o pré-filtro) |
 
 ## Documentação
 

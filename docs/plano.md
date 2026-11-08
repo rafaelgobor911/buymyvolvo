@@ -75,6 +75,20 @@ A Business Verification depende do **CNPJ** e, idealmente, do **domínio**. Vale
 
 Segunda rodada: Polestar Engineered na XC60 (2019–2026) e no S60 (2019–2022), sem V60; Ultimate Dark e Ultra Dark na XC60 e na XC90. Nenhuma dúvida pendente na taxonomia.
 
+## Fase 2: decisões
+
+| Tema                | Decisão                                                                                                                                      |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Formato da resposta | Structured outputs (`output_config.format`) com o schema Zod, em vez de forçar uma tool call; Zod valida de novo e há 1 retry                |
+| "Temperatura baixa" | O Haiku 5.5 rejeita `temperature`; usamos raciocínio desligado + esforço baixo                                                               |
+| Números             | O modelo devolve o número e o trecho original (`price_text`, `km_text`); a normalização re-lê o trecho ("189k", "58mil", emojis de dígitos)  |
+| Coerência           | Penalidades na confiança: motor/versão/ano impossíveis, itens não vendidos no Brasil, resumo copiado da legenda, combustível incoerente      |
+| Duplicados          | Chave exata (modelo, motor, ano, km arredondado a 5 mil, contato) + regra aproximada (mesmo vendedor/modelo/ano e km até 3 mil de diferença) |
+| Custo               | Haiku 5.5: US$ 0,10/M entrada, US$ 0,50/M saída; cache estimado com multiplicadores padrão (1,25×/0,1×)                                      |
+| Chave da API        | Não aceita pelo formulário seguro (host da própria Anthropic); vai como variável do ambiente `buymyvolvo`                                    |
+
+Pendente: rodar `npm run extract:eval` com a chave para medir acurácia por campo e custo por 1.000 posts.
+
 ## Próxima fase (Fase 2: extração com IA)
 
 Pré-filtro por regex, extração com Claude (tool use + Zod), normalização (telefone E.164, preço, km, anos), checagem de coerência com a taxonomia, deduplicação e 40 legendas de teste com gabarito. Saída: `npm run extract:eval`.
