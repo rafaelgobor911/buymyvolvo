@@ -6,9 +6,11 @@ const baseURL = `http://localhost:${PORT}`;
 // Optional: point to a preinstalled Chromium (e.g. in sandboxes where
 // `npx playwright install` is not available).
 const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined;
+const E2E_ADMIN = "admin.teste@example.com";
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  globalSetup: "./tests/e2e/global-setup.ts",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
@@ -29,7 +31,12 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-    // Contact clicks hash IP/UA with HASH_SALT; tests use a throwaway one.
-    env: { HASH_SALT: process.env.HASH_SALT || "e2e-only-salt-not-a-secret-0000000000" },
+    // Throwaway test values: HASH_SALT for contact clicks; the admin test login
+    // (works only with NEXT_PUBLIC_DEMO_MODE on, never in production).
+    env: {
+      HASH_SALT: process.env.HASH_SALT || "e2e-only-salt-not-a-secret-0000000000",
+      ADMIN_EMAILS: [process.env.ADMIN_EMAILS, E2E_ADMIN].filter(Boolean).join(","),
+      ADMIN_TEST_LOGIN_EMAIL: E2E_ADMIN,
+    },
   },
 });

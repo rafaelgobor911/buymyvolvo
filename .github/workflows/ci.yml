@@ -29,6 +29,9 @@ jobs:
       NEXT_PUBLIC_DEMO_MODE: "true"
       # Test-only value (contact clicks hash IP/UA with it); production sets its own.
       HASH_SALT: ci-only-salt-not-a-secret-000000000000
+      # Admin test login for e2e (needs demo mode; never set in a deployed environment).
+      ADMIN_EMAILS: admin.teste@example.com
+      ADMIN_TEST_LOGIN_EMAIL: admin.teste@example.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
