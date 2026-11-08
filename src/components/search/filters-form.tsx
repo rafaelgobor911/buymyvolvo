@@ -245,6 +245,17 @@ export function FiltersForm({ filters, idPrefix }: { filters: SearchFilters; idP
           ]}
         />
       </Field>
+      <Field id={id("repasse")} label="Repasse">
+        <Select
+          id={id("repasse")}
+          name={PARAM.repasse}
+          value={filters.repasse === "only" ? "so" : filters.repasse === "exclude" ? "sem" : ""}
+          options={[
+            { value: "sem", label: "Sem repasse" },
+            { value: "so", label: "Só repasse" },
+          ]}
+        />
+      </Field>
       <Field id={id("texto")} label="Palavras-chave">
         <Input
           id={id("texto")}

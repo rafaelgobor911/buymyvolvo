@@ -153,6 +153,24 @@ describe.skipIf(!url)("database", () => {
       expect((await search("teto solr")).total).toBeGreaterThan(0);
     });
 
+    it("repasse: only, exclude, from text or panel; alerts are public", async () => {
+      const repasse = FIXTURE_LISTINGS.filter(
+        (l) => (l.status ?? "active") === "active" && l.redFlags?.includes("repasse"),
+      ).length;
+      expect(repasse).toBeGreaterThan(0);
+      const only = await search("repasse");
+      expect(only.total).toBe(repasse);
+      expect(only.items.every((i) => i.alerts.includes("repasse"))).toBe(true);
+      expect((await search("", { repasse: "so" })).total).toBe(repasse);
+      expect((await search("", { repasse: "sem" })).total).toBe(activeCount - repasse);
+      // An explicit empty panel value means "any", overriding the text.
+      expect((await search("repasse", { repasse: "" })).total).toBe(activeCount);
+
+      const [agio] = slugOf((l) => !!l.redFlags?.includes("agio"));
+      const detail = await getListingBySlug(agio!.slug);
+      expect(detail?.alerts).toEqual(["agio"]);
+    });
+
     it("explicit filter params override what was parsed from q", async () => {
       const r = await search("s60 t5", { motor: "t4" });
       expect(r.items.every((i) => i.engineName === "T4")).toBe(true);

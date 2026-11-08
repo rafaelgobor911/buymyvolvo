@@ -30,6 +30,21 @@ test.describe("Busca e anúncio", () => {
     ).toBeDisabled();
   });
 
+  test("repasse: selo na busca e quadro de cuidados no anúncio", async ({ page }) => {
+    await page.goto("/busca?q=repasse");
+    await expect(page.getByRole("link", { name: "Remover filtro: Só repasse" })).toBeVisible();
+    const cards = page.locator("main article");
+    const count = await cards.count();
+    expect(count).toBeGreaterThan(0);
+    await expect(cards.filter({ hasText: "Repasse" })).toHaveCount(count);
+
+    await cards.first().getByRole("link").click();
+    await expect(page.getByRole("heading", { name: "Anúncio de repasse" })).toBeVisible();
+    await expect(
+      page.getByText("Não pague sinal nem reserva antes de ver o carro e o documento."),
+    ).toBeVisible();
+  });
+
   test("remover um filtro amplia a busca", async ({ page }) => {
     await page.goto("/busca?q=s60+t5");
     await page.getByRole("link", { name: "Remover filtro: T5" }).click();

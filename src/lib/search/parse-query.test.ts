@@ -296,6 +296,13 @@ describe("parseQuery: leftovers and warnings", () => {
     expect(parse("direto com o dono").sellerType).toBe("particular");
     expect(parse("concessionária").sellerType).toBe("loja");
   });
+
+  it("repasse filters: only or exclude, nothing left as free text", () => {
+    expect(parse("xc60 repasse")).toMatchObject({ modelIds: ["xc60"], repasse: "only", text: "" });
+    expect(parse("carros de repasse em sp")).toMatchObject({ repasse: "only", uf: "SP", text: "" });
+    expect(parse("xc60 sem repasse")).toMatchObject({ repasse: "exclude", text: "" });
+    expect(parse("xc60 t8").repasse).toBeUndefined();
+  });
 });
 
 describe("parseQuery: Brazilian market (owner review 2026-11-07)", () => {

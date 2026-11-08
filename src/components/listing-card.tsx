@@ -2,6 +2,7 @@ import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
 
 import { ModelPlate } from "@/components/model-plate";
+import { Badge } from "@/components/ui/badge";
 import {
   formatKm,
   formatPlace,
@@ -40,6 +41,7 @@ export function ListingCard({ listing, now }: { listing: Listing; now: Date }) {
         <p className="text-sm text-muted-foreground">
           {formatYears(listing.yearFab, listing.yearModel)} · {formatKm(listing.km)}
         </p>
+        {listing.alerts.includes("repasse") && <RepasseBadge className="self-start" />}
         <p className="mt-auto pt-2 text-xl font-semibold tracking-tight">
           {formatPrice(listing.priceCents)}
         </p>
@@ -60,6 +62,19 @@ export function ListingCard({ listing, now }: { listing: Listing; now: Date }) {
         </p>
       </div>
     </article>
+  );
+}
+
+/** "Repasse": the listing's own post calls the sale a repasse. */
+export function RepasseBadge({ className }: { className?: string }) {
+  return (
+    <Badge
+      variant="outline"
+      className={`border-warning/60 bg-warning-soft text-warning-foreground ${className ?? ""}`}
+      title="O próprio anúncio se descreve como repasse"
+    >
+      Repasse
+    </Badge>
   );
 }
 

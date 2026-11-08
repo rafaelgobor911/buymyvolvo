@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { cache, Suspense } from "react";
 
-import { ListingGrid, listingTitle } from "@/components/listing-card";
+import { ListingAlerts } from "@/components/listing-alerts";
+import { ListingGrid, listingTitle, RepasseBadge } from "@/components/listing-card";
 import { ModelPlate } from "@/components/model-plate";
 import { SafetyTips } from "@/components/safety-tips";
 import { Badge } from "@/components/ui/badge";
@@ -150,6 +151,7 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
               <Badge variant="outline">
                 {listing.origin === "instagram" ? "Via Instagram" : "Cadastro direto"}
               </Badge>
+              {listing.alerts.includes("repasse") && <RepasseBadge />}
             </div>
             <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
               Volvo {title}
@@ -162,6 +164,8 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
               {formatPrice(listing.priceCents)}
             </p>
           </div>
+
+          <ListingAlerts alerts={listing.alerts} />
 
           <ContactActions listing={listing} />
 

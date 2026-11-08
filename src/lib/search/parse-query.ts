@@ -39,6 +39,8 @@ import {
 } from "./places";
 
 export type SearchSellerType = "loja" | "particular";
+/** "only": just listings whose post calls them a repasse; "exclude": hide them. */
+export type RepasseFilter = "only" | "exclude";
 
 export interface ParsedQuery {
   modelIds: string[];
@@ -47,6 +49,7 @@ export interface ParsedQuery {
   fuels: Fuel[];
   transmission?: Transmission;
   sellerType?: SearchSellerType;
+  repasse?: RepasseFilter;
   yearMin?: number;
   yearMax?: number;
   priceMin?: number;
@@ -73,6 +76,7 @@ type Entry =
   | { kind: "fuel"; fuels: Fuel[] }
   | { kind: "transmission"; value: Transmission }
   | { kind: "seller"; value: SearchSellerType }
+  | { kind: "repasse"; value: RepasseFilter }
   | { kind: "uf"; uf: Uf; ambiguous: boolean }
   | { kind: "city"; city: string; uf: Uf }
   | { kind: "homonym"; city: string; uf: Uf }
@@ -126,6 +130,21 @@ const TRANSMISSION_PHRASES: Array<[string[], Transmission]> = [
     ],
     "automatico",
   ],
+];
+
+const REPASSE_PHRASES: Array<[string[], RepasseFilter]> = [
+  [
+    [
+      "repasse",
+      "repasses",
+      "de repasse",
+      "carro de repasse",
+      "carros de repasse",
+      "valor de repasse",
+    ],
+    "only",
+  ],
+  [["sem repasse", "nao repasse", "exceto repasse", "sem repasses"], "exclude"],
 ];
 
 const SELLER_PHRASES: Array<[string[], SearchSellerType]> = [
@@ -237,6 +256,9 @@ for (const [phrases, fuels] of FUEL_PHRASES) {
 }
 for (const [phrases, value] of TRANSMISSION_PHRASES) {
   for (const p of phrases) addEntry(p, { kind: "transmission", value });
+}
+for (const [phrases, value] of REPASSE_PHRASES) {
+  for (const p of phrases) addEntry(p, { kind: "repasse", value });
 }
 for (const [phrases, value] of SELLER_PHRASES) {
   for (const p of phrases) addEntry(p, { kind: "seller", value });
@@ -618,6 +640,9 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
           break;
         case "seller":
           result.sellerType = e.value;
+          break;
+        case "repasse":
+          result.repasse = e.value;
           break;
         case "uf":
           result.uf = e.uf;

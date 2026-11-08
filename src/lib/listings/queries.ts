@@ -6,6 +6,21 @@ import type { Fuel, SellerType, Transmission } from "@/lib/taxonomy";
 
 export type ListingStatus = "active" | "sold" | "expired";
 
+/** Alerts shown to buyers, in display order; "sem_contato" stays internal. */
+export const PUBLIC_ALERTS = [
+  "repasse",
+  "agio",
+  "pedido_de_sinal",
+  "leilao",
+  "sinistro",
+  "documento_pendente",
+  "abaixo_do_mercado",
+] as const;
+export type PublicAlert = (typeof PUBLIC_ALERTS)[number];
+
+const publicAlerts = (flags: string[] | null): PublicAlert[] =>
+  PUBLIC_ALERTS.filter((a) => flags?.includes(a));
+
 export interface ListingCard {
   id: string;
   slug: string;
@@ -28,6 +43,8 @@ export interface ListingCard {
   isClaimed: boolean;
   isFeatured: boolean;
   firstSeenAt: Date;
+  /** Alerts the post itself declares (repasse, ágio, leilão...); internal flags removed. */
+  alerts: PublicAlert[];
 }
 
 export interface ListingDetail extends ListingCard {
@@ -51,7 +68,7 @@ export interface ListingDetail extends ListingCard {
 const CARD_COLUMNS = (tx: Tx) => tx`
   l.id, l.slug, l.status, l.origin, l.model_id, m.name as model_name, e.name as engine_name,
   t.name as trim_name, l.version_text, l.year_fab, l.year_model, l.km, l.price_cents, l.city, l.uf,
-  l.fuel, l.transmission, l.seller_type, l.is_claimed, l.is_featured, l.first_seen_at`;
+  l.fuel, l.transmission, l.seller_type, l.is_claimed, l.is_featured, l.first_seen_at, l.red_flags`;
 
 const JOINS = (tx: Tx) => tx`
   from public.listings l
@@ -81,6 +98,7 @@ type CardRow = {
   is_claimed: boolean;
   is_featured: boolean;
   first_seen_at: Date;
+  red_flags: string[] | null;
 };
 
 const toCard = (r: CardRow): ListingCard => ({
@@ -105,6 +123,7 @@ const toCard = (r: CardRow): ListingCard => ({
   isClaimed: r.is_claimed,
   isFeatured: r.is_featured,
   firstSeenAt: r.first_seen_at,
+  alerts: publicAlerts(r.red_flags),
 });
 
 export interface SearchResult {
@@ -123,6 +142,8 @@ export async function searchListings(f: SearchFilters): Promise<SearchResult> {
     if (f.fuels.length) conditions.push(tx`l.fuel = any(${f.fuels})`);
     if (f.transmission) conditions.push(tx`l.transmission = ${f.transmission}`);
     if (f.sellerType) conditions.push(tx`l.seller_type = ${f.sellerType}`);
+    if (f.repasse === "only") conditions.push(tx`l.red_flags @> array['repasse']`);
+    if (f.repasse === "exclude") conditions.push(tx`not (l.red_flags @> array['repasse'])`);
     if (f.yearMin !== undefined) conditions.push(tx`l.year_model >= ${f.yearMin}`);
     if (f.yearMax !== undefined) conditions.push(tx`l.year_model <= ${f.yearMax}`);
     if (f.priceMin !== undefined) conditions.push(tx`l.price_cents >= ${f.priceMin * 100}`);

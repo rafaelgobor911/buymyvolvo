@@ -1,7 +1,7 @@
 /**
  * Resolves the effective search filters from the URL:
  *   q            free text, parsed by parseQuery
- *   explicit     params from the filter panel; when present (even empty) they
+ *   explicit     params from the filter panel (repasse=so|sem among them); when present (even empty) they
  *                override what was parsed from q for that dimension
  * Pure and client-safe: used by server pages and by components building links.
  */
@@ -22,7 +22,7 @@ import {
   variantsOf,
 } from "@/lib/taxonomy";
 
-import { parseQuery, type SearchSellerType } from "./parse-query";
+import { parseQuery, type RepasseFilter, type SearchSellerType } from "./parse-query";
 import { isUf, type Uf, UFS } from "./places";
 
 export const SORTS = {
@@ -42,6 +42,7 @@ export const PARAM = {
   fuel: "combustivel",
   transmission: "cambio",
   seller: "vendedor",
+  repasse: "repasse",
   yearMin: "ano_min",
   yearMax: "ano_max",
   priceMin: "preco_min",
@@ -64,6 +65,7 @@ export interface SearchFilters {
   fuels: Fuel[];
   transmission?: Transmission;
   sellerType?: SearchSellerType;
+  repasse?: RepasseFilter;
   yearMin?: number;
   yearMax?: number;
   priceMin?: number;
@@ -126,6 +128,7 @@ export function resolveSearch(params: RawParams, options: { now?: Date } = {}): 
   const sort = get(PARAM.sort);
   const transmission = get(PARAM.transmission);
   const seller = get(PARAM.seller);
+  const repasse = get(PARAM.repasse);
   const uf = get(PARAM.uf)?.toUpperCase();
   const city = get(PARAM.city)?.trim();
   const yearMin = pick(PARAM.yearMin, () => positiveInt(get(PARAM.yearMin), 2100), parsed.yearMin);
@@ -166,6 +169,11 @@ export function resolveSearch(params: RawParams, options: { now?: Date } = {}): 
       PARAM.seller,
       () => (seller === "loja" || seller === "particular" ? seller : undefined),
       parsed.sellerType,
+    ),
+    repasse: pick(
+      PARAM.repasse,
+      () => (repasse === "so" ? "only" : repasse === "sem" ? "exclude" : undefined),
+      parsed.repasse,
     ),
     yearMin,
     yearMax,
@@ -290,6 +298,13 @@ export function describeFilters(f: SearchFilters): FilterChip[] {
       key: "seller",
       label: f.sellerType === "loja" ? "Loja" : "Particular",
       param: PARAM.seller,
+    });
+  }
+  if (f.repasse) {
+    chips.push({
+      key: "repasse",
+      label: f.repasse === "only" ? "Só repasse" : "Sem repasse",
+      param: PARAM.repasse,
     });
   }
   if (f.yearMin !== undefined && f.yearMin === f.yearMax) {
