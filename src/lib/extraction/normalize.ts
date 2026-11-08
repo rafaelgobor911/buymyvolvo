@@ -182,6 +182,72 @@ function matchTrim(
 }
 
 // ---------------------------------------------------------------------------
+// Colors and summary checks
+// ---------------------------------------------------------------------------
+
+/** Feminine/plural forms of car colors → the masculine singular used on the page. */
+const COLOR_WORDS: Record<string, string> = {
+  preta: "preto",
+  pretos: "preto",
+  branca: "branco",
+  brancos: "branco",
+  vermelha: "vermelho",
+  amarela: "amarelo",
+  dourada: "dourado",
+  prateada: "prateado",
+  roxa: "roxo",
+  metalica: "metálico",
+  metálica: "metálico",
+  perolizada: "perolizado",
+  fosca: "fosco",
+  escura: "escuro",
+  clara: "claro",
+};
+
+/** "Vermelha metálica" → "vermelho metálico"; unknown words are kept. */
+export function normalizeColor(raw: string | null): string | null {
+  const text = raw?.trim().toLowerCase();
+  if (!text) return null;
+  return text
+    .split(/\s+/)
+    .map((w) => COLOR_WORDS[w] ?? w)
+    .join(" ");
+}
+
+const CONTACT_WORDS =
+  /\b(contato|contatar|whats(app)?|zap|wpp|direct|inbox|dm|telefone|ligar|ligue|chame|chamar)\b/;
+const CONTACT_DATA = /@[a-z0-9._]{2,}|https?:\/\/|www\./;
+const SUMMARY_PRICE = /r\$|\breais\b|\b\d+([.,]\d+)?\s*(mil|k)\b(?!\s*(km|quilometr|rodad))/;
+
+/**
+ * Drops sentences that only say how to reach the seller ("Contato pelo
+ * direct."): the page has its own contact button. Keeps the text if nothing
+ * else would remain.
+ */
+export function stripContactSentences(summary: string): string {
+  const sentences = summary.split(/(?<=[.!?])\s+/);
+  const kept = sentences.filter((s) => !CONTACT_WORDS.test(foldText(s)));
+  return kept.length > 0 && kept.length < sentences.length ? kept.join(" ") : summary;
+}
+
+/**
+ * The summary is public (page, meta description) while the phone is not, so a
+ * phone, @handle or link in it goes to moderation; a price there gets stale.
+ */
+function checkSummary(
+  summary: string,
+  issue: (code: string, message: string, penalty: number) => void,
+) {
+  const folded = foldText(summary);
+  if (extractPhones(summary).length > 0 || CONTACT_DATA.test(folded)) {
+    issue("summary_contact", "O resumo traz dado de contato (telefone, @ ou link).", 0.3);
+  }
+  if (SUMMARY_PRICE.test(folded)) {
+    issue("summary_price", "O resumo menciona o preço.", 0.1);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Red flags found by rule (in addition to the model's)
 // ---------------------------------------------------------------------------
 
@@ -258,7 +324,9 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
   const years = normalizeYears(x.year_fab, x.year_model, now);
   if (!years.ok) issue("year_invalid", "Ano de fabricação/modelo incoerente.", 0.15);
   const price = normalizePrice(x.price_text, x.price);
-  if ((x.price != null || x.price_text) && price == null) {
+  // "Consulte valor" (price on request) is no price, not an invalid one.
+  const statedPrice = (x.price != null && x.price > 0) || /\d/.test(foldText(x.price_text ?? ""));
+  if (statedPrice && price == null) {
     issue("price_invalid", "Preço fora da faixa plausível.", 0.1);
   }
   const km = normalizeKm(x.km_text, x.km);
@@ -346,10 +414,11 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
   else redFlags.delete("sem_contato");
 
   // Compliance: the summary must be in our own words.
-  const summary = x.summary_ptbr.trim();
+  const summary = stripContactSentences(x.summary_ptbr.trim());
   if (sharesWordRun(summary, ctx.caption, 8)) {
     issue("summary_copied", "O resumo repete trechos da legenda.", 0.3);
   }
+  if (summary) checkSummary(summary, issue);
 
   const penalty = issues.reduce((sum, i) => sum + i.penalty, 0);
   const confidence = Math.max(0, Math.min(1, Math.min(x.confidence, 1) - penalty));
@@ -366,7 +435,7 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
     priceCents: price == null ? null : price * 100,
     city,
     uf,
-    color: x.color?.trim().toLowerCase() || null,
+    color: normalizeColor(x.color),
     transmission: x.transmission,
     fuel,
     options: [...new Set(x.options.map((o) => o.trim()).filter(Boolean))].slice(0, 12),

@@ -158,6 +158,52 @@ describe("normalizeExtraction", () => {
     );
   });
 
+  it("writes colors in the masculine singular", () => {
+    expect(norm({ color: "Vermelha" }).color).toBe("vermelho");
+    expect(norm({ color: "preta metálica" }).color).toBe("preto metálico");
+    expect(norm({ color: "amarelo creme" }).color).toBe("amarelo creme");
+    expect(norm({ color: "cinza" }).color).toBe("cinza");
+    expect(norm({ color: "  " }).color).toBeNull();
+  });
+
+  it("sends a public summary with contact data to moderation and flags a price", () => {
+    const codes = (summary_ptbr: string) => norm({ summary_ptbr }).issues.map((i) => i.code);
+    expect(codes("SUV híbrido com 41 mil km rodados e revisões em dia.")).toEqual([]);
+    expect(codes("Sedã com cerca de 102 mil quilômetros, bem conservado.")).toEqual([]);
+    expect(codes("Bem conservado. Chame no WhatsApp (41) 90000-0001.")).toEqual([]);
+    expect(codes("Carro da loja @nordica.veiculos, revisado.")).toContain("summary_contact");
+    expect(codes("Coupé raro, à venda por 55 mil reais.")).toEqual(["summary_price"]);
+    expect(codes("Oferecido por R$ 89.900 com IPVA pago.")).toEqual(["summary_price"]);
+    const leaked = norm({ summary_ptbr: "Contato pelo zap 41 90000-0001." });
+    expect(leaked.confidence).toBeLessThan(0.85);
+  });
+
+  it("drops sentences that only say how to contact the seller", () => {
+    expect(
+      norm({
+        summary_ptbr:
+          "SUV elétrico de 2022 com bateria em ótimo estado. O contato é feito pelo direct ou telefone indicado no anúncio.",
+      }).summary,
+    ).toBe("SUV elétrico de 2022 com bateria em ótimo estado.");
+    expect(
+      norm({ summary_ptbr: "Bem conservado. Chame no WhatsApp (41) 90000-0001. Aceita troca." })
+        .summary,
+    ).toBe("Bem conservado. Aceita troca.");
+    expect(norm({ summary_ptbr: "Contato só pelo direct." }).summary).toBe(
+      "Contato só pelo direct.",
+    );
+  });
+
+  it("does not penalize a price on request", () => {
+    const onRequest = norm({ price: null, price_text: "Consulte valor!" });
+    expect(onRequest.priceCents).toBeNull();
+    expect(onRequest.issues).toEqual([]);
+    expect(norm({ price: 0, price_text: "sob consulta" }).issues).toEqual([]);
+    expect(norm({ price: 1, price_text: "R$ 1" }).issues.map((i) => i.code)).toEqual([
+      "price_invalid",
+    ]);
+  });
+
   it("prefers the price snippet over a wrong number from the model", () => {
     expect(norm({ price: 1, price_text: "R$ 159.900" }).priceCents).toBe(15_990_000);
   });
