@@ -6,6 +6,7 @@
  * assigned to real people; nothing here is ever dialed.
  * A field left `undefined` in `expected` is not scored for that case.
  */
+import type { PrefilterOrigin } from "@/lib/extraction/prefilter";
 import type { RedFlag } from "@/lib/extraction/schema";
 import type { Fuel, Transmission } from "@/lib/taxonomy";
 
@@ -36,6 +37,10 @@ export interface EvalCase {
   id: string;
   caption: string;
   igUsername?: string;
+  /** Where the post came from (sets the pre-filter's Brazil rule); absent in the fictitious set. */
+  origin?: PrefilterOrigin;
+  /** Profile bio of a Business Discovery source (contact and city fallback). */
+  bio?: string | null;
   note?: string;
   expected: EvalExpected;
 }

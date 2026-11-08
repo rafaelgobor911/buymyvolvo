@@ -1,8 +1,10 @@
 /**
- * npm run extract:eval [-- --offline] [--limit=N] [--concurrency=N] [--model=ID]
+ * npm run extract:eval [-- --set=real] [--offline] [--limit=N] [--concurrency=N] [--model=ID]
  *
- * Runs the 40 gold captions through pre-filter → Claude → normalization and
- * writes a per-field accuracy and cost report to evals/extraction/reports/.
+ * Runs a gold set through pre-filter → Claude → normalization and writes a
+ * per-field accuracy and cost report to evals/extraction/reports/.
+ * --set=fictitious (default): the 40 fictitious captions.
+ * --set=real: real captions from the monitored shops and hashtags (anonymized).
  * --offline evaluates only the pre-filter (no API calls, no cost).
  */
 import { mkdir, writeFile } from "node:fs/promises";
@@ -22,6 +24,7 @@ import { prefilter } from "@/lib/extraction/prefilter";
 import { EXTRACTION_PROMPT_VERSION } from "@/lib/extraction/prompt";
 
 import { EVAL_CASES, type EvalCase } from "../evals/extraction/dataset";
+import { REAL_EVAL_CASES } from "../evals/extraction/dataset-real";
 import { type CaseResult, renderMarkdown, scoreResults } from "../evals/extraction/score";
 import { loadLocalEnv } from "./db/lib";
 
@@ -60,7 +63,13 @@ async function main() {
   const limit = Number(arg("limit") ?? EVAL_CASES.length);
   const concurrency = Number(arg("concurrency") ?? 4);
   const model = arg("model") ?? process.env.ANTHROPIC_MODEL_EXTRACTION ?? DEFAULT_EXTRACTION_MODEL;
-  const cases = EVAL_CASES.slice(0, limit);
+  const set = arg("set") ?? "fictitious";
+  if (set !== "fictitious" && set !== "real") {
+    console.error('--set deve ser "fictitious" ou "real".');
+    process.exit(2);
+  }
+  const all = set === "real" ? REAL_EVAL_CASES : EVAL_CASES;
+  const cases = all.slice(0, limit);
 
   if (!offline && !process.env.ANTHROPIC_API_KEY) {
     console.error(
@@ -72,7 +81,7 @@ async function main() {
   let done = 0;
 
   const runCase = async (c: EvalCase): Promise<CaseResult> => {
-    const filter = prefilter(c.caption);
+    const filter = prefilter(c.caption, { origin: c.origin });
     const base: CaseResult = {
       id: c.id,
       prefilterPass: filter.pass,
@@ -83,12 +92,13 @@ async function main() {
     const started = performance.now();
     try {
       const r = await extractListing(
-        { caption: c.caption, igUsername: c.igUsername },
+        { caption: c.caption, igUsername: c.igUsername, bio: c.bio },
         { client, model },
       );
       const normalized = normalizeExtraction(r.output, {
         caption: c.caption,
         igUsername: c.igUsername,
+        bio: c.bio,
         now: NOW,
       });
       return {
@@ -125,12 +135,17 @@ async function main() {
 
   const report = scoreResults(cases, results, offline ? null : model);
   const date = new Date().toISOString();
-  const markdown = renderMarkdown(report, { date, promptVersion: EXTRACTION_PROMPT_VERSION });
+  const markdown = renderMarkdown(report, {
+    date,
+    promptVersion: EXTRACTION_PROMPT_VERSION,
+    dataset: set === "real" ? "evals/extraction/dataset-real.ts" : "evals/extraction/dataset.ts",
+  });
   console.log(markdown);
 
   const dir = path.join(ROOT, "evals/extraction/reports");
   await mkdir(dir, { recursive: true });
-  const stem = offline ? "prefilter-latest" : `latest-${model}`;
+  const prefix = set === "real" ? "real-" : "";
+  const stem = `${prefix}${offline ? "prefilter-latest" : `latest-${model}`}`;
   await writeFormatted(path.join(dir, `${stem}.md`), markdown);
   await writeFormatted(
     path.join(dir, `${stem}.json`),

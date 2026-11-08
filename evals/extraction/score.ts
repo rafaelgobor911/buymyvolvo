@@ -193,7 +193,7 @@ const FIELD_LABELS: Record<Field, string> = {
 
 export function renderMarkdown(
   report: EvalReport,
-  meta: { date: string; promptVersion: string },
+  meta: { date: string; promptVersion: string; dataset?: string },
 ): string {
   const lines = [
     `# Avaliação da extração`,
@@ -201,7 +201,7 @@ export function renderMarkdown(
     `- Data: ${meta.date}`,
     `- Modelo: ${report.model ?? "(somente pré-filtro, sem chamadas à API)"}`,
     `- Versão do prompt: ${meta.promptVersion}`,
-    `- Casos: ${report.cases} (conjunto em \`evals/extraction/dataset.ts\`)`,
+    `- Casos: ${report.cases} (conjunto em \`${meta.dataset ?? "evals/extraction/dataset.ts"}\`)`,
     "",
     "## Resumo",
     "",

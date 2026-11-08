@@ -1,0 +1,1869 @@
+{
+  "date": "2026-11-08T16:32:11.216Z",
+  "promptVersion": "2026-11-08.4",
+  "report": {
+    "model": null,
+    "cases": 35,
+    "prefilter": {
+      "correct": 35,
+      "total": 35,
+      "falseNegatives": [],
+      "falsePositives": []
+    },
+    "isListing": {
+      "correct": 15,
+      "total": 35,
+      "misses": [
+        "r01",
+        "r02",
+        "r03",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08",
+        "r11",
+        "r12",
+        "r13",
+        "r14",
+        "r15",
+        "r16",
+        "r17",
+        "r18",
+        "r20",
+        "r21",
+        "r24",
+        "r28"
+      ]
+    },
+    "fields": {
+      "modelId": {
+        "correct": 0,
+        "total": 20
+      },
+      "engineId": {
+        "correct": 0,
+        "total": 20
+      },
+      "trimId": {
+        "correct": 0,
+        "total": 20
+      },
+      "yearFab": {
+        "correct": 0,
+        "total": 6
+      },
+      "yearModel": {
+        "correct": 0,
+        "total": 20
+      },
+      "km": {
+        "correct": 0,
+        "total": 20
+      },
+      "price": {
+        "correct": 0,
+        "total": 20
+      },
+      "city": {
+        "correct": 0,
+        "total": 13
+      },
+      "uf": {
+        "correct": 0,
+        "total": 19
+      },
+      "transmission": {
+        "correct": 0,
+        "total": 13
+      },
+      "fuel": {
+        "correct": 0,
+        "total": 19
+      },
+      "sellerType": {
+        "correct": 0,
+        "total": 18
+      },
+      "phone": {
+        "correct": 0,
+        "total": 20
+      }
+    },
+    "overallFieldAccuracy": 0,
+    "redFlags": {
+      "found": 0,
+      "expected": 0
+    },
+    "summaryCopied": [],
+    "errors": [],
+    "mismatches": [
+      {
+        "id": "r01",
+        "field": "modelId",
+        "expected": "xc40",
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "engineId",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "yearModel",
+        "expected": 2021,
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "km",
+        "expected": 38000,
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "price",
+        "expected": 208900,
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r01",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "km",
+        "expected": 95000,
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "price",
+        "expected": 165900,
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r02",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "trimId",
+        "expected": "ultimate-dark",
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "yearModel",
+        "expected": 2023,
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "km",
+        "expected": 59000,
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "price",
+        "expected": 254900,
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r03",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "modelId",
+        "expected": "xc40",
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "engineId",
+        "expected": "single-motor",
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "trimId",
+        "expected": "plus",
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "km",
+        "expected": 25000,
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "price",
+        "expected": 209900,
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "fuel",
+        "expected": "eletrico",
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r04",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "trimId",
+        "expected": "ultra",
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "yearModel",
+        "expected": 2025,
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "km",
+        "expected": 19000,
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "price",
+        "expected": 358900,
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r05",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "modelId",
+        "expected": "xc90",
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "trimId",
+        "expected": "inscription",
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "yearModel",
+        "expected": 2022,
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "km",
+        "expected": 39000,
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "price",
+        "expected": 269900,
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r06",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "modelId",
+        "expected": "s60",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "yearModel",
+        "expected": 2021,
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "km",
+        "expected": 55600,
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "price",
+        "expected": 195900,
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "city",
+        "expected": "Vinhedo",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r07",
+        "field": "phone",
+        "expected": "+5519900000101",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "trimId",
+        "expected": "plus",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "km",
+        "expected": 55897,
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "price",
+        "expected": 244000,
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "city",
+        "expected": "Ribeirão Preto",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r08",
+        "field": "phone",
+        "expected": "+5516900000102",
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "trimId",
+        "expected": "ultra",
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "yearFab",
+        "expected": 2025,
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "yearModel",
+        "expected": 2026,
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "km",
+        "expected": 8802,
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "price",
+        "expected": 408900,
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r11",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "modelId",
+        "expected": "ex30",
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "engineId",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "trimId",
+        "expected": "core",
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "km",
+        "expected": 34596,
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "price",
+        "expected": 237890,
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "fuel",
+        "expected": "eletrico",
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r12",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "modelId",
+        "expected": "ex30",
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "engineId",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "trimId",
+        "expected": "ultra",
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "yearFab",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "km",
+        "expected": 18000,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "price",
+        "expected": 205000,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "fuel",
+        "expected": "eletrico",
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r13",
+        "field": "phone",
+        "expected": "+5575900000106",
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "trimId",
+        "expected": "ultimate-dark",
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "yearFab",
+        "expected": 2023,
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "km",
+        "expected": 26000,
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "price",
+        "expected": 285000,
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r14",
+        "field": "phone",
+        "expected": "+5575900000108",
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "trimId",
+        "expected": "inscription",
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "km",
+        "expected": 84000,
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "price",
+        "expected": 145000,
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "fuel",
+        "expected": "gasolina",
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r15",
+        "field": "phone",
+        "expected": "+5511900000110",
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "modelId",
+        "expected": "xc90",
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "engineId",
+        "expected": "t6",
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "yearFab",
+        "expected": 2018,
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "yearModel",
+        "expected": 2018,
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "km",
+        "expected": 90000,
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "price",
+        "expected": 155000,
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "fuel",
+        "expected": "gasolina",
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r16",
+        "field": "phone",
+        "expected": "+5511900000111",
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "trimId",
+        "expected": "polestar-engineered",
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "km",
+        "expected": 18000,
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "price",
+        "expected": 343000,
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r17",
+        "field": "phone",
+        "expected": "+5511900000112",
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "modelId",
+        "expected": "s60",
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "yearFab",
+        "expected": 2020,
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "yearModel",
+        "expected": 2020,
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "km",
+        "expected": 53000,
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "price",
+        "expected": 192000,
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r18",
+        "field": "phone",
+        "expected": "+5511900000113",
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "modelId",
+        "expected": "v60",
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "yearModel",
+        "expected": 2015,
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "km",
+        "expected": 69000,
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "price",
+        "expected": 79890,
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "fuel",
+        "expected": "gasolina",
+        "actual": null
+      },
+      {
+        "id": "r20",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "trimId",
+        "expected": "ultimate",
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "km",
+        "expected": 16000,
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "price",
+        "expected": 289900,
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "city",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "uf",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r21",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "modelId",
+        "expected": "xc40",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "km",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "price",
+        "expected": 124900,
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "city",
+        "expected": "Canoas",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "uf",
+        "expected": "RS",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "fuel",
+        "expected": "gasolina",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "r24",
+        "field": "phone",
+        "expected": "+5551900000114",
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "trimId",
+        "expected": "ultimate",
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "yearFab",
+        "expected": 2023,
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "km",
+        "expected": 21500,
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "price",
+        "expected": 279900,
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "r28",
+        "field": "phone",
+        "expected": "+5543900000116",
+        "actual": null
+      }
+    ],
+    "usage": {
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "cacheWriteTokens": 0,
+      "cacheReadTokens": 0
+    },
+    "extractedCalls": 0,
+    "costUsd": null,
+    "costPer1000PostsUsd": null,
+    "costPer1000ExtractionsUsd": null,
+    "avgLatencyMs": null
+  },
+  "results": [
+    {
+      "id": "r01",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r02",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r03",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r04",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r05",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r06",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r07",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r08",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r09",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r10",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r11",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r12",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r13",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r14",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r15",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r16",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r17",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r18",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r19",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r20",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r21",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r22",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r23",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r24",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r25",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r26",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r27",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r28",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r29",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r30",
+      "prefilterPass": false,
+      "prefilterReason": "sold",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r31",
+      "prefilterPass": false,
+      "prefilterReason": "sold",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r32",
+      "prefilterPass": false,
+      "prefilterReason": "not_volvo",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r33",
+      "prefilterPass": false,
+      "prefilterReason": "not_volvo",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r34",
+      "prefilterPass": false,
+      "prefilterReason": "no_sale_signal",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "r35",
+      "prefilterPass": false,
+      "prefilterReason": "no_sale_signal",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    }
+  ]
+}
