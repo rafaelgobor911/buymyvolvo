@@ -98,6 +98,8 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - A normalização é a fonte da verdade: re-lê preço/km dos trechos originais (`price_text`, `km_text`), casa a taxonomia, valida telefone (E.164, DDD válido) e **reduz a confiança** em combinações impossíveis ou não vendidas no Brasil.
 - O resumo precisa ser em palavras próprias: se repetir 8 palavras seguidas da legenda, a confiança cai e o anúncio vai para moderação.
 - O resumo é público (página e meta description) e o telefone não: frases que só dizem como contatar saem; telefone, @ ou link no resumo mandam para moderação; preço no resumo reduz a confiança.
+- **Pré-filtro por origem** (`prefilter(caption, { origin })`): post de loja cadastrada (Business Discovery) pula a checagem de Brasil; post de hashtag precisa de R$, +55 ou telefone com DDD. Sigla de UF só conta em maiúsculas.
+- Preço em moeda estrangeira (€, US$, £, Kz) não vira preço em reais: fica vazio e o anúncio vai para moderação.
 - "Único dono" descreve o histórico do carro, não o vendedor (lojas também usam): não define `seller_type`.
 - Um anúncio `removed` nunca volta: uma repostagem do mesmo carro é ignorada.
 
@@ -109,6 +111,7 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - Cliente da Graph (`instagram/graph.ts`): token **no header**, nunca na URL; `appsecret_proof` quando há `META_APP_SECRET`; erros classificados (`rate_limit`, `auth`, `permission`, `not_found`, `transient`). Não peça `media_url` nem métricas.
 - **Fixtures:** `--fixtures` usa o Instagram fictício de `instagram/fixtures.ts` e só toca fontes terminadas em `.demo`/`_demo`; sem a flag, essas fontes são ignoradas. Novos casos de API entram primeiro nas fixtures, com o formato observado na API real.
 - **Orçamento de hashtags:** qualquer consulta a uma hashtag nova gasta uma das 30 vagas por 7 dias da conta (`ig_hashtag_search` já conta). Não teste hashtags reais à toa; o dry-run com a API real não consulta hashtags que gastariam vaga nova.
+- **Hashtags rodam 1 vez por dia** (decisão do dono do produto; `add-hashtag` usa 1440 min). Cada leitura de hashtag leva 7–20 s na API real: os jobs de coleta têm orçamento de tempo (`maxSeconds`; 240 s nas rotas de cron) e as fontes não lidas ficam para a chamada seguinte.
 - Ciclo de vida: legenda editada para "vendido" → `sold`; post que sumiu do trecho lido → `expired`; anúncio só de hashtag mostra "pode não estar mais disponível" após `hashtag_stale_after_days` e expira após `hashtag_expire_after_days`.
 - Nesta sandbox, o `fetch` do Node precisa de `NODE_USE_ENV_PROXY=1` para chegar à API; `ANTHROPIC_API_KEY` vem de `BUYMYVOLVO_ANTHROPIC_API_KEY` (ver `docs/plano.md`).
 

@@ -127,15 +127,34 @@ Segunda rodada: Polestar Engineered na XC60 (2019–2026) e no S60 (2019–2022)
 - **Hashtag:** #volvoavenda (1 de 25 vagas), sem posts nas últimas 24h.
 - **Token:** válido por mais 59 dias, com todas as permissões.
 
-### Pendências da Fase 3
+### Revisão da Fase 3 (08/11/2026)
 
-- **Aviso de prévia:** com dados reais no banco, o aviso "anúncios fictícios" (`NEXT_PUBLIC_DEMO_MODE`) fica incorreto. Desligar quando houver dados reais em produção (Fase 7).
-- **Resumo:** às vezes cita a loja ("entrega para todo o Brasil", "oferece blindagem"). Ajustar o prompt com um gabarito de legendas reais.
-- **Motor inferido:** "EX30 Ultra" virou `single-motor` sem a legenda dizer. Mesmo ajuste.
-- **Legenda editada** (além de "vendido") não reprocessa o anúncio, por exemplo numa mudança de preço.
-- **Lista de hashtags** a validar (sugestões em `docs/PROMPT.md` §7.3) antes de gastar vagas.
-- **Alertas** (token, orçamento, limite da Meta) hoje ficam em `job_runs` e no log; a notificação por e-mail entra com o admin (Fase 5) ou na Fase 7.
-- **Agendador de produção:** confirmar o limite de crons do plano da Vercel; alternativas: `pg_cron` do Supabase ou GitHub Actions (Fase 7).
+Todos os itens aprovados na página de revisão; merge da Fase 3 feito.
+
+| Item                       | Decisão                                                                                                    | Quando          |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------- |
+| Extração em legendas reais | Gabarito com ~30 legendas reais; prompt: resumo só sobre o carro, motor só quando escrito                  | Antes da Fase 4 |
+| Aviso de prévia            | Desligar o modo de prévia em produção quando entrarem dados reais                                          | Fase 7          |
+| Legenda editada            | Reprocessar e atualizar preço/km de anúncio não reivindicado, guardando o valor anterior                   | Fase 5          |
+| Alertas                    | No painel do admin (Fase 5) e por e-mail (Fase 7, provedor a escolher)                                     | Fases 5 e 7     |
+| Agendador                  | Decidir na Fase 7. **Hashtags 1 vez por dia** (decisão do dono do produto): `poll_interval_minutes = 1440` | Fase 7          |
+| Token                      | Renovar à mão até haver portfólio com CNPJ; depois System User                                             | Até 28/12/2026  |
+
+**Hashtags escolhidas (19):** #volvoxc60, #volvoxc40, #volvoxc90, #volvoex30, #volvoex40, #volvoex90, #volvoc40, #volvoec40, #volvos60, #volvos90, #volvov60, #volvov40, #volvoc30, #volvos40, #volvoxc70, #volvo850, #volvot8, #volvot5, #volvot6. A #volvoavenda ficou de fora (pausada; conta até 15/11). Orçamento: 20 de 25.
+
+**Primeira coleta (08/11):** 274 posts nas últimas 24h (máximo de 63 por hashtag, longe do teto de 200 por execução, então 1 vez por dia comporta o volume). 11 passaram do pré-filtro, 9 viraram anúncio: 4 brasileiros publicados (#volvoxc60, #volvoxc40, #volvot8, #volvot5) e 5 estrangeiros (Espanha, Itália, Angola) que só a regra de mercado brasileiro segurou.
+
+**Ajustes feitos depois da revisão (branch `phase-3-followup`):**
+
+- **Pré-filtro por origem:** lojas cadastradas são brasileiras por curadoria e pulam a checagem de Brasil (recuperou 4 anúncios reais da Autoland, sem R$ nem telefone na legenda); posts de hashtag precisam de R$, +55 ou telefone com DDD (barra os estrangeiros). Sigla de UF só conta em maiúsculas ("es", "pe" e "ms" são palavras em espanhol e italiano).
+- **Moeda estrangeira:** preço em euro, dólar, libra ou kwanza fica vazio e o anúncio vai para moderação.
+- **Tempo:** cada leitura de hashtag leva 7 a 20 s na API da Meta (19 hashtags = ~5 min). Os jobs de coleta aceitam um orçamento de tempo (`--max-seconds`; 240 s nas rotas de cron) e continuam de onde pararam na chamada seguinte, por isso o agendador deve chamar a rota mais de uma vez por dia mesmo com hashtags diárias.
+
+### Pendências
+
+- Gabarito com legendas reais (aprovado, antes da Fase 4). Proposta a revisar: códigos **P6** (Single Motor) e **P8** (Twin Motor) do XC40/C40 Recharge na taxonomia; hoje o modelo chuta "Twin Motor" para o P6.
+- Rendimento por hashtag depois de uma semana de coleta (depende de rodar a coleta diária; até a Fase 7 só manualmente).
+- Itens das fases 5 e 7 na tabela acima.
 
 ## Próxima fase (Fase 4: leads e WhatsApp)
 
