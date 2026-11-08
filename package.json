@@ -19,9 +19,11 @@
     "db:migrate": "tsx scripts/db/cli.ts migrate",
     "db:seed": "tsx scripts/db/cli.ts seed",
     "db:setup": "tsx scripts/db/cli.ts setup",
-    "db:reset": "tsx scripts/db/cli.ts reset"
+    "db:reset": "tsx scripts/db/cli.ts reset",
+    "extract:eval": "tsx scripts/extract-eval.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
     "@base-ui/react": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.2",
