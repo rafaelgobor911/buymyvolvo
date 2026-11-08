@@ -1,6 +1,6 @@
 import "server-only";
 
-import { asAnon, type Tx } from "@/lib/db/client";
+import { asAnon, db, type Tx } from "@/lib/db/client";
 import { PAGE_SIZE, type SearchFilters } from "@/lib/search/filters";
 import type { Fuel, SellerType, Transmission } from "@/lib/taxonomy";
 
@@ -43,6 +43,8 @@ export interface ListingDetail extends ListingCard {
   instagramUsername: string | null;
   sourcePermalink: string | null;
   sourceUsername: string | null;
+  /** Active, backed only by hashtag posts (never re-read) older than the configured days. */
+  possiblyUnavailable: boolean;
 }
 
 // Explicit columns only: anon has column-level grants (no phone, no internal fields).
@@ -180,8 +182,17 @@ export async function getRecentListings(limit = 8): Promise<ListingCard[]> {
   });
 }
 
+/** Operational setting (not user data), read with the server role and never exposed. */
+async function hashtagStaleAfterDays(): Promise<number> {
+  const [row] = await db()<{ value: unknown }[]>`
+    select value from public.app_settings where key = 'hashtag_stale_after_days'`;
+  const n = Number(row?.value);
+  return Number.isFinite(n) && n > 0 ? n : 14;
+}
+
 export async function getListingBySlug(slug: string): Promise<ListingDetail | null> {
   if (!/^[a-z0-9-]{3,200}$/.test(slug)) return null;
+  const staleDays = await hashtagStaleAfterDays();
   return asAnon(async (tx) => {
     const [row] = await tx<
       (CardRow & {
@@ -197,11 +208,20 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
         contact_ig_username: string | null;
         source_permalink: string | null;
         source_username: string | null;
+        possibly_unavailable: boolean;
       })[]
     >`
       select ${CARD_COLUMNS(tx)}, l.engine_id, l.trim_id, l.color, l.options, l.summary_ptbr,
         l.last_seen_at, l.expires_at, l.sold_at, l.contact_ig_username,
-        s.display_name as seller_name, src.permalink as source_permalink, src.ig_username as source_username
+        s.display_name as seller_name, src.permalink as source_permalink, src.ig_username as source_username,
+        (l.status = 'active' and l.origin = 'instagram'
+          and l.first_seen_at < now() - make_interval(days => ${staleDays})
+          and exists (select 1 from public.listing_sources x where x.listing_id = l.id)
+          and not exists (
+            select 1 from public.listing_sources x
+            join public.raw_posts rp on rp.id = x.raw_post_id
+            where x.listing_id = l.id and rp.ig_username is not null)
+        ) as possibly_unavailable
       ${JOINS(tx)}
       left join public.sellers s on s.id = l.seller_id
       left join lateral (
@@ -228,6 +248,7 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
       instagramUsername: row.contact_ig_username,
       sourcePermalink: row.source_permalink,
       sourceUsername: row.source_username,
+      possiblyUnavailable: row.possibly_unavailable,
     };
   });
 }

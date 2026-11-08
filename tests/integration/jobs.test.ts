@@ -7,6 +7,7 @@ import type { ExtractInput, ExtractResult } from "@/lib/extraction/extract";
 import type { Extraction } from "@/lib/extraction/schema";
 import { createFixtureWorld, type FixtureWorld } from "@/lib/instagram/fixtures";
 import { createJobDeps, type JobDeps, runNamedJob } from "@/lib/jobs";
+import { getListingBySlug } from "@/lib/listings/queries";
 
 const url = process.env.TEST_DATABASE_URL;
 const NOW = new Date("2026-11-08T12:00:00-03:00");
@@ -210,6 +211,26 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
     const [{ count }] = await sql<{ count: number }[]>`
       select count(*)::int as count from public.raw_posts where ig_media_id like 'fxm_tag_%'`;
     expect(count).toBe(5); // 4 + 1 from the last 24h; the 40h-old post is not returned
+  });
+
+  it("flags an old hashtag-only listing as possibly unavailable on its page", async () => {
+    await run("process-posts", { limit: 100 });
+    const slugOf = async (mediaId: string) => {
+      const [row] = await sql<{ slug: string; id: string }[]>`
+        select l.slug, l.id from public.listings l
+        join public.listing_sources ls on ls.listing_id = l.id
+        join public.raw_posts rp on rp.id = ls.raw_post_id
+        where rp.ig_media_id = ${mediaId}`;
+      return row!;
+    };
+    const tag = await slugOf("fxm_tag_02");
+    const shop = await slugOf("fxm_nordica_04");
+    expect((await getListingBySlug(tag.slug))?.possiblyUnavailable).toBe(false);
+    await sql`update public.listings set first_seen_at = now() - interval '20 days'
+              where id in (${tag.id}, ${shop.id})`;
+    expect((await getListingBySlug(tag.slug))?.possiblyUnavailable).toBe(true);
+    // Business Discovery posts are re-read, so their listings never get the warning.
+    expect((await getListingBySlug(shop.slug))?.possiblyUnavailable).toBe(false);
   });
 
   it("expires hashtag-only listings after the configured days, leaving shop listings alone", async () => {

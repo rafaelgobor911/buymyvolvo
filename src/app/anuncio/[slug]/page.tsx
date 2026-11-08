@@ -81,7 +81,7 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
         </ol>
       </nav>
 
-      {!isActive && <StatusNotice listing={listing} />}
+      {(!isActive || listing.possiblyUnavailable) && <StatusNotice listing={listing} />}
 
       <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:gap-12">
         <div className="flex min-w-0 flex-col gap-8">
@@ -205,7 +205,9 @@ function StatusNotice({ listing }: { listing: ListingDetail }) {
   const text =
     listing.status === "sold"
       ? "Este carro foi marcado como vendido."
-      : "Este anúncio expirou e pode não estar mais disponível.";
+      : listing.status === "active"
+        ? "Este anúncio veio de uma hashtag do Instagram há algumas semanas e pode não estar mais disponível. Confira o post original antes de entrar em contato."
+        : "Este anúncio expirou e pode não estar mais disponível.";
   return (
     <p role="status" className="rounded-xl border border-border bg-secondary px-4 py-3 text-sm">
       {text}{" "}
