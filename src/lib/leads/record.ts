@@ -35,7 +35,7 @@ interface ContactRow {
   id: string;
   slug: string;
   short_id: string;
-  status: "pending_review" | "active" | "sold" | "expired" | "removed";
+  status: "pending_review" | "active" | "sold" | "expired" | "removed" | "rejected";
   seller_id: string | null;
   contact_phone_e164: string | null;
   contact_ig_username: string | null;
@@ -137,8 +137,8 @@ export type ClickResult =
 export async function recordClick(sql: Sql, input: ClickInput): Promise<ClickResult> {
   if (!SHORT_ID_PATTERN.test(input.shortId)) return { kind: "not_found" };
   const [row] = await sql<ContactRow[]>`${CONTACT_SELECT(sql)} where l.short_id = ${input.shortId}`;
-  // Listings under review or removed are not public: behave as if they did not exist.
-  if (!row || row.status === "pending_review" || row.status === "removed") {
+  // Listings under review, removed or rejected are not public: behave as if they did not exist.
+  if (!row || !["active", "sold", "expired"].includes(row.status)) {
     return { kind: "not_found" };
   }
   const channel = row.status === "active" ? channelFor(row) : null;

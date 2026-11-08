@@ -211,4 +211,24 @@ describe.skipIf(!url)("extraction pipeline (database)", () => {
       join raw_posts rp on rp.id = ls.raw_post_id where rp.source_id = ${sourceId}`;
     expect(count).toBe(3);
   });
+
+  it("a repost of a rejected listing goes back to moderation", async () => {
+    const a = (await listingOf("test-a"))!;
+    await sql`update listings set status = 'rejected', rejected_at = now() where id = ${a.id}`;
+    await addPost(
+      "test-h",
+      "[b] Vendo XC60 T8 Inscription 19/20, 41.500 km, R$ 239.900, aceito troca. (41) 90000-0101",
+    );
+    const stats = await processPendingRawPosts(sql, { extract, now: () => NOW });
+    expect(stats.outcomes.merged).toBe(1);
+    expect((await listingOf("test-a"))?.status).toBe("pending_review");
+    const [entry] = await sql<{ actor: string; action: string; changes: unknown }[]>`
+      select actor, action, changes from audit_log
+      where entity = 'listing' and entity_id = ${a.id} order by at desc limit 1`;
+    expect(entry).toEqual({
+      actor: "system:process-posts",
+      action: "listing.reopen",
+      changes: { status: { from: "rejected", to: "pending_review" } },
+    });
+  });
 });

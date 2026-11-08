@@ -225,6 +225,15 @@ export async function processRawPost(
     if (existing) {
       if (existing.status === "removed") return "skipped_removed" as const;
       await tx`update public.listings set last_seen_at = ${now} where id = ${existing.id}`;
+      // Moderation rejected it, but the seller posted the car again: review it again.
+      if (existing.status === "rejected") {
+        await tx`update public.listings set status = 'pending_review' where id = ${existing.id}`;
+        await tx`
+          insert into public.audit_log (actor, action, entity, entity_id, changes, note)
+          values ('system:process-posts', 'listing.reopen', 'listing', ${existing.id},
+            ${tx.json({ status: { from: "rejected", to: "pending_review" } })},
+            'Repostagem de um anúncio rejeitado')`;
+      }
       await tx`
         insert into public.listing_sources (listing_id, raw_post_id, is_primary)
         values (${existing.id}, ${post.id}, false)

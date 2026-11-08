@@ -163,6 +163,17 @@ export const fixtureListingId = (index: number) =>
   `00000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`;
 export const fixtureSellerId = (index: number) =>
   `00000000-0000-4000-9000-${String(index + 1).padStart(12, "0")}`;
+export const fixturePostId = (index: number) =>
+  `00000000-0000-4000-a000-${String(index + 1).padStart(12, "0")}`;
+/** Inactive source that owns the fictitious posts waiting in moderation. */
+export const FIXTURE_SOURCE_ID = "00000000-0000-4000-b000-000000000001";
+export const FIXTURE_SOURCE_HANDLE = "anuncios.ficticios";
+
+export const fixturePhone = (index: number) => `+55209${String(1000_0000 + index + 1).slice(-8)}`;
+
+/** "+5520910000017" → "(20) 91000-0017", as a caption would write it. */
+const captionPhone = (e164: string) =>
+  `(${e164.slice(3, 5)}) ${e164.slice(5, 10)}-${e164.slice(10)}`;
 
 export function fixtureSlug(listing: FixtureListing, index: number): string {
   return listingSlug(
@@ -230,7 +241,7 @@ export function generateSeedSql(): string {
     const sellerIndex = l.seller ? FIXTURE_SELLERS.findIndex((s) => s.key === l.seller) : -1;
     const status = l.status ?? "active";
     const seen = `now() - interval '${l.daysAgo} days'`;
-    const phone = `+55209${String(1000_0000 + i + 1).slice(-8)}`;
+    const phone = fixturePhone(i);
     return `  (${[
       lit(fixtureListingId(i)),
       lit(fixtureSlug(l, i)),
@@ -254,7 +265,7 @@ export function generateSeedSql(): string {
       lit(l.sellerType),
       sellerIndex >= 0 ? lit(fixtureSellerId(sellerIndex)) : "null",
       lit(phone),
-      "0.95",
+      l.post ? String(l.post.confidence) : "0.95",
       arr(l.redFlags ?? []),
       sellerIndex >= 0 ? "true" : "false",
       seen,
@@ -276,8 +287,53 @@ export function generateSeedSql(): string {
     "  contact_phone_e164 = excluded.contact_phone_e164, confidence = excluded.confidence,",
     "  red_flags = excluded.red_flags,",
     "  is_claimed = excluded.is_claimed, first_seen_at = excluded.first_seen_at,",
-    "  last_seen_at = excluded.last_seen_at, sold_at = excluded.sold_at, removed_at = excluded.removed_at;",
+    "  last_seen_at = excluded.last_seen_at, sold_at = excluded.sold_at, removed_at = excluded.removed_at,",
+    "  rejected_at = null, review_note = null;",
     "",
   );
+
+  // Fictitious source posts for the listings waiting in moderation (no real
+  // Instagram account or post behind them).
+  const posts = FIXTURE_LISTINGS.flatMap((l, i) => (l.post ? [{ l, i, post: l.post }] : []));
+  if (posts.length) {
+    out.push(
+      "insert into public.sources (id, type, handle, active, notes)",
+      `values (${lit(FIXTURE_SOURCE_ID)}, 'ig_business_account', ${lit(FIXTURE_SOURCE_HANDLE)}, false, 'Fonte fictícia do seed: posts de exemplo da moderação')`,
+      "on conflict (id) do nothing;",
+      "",
+      "insert into public.raw_posts (id, ig_media_id, source_id, permalink, caption, media_type, ig_username,",
+      "  posted_at, processing_status, extraction_json)",
+      "values",
+      posts
+        .map(({ l, i, post }) => {
+          const json = JSON.stringify({
+            normalized: { confidence: post.confidence, issues: post.issues },
+            outcome: "moderation",
+          });
+          return `  (${[
+            lit(fixturePostId(i)),
+            lit(`seed-demo-${i + 1}`),
+            lit(FIXTURE_SOURCE_ID),
+            lit(`https://www.instagram.com/p/exemplo-ficticio-${i + 1}/`),
+            lit(post.caption.replace("{telefone}", captionPhone(fixturePhone(i)))),
+            "'IMAGE'",
+            lit(FIXTURE_SOURCE_HANDLE),
+            `now() - interval '${l.daysAgo} days'`,
+            "'extracted'",
+            `${lit(json)}::jsonb`,
+          ].join(", ")})`;
+        })
+        .join(",\n"),
+      "on conflict (id) do update set caption = excluded.caption, extraction_json = excluded.extraction_json;",
+      "",
+      "insert into public.listing_sources (listing_id, raw_post_id, is_primary)",
+      "values",
+      posts
+        .map(({ i }) => `  (${lit(fixtureListingId(i))}, ${lit(fixturePostId(i))}, true)`)
+        .join(",\n"),
+      "on conflict (raw_post_id) do nothing;",
+      "",
+    );
+  }
   return out.join("\n");
 }
