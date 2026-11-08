@@ -262,6 +262,14 @@ export async function collectHashtags(
         await tx`
           update public.hashtag_budget set ig_hashtag_id = ${tagId}, last_queried_at = ${ctx.now}
           where id = ${entry!.id}`;
+        if (tagId) {
+          // The same hashtag may already count as ext_<id> (synced from Meta):
+          // keep a single slot for it.
+          await tx`
+            delete from public.hashtag_budget
+            where ig_user_id = ${igUserId} and ig_hashtag_id = ${tagId}
+              and hashtag = ${`ext_${tagId}`} and id <> ${entry!.id}`;
+        }
         const media = tagId ? await recentHashtagMedia(client, igUserId, tagId) : [];
         const upsert = await upsertPosts(tx, {
           sourceId: source.id,

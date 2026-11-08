@@ -198,6 +198,15 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
     }
     const rest = await run("collect-hashtags");
     expect(rest.stats).toMatchObject({ queried: 2, skippedForBudget: 0 });
+    // A hashtag first registered as ext_<id> keeps a single slot once named.
+    world.searched.push("fxh_volvoseminovo");
+    await sql`delete from public.hashtag_budget where hashtag = 'volvoseminovo_demo'`;
+    await sql`insert into public.hashtag_budget (ig_user_id, hashtag, ig_hashtag_id)
+              values (${world.igUserId}, 'ext_fxh_volvoseminovo', 'fxh_volvoseminovo')`;
+    await run("collect-hashtags");
+    const slots = await sql<{ hashtag: string }[]>`
+      select hashtag from public.hashtag_budget where ig_hashtag_id = 'fxh_volvoseminovo'`;
+    expect(slots.map((s) => s.hashtag)).toEqual(["volvoseminovo_demo"]);
     const [{ count }] = await sql<{ count: number }[]>`
       select count(*)::int as count from public.raw_posts where ig_media_id like 'fxm_tag_%'`;
     expect(count).toBe(5); // 4 + 1 from the last 24h; the 40h-old post is not returned
