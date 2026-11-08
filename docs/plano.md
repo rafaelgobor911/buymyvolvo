@@ -195,6 +195,26 @@ Pedido do dono do produto: muitos anúncios do Instagram são de **repasse**, co
 - Rótulo de resumo automático na página do anúncio (decidir na Fase 5 ou 7).
 - Itens das fases 5 e 7 na tabela da revisão.
 
-## Próxima fase (Fase 4: leads e WhatsApp)
+## Fase 4: decisões
 
-Rota `/r/[ref]`, registro de lead (IP e user agent só em hash com salt), deduplicação de cliques, mensagem configurável e fallback para o Instagram quando não houver telefone. Saída: o clique gera um lead e abre o WhatsApp com a mensagem certa (testado no celular).
+Plano aprovado em 09/11/2026.
+
+- **Clique:** o botão aponta para `/r/{código do anúncio}` (o fim do slug). A rota grava o lead e redireciona (302) para o WhatsApp com a mensagem; o telefone nunca vai para o HTML da página. Sem telefone, o botão vira "Falar com o vendedor no Instagram" (Direct pelo @ ou, sem @, o post).
+- **Código do lead:** `VX-` + 5 caracteres sem 0/O/1/I/L (fáceis de ler em voz alta), gerado no clique.
+- **Mensagem:** o modelo de `app_settings` (editável no admin da Fase 5) com link curto `/a/{código}` para o vendedor ver de onde veio o contato.
+- **Dedupe:** o mesmo aparelho (hash de IP + navegador) no mesmo anúncio em 24h reaproveita o código e soma o clique.
+- **Não contam:** robôs e pré-visualizações de link (que vão para a página do anúncio, sem telefone), pré-carregamento, `HEAD`, anúncios fora do ar.
+- **Auditoria:** leads não podem ser apagados nem alterados, exceto vendedor, resultado da venda (Fase 6) e contadores.
+- **LGPD:** sem cookie e sem cadastro; IP e navegador só em HMAC com `HASH_SALT`; a página diz "Não guardamos dados seus neste clique."
+- **Prévia:** anúncios fictícios (DDD 20) mostram a mensagem numa página de prévia em vez de abrir um WhatsApp inexistente.
+- **Testes:** unidade (código, mensagem, links, robôs, hash, origem), integração (lead, dedupe, cliques simultâneos, Instagram, anúncio fora do ar, auditoria, anon sem acesso) e e2e no computador e no celular emulado. Um telefone em formato real foi conferido de ponta a ponta contra o build de produção (302 para `wa.me` com a mensagem e o mesmo código nos cliques repetidos).
+
+**Pendências da Fase 4:**
+
+- Teste num celular de verdade: precisa de um endereço público (deploy da Fase 7).
+- `HASH_SALT` definitivo nas variáveis da Vercel (Fase 7); aqui e na CI usamos salts descartáveis de teste.
+- Nome do site: aparece na mensagem e precisa estar definido antes de ir ao ar.
+
+## Próxima fase (Fase 5: admin e moderação)
+
+Todas as telas da seção 10 do `PROMPT.md`: moderação, fontes e orçamento de hashtags, anúncios, leads (por dia, anúncio e vendedor; export CSV), vendedores, remoções, blocklist, jobs e configurações (mensagem do WhatsApp, limiares, prazos).

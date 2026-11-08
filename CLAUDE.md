@@ -42,12 +42,13 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 | `npm run extract:eval`      | Avalia a extração: 40 legendas fictícias ou `--set=real` (35 reais); `--offline`: só pré-filtro, sem custo |
 | `npm run job -- <job\|all>` | Jobs de coleta e manutenção (`--dry-run`, `--fixtures`, `--force`, `--only=@loja`, `--limit=N`)            |
 | `npm run sources -- <cmd>`  | Contas e hashtags monitoradas: `list`, `add @loja`, `add-hashtag tag`, `pause`, `resume`, `add-fixtures`   |
+| `npm run leads`             | Leads recentes (`--days=7`, `--limit=50`) até o admin da Fase 5                                            |
 
 ## Estrutura
 
 ```
 src/
-  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /api/cron/[job]
+  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /api/cron/[job]
   components/            componentes do site; ui/ = shadcn; search/ = busca e filtros
   content/               textos editoriais (checklists por modelo, buscas populares)
   lib/
@@ -59,7 +60,7 @@ src/
     extraction/          pré-filtro, schema, prompt, extract (Claude), normalize, dedupe, pipeline
     instagram/           cliente da Graph API (graph.ts), recursos (api.ts) e Instagram fictício (fixtures.ts)
     jobs/                executor (trava + job_runs + dry-run), coleta, manutenção e registro dos jobs
-    leads/               (Fase 4)
+    leads/               código do lead, mensagem, links (contact.ts), hash/robôs (request.ts), recordClick (record.ts)
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
 scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
 scripts/job.ts           roda jobs localmente · scripts/sources.ts: fontes monitoradas
@@ -120,6 +121,17 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - **Hashtags rodam 1 vez por dia** (decisão do dono do produto; `add-hashtag` usa 1440 min). Cada leitura de hashtag leva 7–20 s na API real: os jobs de coleta têm orçamento de tempo (`maxSeconds`; 240 s nas rotas de cron) e as fontes não lidas ficam para a chamada seguinte.
 - Ciclo de vida: legenda editada para "vendido" → `sold`; post que sumiu do trecho lido → `expired`; anúncio só de hashtag mostra "pode não estar mais disponível" após `hashtag_stale_after_days` e expira após `hashtag_expire_after_days`.
 - Nesta sandbox, o `fetch` do Node precisa de `NODE_USE_ENV_PROXY=1` para chegar à API; `ANTHROPIC_API_KEY` vem de `BUYMYVOLVO_ANTHROPIC_API_KEY` (ver `docs/plano.md`).
+
+## Leads e WhatsApp (Fase 4)
+
+- O botão do anúncio é um `<a href="/r/<short_id>">` simples (sem `next/link`, para nada pré-carregar o clique). `short_id` é a última parte do slug (coluna gerada, única). O telefone **nunca** vai para o HTML: só aparece no redirect de `/r`; a página só sabe `has_phone`.
+- `/r/[código]` (`recordClick` em `leads/record.ts`, com `sql` por parâmetro como os jobs): grava o lead (código `VX-XXXXX`, canal, HMAC de IP e user agent com `HASH_SALT`, página de origem e UTMs) e responde 302 para `wa.me/<número>?text=<mensagem>`. Sem telefone: `ig.me/m/<@>` ou o post, com canal `instagram`.
+- **Não é clique:** prefetch (`Sec-Purpose`) e `HEAD` → 204; robôs e pré-visualizações de link → página do anúncio, sem lead e sem telefone. Anúncio vendido/expirado/sem contato → página do anúncio; em moderação, removido ou inexistente → `/busca`.
+- **Dedupe:** mesmo anúncio + mesmo hash de IP e UA dentro de `lead_dedupe_hours` (24) reaproveita o código e soma `click_count`; uma trava (`pg_advisory_xact_lock`) impede leads duplicados em cliques simultâneos.
+- **Auditoria:** um trigger impede apagar leads e só deixa mudar `seller_id`, `outcome`, `outcome_reported_at` e os contadores. Testes limpam com `set local buymyvolvo.allow_lead_delete = 'on'` (só em bancos descartáveis).
+- Mensagem: `app_settings.whatsapp_message_template` com `{modelo} {versao} {ano} {site} {url} {ref}` (aceita `{versão}`, `{nome_do_site}`, `{url_curta}`); `{url}` é o link curto `/a/<short_id>`.
+- Anúncios fictícios (DDD 20) não abrem WhatsApp: o clique mostra `/r/previa/<código>` com a mensagem. Essa página só existe para eles.
+- `HASH_SALT` é obrigatório em `/r`; o Playwright e a CI usam um salt descartável de teste.
 
 ## Variáveis de ambiente
 
