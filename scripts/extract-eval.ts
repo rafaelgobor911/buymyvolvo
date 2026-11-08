@@ -9,6 +9,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import Anthropic from "@anthropic-ai/sdk";
+import { format, resolveConfig } from "prettier";
 
 import { emptyUsage } from "@/lib/extraction/cost";
 import {
@@ -45,6 +46,12 @@ async function pool<T, R>(items: T[], size: number, fn: (item: T) => Promise<R>)
     }),
   );
   return out;
+}
+
+/** Reports are committed, so they go through the project's Prettier config (npm run check). */
+async function writeFormatted(file: string, content: string) {
+  const options = (await resolveConfig(file)) ?? {};
+  await writeFile(file, await format(content, { ...options, filepath: file }));
 }
 
 async function main() {
@@ -114,8 +121,8 @@ async function main() {
   const dir = path.join(ROOT, "evals/extraction/reports");
   await mkdir(dir, { recursive: true });
   const stem = offline ? "prefilter-latest" : `latest-${model}`;
-  await writeFile(path.join(dir, `${stem}.md`), markdown);
-  await writeFile(
+  await writeFormatted(path.join(dir, `${stem}.md`), markdown);
+  await writeFormatted(
     path.join(dir, `${stem}.json`),
     JSON.stringify({ date, promptVersion: EXTRACTION_PROMPT_VERSION, report, results }, null, 2),
   );

@@ -268,12 +268,19 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
   let city: string | null = x.city?.trim() || null;
   if (city) {
     const place = parseQuery(city, { expand: false });
-    if (place.city) {
-      if (uf && place.uf && uf !== place.uf) {
-        issue("place_mismatch", `Cidade ${place.city} não fica em ${uf}.`, 0.05);
+    // The search reads a bare "São Paulo"/"Rio de Janeiro" as the state; in the
+    // city field it means the city.
+    const found = place.city ? { city: place.city, uf: place.uf } : place.citySuggestion;
+    if (found) {
+      if (uf && found.uf && uf !== found.uf) {
+        issue("place_mismatch", `Cidade ${found.city} não fica em ${uf}.`, 0.05);
       }
-      city = place.city;
-      uf ??= place.uf ?? null;
+      city = found.city;
+      uf ??= found.uf ?? null;
+    } else if (place.uf) {
+      // A state in the city field ("RJ", "Paraná") or an unknown city plus its state ("Toledo PR").
+      uf ??= place.uf;
+      if (!place.text) city = null;
     }
   }
 

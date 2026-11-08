@@ -141,6 +141,23 @@ describe("normalizeExtraction", () => {
     ).toBe("v40-cc");
   });
 
+  it("reads the state from the city field when the model left uf empty", () => {
+    const place = (city: string | null, uf: string | null = null) => {
+      const n = norm({ city, uf });
+      return { city: n.city, uf: n.uf };
+    };
+    expect(place("São Paulo")).toEqual({ city: "São Paulo", uf: "SP" });
+    expect(place("Rio de Janeiro/RJ")).toEqual({ city: "Rio de Janeiro", uf: "RJ" });
+    expect(place("Sampa")).toEqual({ city: "São Paulo", uf: "SP" });
+    expect(place("RJ")).toEqual({ city: null, uf: "RJ" });
+    expect(place("Paraná")).toEqual({ city: null, uf: "PR" });
+    expect(place("Toledo PR")).toEqual({ city: "Toledo PR", uf: "PR" });
+    expect(place("Ctba", "PR")).toEqual({ city: "Ctba", uf: "PR" });
+    expect(norm({ city: "São Paulo", uf: "PR" }).issues.map((i) => i.code)).toContain(
+      "place_mismatch",
+    );
+  });
+
   it("prefers the price snippet over a wrong number from the model", () => {
     expect(norm({ price: 1, price_text: "R$ 159.900" }).priceCents).toBe(15_990_000);
   });
