@@ -53,21 +53,21 @@ Isso aplica as migrations e carrega ~60 anúncios **fictícios**. Abra http://lo
 
 ## Scripts
 
-| Comando                                   | O que faz                                                                                                                 |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`                             | Servidor de desenvolvimento                                                                                               |
-| `npm run build` / `npm start`             | Build e servidor de produção                                                                                              |
-| `npm run lint` / `npm run lint:fix`       | ESLint                                                                                                                    |
-| `npm run format` / `npm run format:check` | Prettier (com ordenação de classes Tailwind)                                                                              |
-| `npm run typecheck`                       | Checagem de tipos                                                                                                         |
-| `npm test`                                | Testes de unidade (Vitest)                                                                                                |
-| `npm run test:e2e`                        | Testes e2e (Playwright, desktop + mobile). Na primeira vez: `npx playwright install chromium`                             |
-| `npm run check`                           | Tudo acima, menos e2e (critério de fim de fase)                                                                           |
-| `npm run db:setup` / `db:reset`           | Migrations + dados fictícios (`db:reset` apaga tudo; só funciona em banco local)                                          |
-| `npm run db:generate`                     | Regera a migration da taxonomia e o `supabase/seed.sql`                                                                   |
-| `npm run extract:eval`                    | Avalia a extração com IA nas 40 legendas de teste (precisa de `ANTHROPIC_API_KEY`; `-- --offline` avalia só o pré-filtro) |
-| `npm run job -- <job\|all>`               | Roda os jobs de coleta e manutenção (`--dry-run`, `--fixtures`, `--force`, `--only=@loja`, `--limit=N`); ver `CLAUDE.md`  |
-| `npm run sources -- <comando>`            | Contas e hashtags monitoradas: `list`, `add @loja`, `add-hashtag tag`, `pause`, `resume`, `add-fixtures`                  |
+| Comando                                   | O que faz                                                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `npm run dev`                             | Servidor de desenvolvimento                                                                                              |
+| `npm run build` / `npm start`             | Build e servidor de produção                                                                                             |
+| `npm run lint` / `npm run lint:fix`       | ESLint                                                                                                                   |
+| `npm run format` / `npm run format:check` | Prettier (com ordenação de classes Tailwind)                                                                             |
+| `npm run typecheck`                       | Checagem de tipos                                                                                                        |
+| `npm test`                                | Testes de unidade (Vitest)                                                                                               |
+| `npm run test:e2e`                        | Testes e2e (Playwright, desktop + mobile). Na primeira vez: `npx playwright install chromium`                            |
+| `npm run check`                           | Tudo acima, menos e2e (critério de fim de fase)                                                                          |
+| `npm run db:setup` / `db:reset`           | Migrations + dados fictícios (`db:reset` apaga tudo; só funciona em banco local)                                         |
+| `npm run db:generate`                     | Regera a migration da taxonomia e o `supabase/seed.sql`                                                                  |
+| `npm run extract:eval`                    | Avalia a extração com IA: 40 legendas fictícias ou `-- --set=real` (35 reais); `--offline` avalia só o pré-filtro        |
+| `npm run job -- <job\|all>`               | Roda os jobs de coleta e manutenção (`--dry-run`, `--fixtures`, `--force`, `--only=@loja`, `--limit=N`); ver `CLAUDE.md` |
+| `npm run sources -- <comando>`            | Contas e hashtags monitoradas: `list`, `add @loja`, `add-hashtag tag`, `pause`, `resume`, `add-fixtures`                 |
 
 ## Documentação
 

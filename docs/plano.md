@@ -150,11 +150,34 @@ Todos os itens aprovados na página de revisão; merge da Fase 3 feito.
 - **Moeda estrangeira:** preço em euro, dólar, libra ou kwanza fica vazio e o anúncio vai para moderação.
 - **Tempo:** cada leitura de hashtag leva 7 a 20 s na API da Meta (19 hashtags = ~5 min). Os jobs de coleta aceitam um orçamento de tempo (`--max-seconds`; 240 s nas rotas de cron) e continuam de onde pararam na chamada seguinte, por isso o agendador deve chamar a rota mais de uma vez por dia mesmo com hashtags diárias.
 
+### Extração em legendas reais (08/11/2026)
+
+**Gabarito real** (`evals/extraction/dataset-real.ts`, `npm run extract:eval -- --set=real`): 35 posts reais das 6 lojas e das hashtags, anonimizados (telefones brasileiros trocados por fictícios, telefones estrangeiros, e-mails, links, sites, menções e nomes de pessoas removidos) e guardados no repositório com aprovação do dono do produto. 20 anúncios brasileiros e 15 negativos (estrangeiros, vendidos, outras marcas, conteúdo). O gabarito foi escrito lendo as legendas; motor não escrito = vazio.
+
+| Conjunto real                         | Prompt `.4` | Prompt `.6` + normalização (2 rodadas) |
+| ------------------------------------- | ----------- | -------------------------------------- |
+| Campos corretos                       | 98,2%       | **100%**                               |
+| Motor                                 | 18/20       | **20/20**                              |
+| Telefone                              | 18/20       | **20/20**                              |
+| Resumos que falam do vendedor/negócio | 10 de 20    | **0**                                  |
+| Resumos que copiam a legenda          | 1           | **0**                                  |
+| Custo por 1.000 posts                 | US$ 0,21    | US$ 0,18                               |
+
+O conjunto fictício segue em 100% (40/40, 6/6 alertas); 1 resumo ainda cita "venda rápida".
+
+**O que mudou:**
+
+- Taxonomia: **P6** = Single Motor e **P8** = Twin Motor (XC40/C40 Recharge, também em anúncios de EX40/EC40); o prompt passou a listar os apelidos dos motores.
+- Prompt `2026-11-08.6`: resumo só sobre o carro (sem vendedor, loja, financiamento, troca, propostas, sinal, pressa, entrega), de 1 a 3 frases; motor só quando escrito; a bio da conta não descreve o carro (um resumo chegou a dizer que o carro era blindado porque a bio da loja falava em blindados); telefones da legenda.
+- Normalização: motor que a legenda não nomeia é descartado; o motor escrito na versão vale mais que o campo do modelo; o par de anos escrito na legenda ("20/20", "2023/2024", "2024/24") vale mais que a leitura do modelo; telefone da legenda antes do da bio.
+
+**Resíduos:** um resumo inverteu o sentido de "primeira [revisão] feita agora" para "ainda por fazer". Erros de compreensão assim não têm regra que pegue; sugestão para a Fase 5/7: marcar o texto como "resumo automático do post; confira no original".
+
 ### Pendências
 
-- Gabarito com legendas reais (aprovado, antes da Fase 4). Proposta a revisar: códigos **P6** (Single Motor) e **P8** (Twin Motor) do XC40/C40 Recharge na taxonomia; hoje o modelo chuta "Twin Motor" para o P6.
 - Rendimento por hashtag depois de uma semana de coleta (depende de rodar a coleta diária; até a Fase 7 só manualmente).
-- Itens das fases 5 e 7 na tabela acima.
+- Rótulo de resumo automático na página do anúncio (decidir na Fase 5 ou 7).
+- Itens das fases 5 e 7 na tabela da revisão.
 
 ## Próxima fase (Fase 4: leads e WhatsApp)
 

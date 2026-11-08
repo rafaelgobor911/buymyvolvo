@@ -26,22 +26,22 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ## Comandos
 
-| Comando                     | O que faz                                                                                                |
-| --------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `npm run dev`               | Servidor de desenvolvimento (http://localhost:3000)                                                      |
-| `npm run build`             | Build de produção                                                                                        |
-| `npm run lint`              | ESLint (`lint:fix` para corrigir)                                                                        |
-| `npm run format`            | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)                                 |
-| `npm run typecheck`         | Gera os tipos de rota e roda `tsc --noEmit`                                                              |
-| `npm test`                  | Vitest (`test:watch` em modo watch)                                                                      |
-| `npm run test:e2e`          | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`                            |
-| `npm run check`             | format:check + lint + typecheck + test + build (critério de fim de fase)                                 |
-| `npm run db:setup`          | Aplica migrations pendentes e carrega os anúncios fictícios                                              |
-| `npm run db:reset`          | **Só local:** apaga tudo, migra e popula de novo                                                         |
-| `npm run db:generate`       | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript                             |
-| `npm run extract:eval`      | Avalia a extração com IA nas 40 legendas de teste (`-- --offline`: só pré-filtro, sem custo)             |
-| `npm run job -- <job\|all>` | Jobs de coleta e manutenção (`--dry-run`, `--fixtures`, `--force`, `--only=@loja`, `--limit=N`)          |
-| `npm run sources -- <cmd>`  | Contas e hashtags monitoradas: `list`, `add @loja`, `add-hashtag tag`, `pause`, `resume`, `add-fixtures` |
+| Comando                     | O que faz                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `npm run dev`               | Servidor de desenvolvimento (http://localhost:3000)                                                        |
+| `npm run build`             | Build de produção                                                                                          |
+| `npm run lint`              | ESLint (`lint:fix` para corrigir)                                                                          |
+| `npm run format`            | Prettier, com ordenação de classes Tailwind (`format:check` só verifica)                                   |
+| `npm run typecheck`         | Gera os tipos de rota e roda `tsc --noEmit`                                                                |
+| `npm test`                  | Vitest (`test:watch` em modo watch)                                                                        |
+| `npm run test:e2e`          | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`                              |
+| `npm run check`             | format:check + lint + typecheck + test + build (critério de fim de fase)                                   |
+| `npm run db:setup`          | Aplica migrations pendentes e carrega os anúncios fictícios                                                |
+| `npm run db:reset`          | **Só local:** apaga tudo, migra e popula de novo                                                           |
+| `npm run db:generate`       | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript                               |
+| `npm run extract:eval`      | Avalia a extração: 40 legendas fictícias ou `--set=real` (35 reais); `--offline`: só pré-filtro, sem custo |
+| `npm run job -- <job\|all>` | Jobs de coleta e manutenção (`--dry-run`, `--fixtures`, `--force`, `--only=@loja`, `--limit=N`)            |
+| `npm run sources -- <cmd>`  | Contas e hashtags monitoradas: `list`, `add @loja`, `add-hashtag tag`, `pause`, `resume`, `add-fixtures`   |
 
 ## Estrutura
 
@@ -63,7 +63,7 @@ src/
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
 scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
 scripts/job.ts           roda jobs localmente · scripts/sources.ts: fontes monitoradas
-evals/extraction/        40 legendas fictícias com gabarito + cálculo do placar
+evals/extraction/        gabaritos: 40 legendas fictícias e 35 reais anonimizadas (dataset-real.ts) + placar
 supabase/
   migrations/            SQL versionado (formato Supabase CLI)
   local/bootstrap.sql    recria roles/schemas do Supabase num Postgres comum (só local)
@@ -101,6 +101,10 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - **Pré-filtro por origem** (`prefilter(caption, { origin })`): post de loja cadastrada (Business Discovery) pula a checagem de Brasil; post de hashtag precisa de R$, +55 ou telefone com DDD. Sigla de UF só conta em maiúsculas.
 - Preço em moeda estrangeira (€, US$, £, Kz) não vira preço em reais: fica vazio e o anúncio vai para moderação.
 - "Único dono" descreve o histórico do carro, não o vendedor (lojas também usam): não define `seller_type`.
+- O resumo fala só do carro (estado, histórico, equipamentos): nada de vendedor, loja, financiamento, troca, propostas, sinal, pressa ou entrega. A bio da conta serve só de reserva para cidade, UF e tipo de vendedor.
+- **Motor só quando escrito:** a normalização descarta o motor que a legenda não nomeia, e o motor escrito na versão vale mais que o campo do modelo. P6 = Single Motor, P8 = Twin Motor.
+- O par de anos escrito na legenda ("20/20", "2023/2024") vale mais que a leitura do modelo; telefone da legenda vem antes do da bio.
+- Mudou o prompt ou a normalização? Rode os dois gabaritos (`npm run extract:eval` e `-- --set=real`) e compare. O gabarito real nunca é editado para "passar".
 - Um anúncio `removed` nunca volta: uma repostagem do mesmo carro é ignorada.
 
 ## Coleta do Instagram (Fase 3)
