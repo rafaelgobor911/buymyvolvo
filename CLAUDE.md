@@ -90,7 +90,8 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - `parseQuery(texto)` é determinístico e sem IA: regex para km/ano/preço, depois um dicionário de aliases (taxonomia + lugares) com n-gramas de até 5 palavras e segmentação de tokens colados ("s60t5"). O que sobra vai para full-text (`pt_unaccent`) com fallback por trigram (erros de digitação).
 - Regras de produto: "v40" inclui o V40 Cross Country; "ultimate"/"ultra" incluem as versões Dark ("ultimate dark" restringe); "xc40 elétrico" inclui o EX40; "c40" ⇄ "ec40"; "polestar" = Polestar Engineered (a série Polestar 2014–2018 não veio ao Brasil); "São Paulo"/"Rio de Janeiro" sozinhos = estado, com atalho para a cidade; "cidade de…", "capital" e "sampa" = cidade.
 - **Mercado brasileiro:** `brazil: false` na taxonomia marca o que nunca foi vendido oficialmente aqui (V90, S60/V60 Cross Country, B4/B5/B6, D3/D4, T2, Summum, Polestar 2014–2018, V70 3ª geração). A busca continua reconhecendo esses termos e mostra um aviso, mas eles saem das opções do painel de filtros. Motores com `brazil: [...]` (T3, T4, D5) só valem nos modelos/anos listados. Os anúncios fictícios só usam combinações vendidas no Brasil (há teste para isso).
-- URL: `q` é o texto; parâmetros explícitos do painel (`modelo`, `motor`, `versao`, `combustivel`, `cambio`, `vendedor`, `ano_min`, `ano_max`, `preco_min`, `preco_max`, `km_max`, `uf`, `cidade`, `texto`, `ordem`, `pagina`) **sobrescrevem** o que veio do texto, inclusive quando vazios (= "qualquer").
+- URL: `q` é o texto; parâmetros explícitos do painel (`modelo`, `motor`, `versao`, `combustivel`, `cambio`, `vendedor`, `ano_min`, `ano_max`, `preco_min`, `preco_max`, `km_max`, `uf`, `cidade`, `repasse`, `texto`, `ordem`, `pagina`) **sobrescrevem** o que veio do texto, inclusive quando vazios (= "qualquer").
+- **Repasse:** "repasse" no texto filtra só repasses e "sem repasse" os exclui (`repasse=so|sem` na URL). Cards mostram o selo "Repasse" e a página do anúncio, o quadro de cuidados (repasse ou ágio) e a linha "O anúncio menciona: …". Os alertas públicos saem de `red_flags` (`PUBLIC_ALERTS` em `listings/queries.ts`; `sem_contato` é interno) e dizem só o que o próprio post declara.
 
 ## Extração (Fase 2)
 
@@ -105,6 +106,7 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - **Motor só quando escrito:** a normalização descarta o motor que a legenda não nomeia, e o motor escrito na versão vale mais que o campo do modelo. P6 = Single Motor, P8 = Twin Motor.
 - O par de anos escrito na legenda ("20/20", "2023/2024") vale mais que a leitura do modelo; telefone da legenda vem antes do da bio.
 - Mudou o prompt ou a normalização? Rode os dois gabaritos (`npm run extract:eval` e `-- --set=real`) e compare. O gabarito real nunca é editado para "passar".
+- **Repasse e ágio vêm do texto:** `writtenSaleType()` (normalize.ts) decide os alertas `repasse` e `agio` pelas palavras da legenda, ignorando negações ("não é repasse"); o que o modelo sugerir sem apoio no texto sai. Repasse ou ágio com `pedido_de_sinal` vai para moderação.
 - Um anúncio `removed` nunca volta: uma repostagem do mesmo carro é ignorada.
 
 ## Coleta do Instagram (Fase 3)

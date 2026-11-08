@@ -173,6 +173,22 @@ O conjunto fictício segue em 100% (40/40, 6/6 alertas); 1 resumo ainda cita "ve
 
 **Resíduos:** um resumo inverteu o sentido de "primeira [revisão] feita agora" para "ainda por fazer". Erros de compreensão assim não têm regra que pegue; sugestão para a Fase 5/7: marcar o texto como "resumo automático do post; confira no original".
 
+### Repasse e ágio (09/11/2026)
+
+Pedido do dono do produto: muitos anúncios do Instagram são de **repasse**, com preço bem abaixo do mercado, e o comprador precisa saber disso. Itens 1 a 4 aprovados:
+
+1. **Detecção pelo texto do próprio post**, sem IA decidir sozinha: "repasse", "repasso", "valor de repasse" etc. viram o alerta `repasse`; "ágio", "assumir parcelas", "transfiro o financiamento" viram o alerta novo `agio`. Negações ("não é repasse", "nada de ágio", "sem repasse") não contam. A normalização decide: o modelo pode sugerir, mas o alerta só fica se a legenda disser.
+2. **Página do anúncio:** quadro "Anúncio de repasse" (ou "Venda de ágio") com os cuidados (vistoria cautelar, consulta de débitos/leilão/sinistro, conferir o dono, não pagar sinal antes de ver o carro); os outros alertas aparecem numa linha factual "O anúncio menciona: …". O texto diz o que o post declara, nunca um julgamento nosso.
+3. **Busca:** selo "Repasse" nos cards; filtro "Repasse" no painel (`repasse=so|sem`); digitar "repasse" filtra só repasses e "sem repasse" os exclui.
+4. **Moderação:** repasse ou ágio **com pedido de sinal** vai para moderação (padrão comum de golpe).
+
+`red_flags` passou a ser coluna pública (só leitura; `sem_contato` não aparece na interface), com índice GIN. Prompt `2026-11-09.1`; os dois gabaritos seguem em 100% dos campos (o caso fictício c08, repasse com sinal, agora cai na moderação). Nenhum dos 35 posts reais é repasse: as 6 lojas e as hashtags de modelo não trazem esse tipo de anúncio.
+
+**Em aberto:**
+
+- **Referência de preço de mercado** para marcar "abaixo do mercado" por conta própria: comparação interna com anúncios parecidos, pesquisa de uma fonte FIPE com licença adequada, ou as duas. Hoje `abaixo_do_mercado` só aparece quando o próprio post diz.
+- **Fontes de repasse:** testar hashtags de repasse (usa vagas do limite de 30 por 7 dias) ou cadastrar contas de repassadores indicadas pelo dono do produto.
+
 ### Pendências
 
 - Rendimento por hashtag depois de uma semana de coleta (depende de rodar a coleta diária; até a Fase 7 só manualmente).
