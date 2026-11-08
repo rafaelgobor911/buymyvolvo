@@ -1,0 +1,2107 @@
+{
+  "date": "2026-11-08T11:42:01.926Z",
+  "promptVersion": "2026-11-08.1",
+  "report": {
+    "model": null,
+    "cases": 40,
+    "prefilter": {
+      "correct": 40,
+      "total": 40,
+      "falseNegatives": [],
+      "falsePositives": []
+    },
+    "isListing": {
+      "correct": 11,
+      "total": 40,
+      "misses": [
+        "c01",
+        "c02",
+        "c03",
+        "c04",
+        "c05",
+        "c06",
+        "c07",
+        "c08",
+        "c09",
+        "c10",
+        "c11",
+        "c12",
+        "c13",
+        "c14",
+        "c15",
+        "c16",
+        "c17",
+        "c18",
+        "c19",
+        "c20",
+        "c21",
+        "c22",
+        "c23",
+        "c24",
+        "c25",
+        "c26",
+        "c27",
+        "c28",
+        "c40"
+      ]
+    },
+    "fields": {
+      "modelId": {
+        "correct": 0,
+        "total": 29
+      },
+      "engineId": {
+        "correct": 0,
+        "total": 26
+      },
+      "trimId": {
+        "correct": 0,
+        "total": 20
+      },
+      "yearFab": {
+        "correct": 0,
+        "total": 7
+      },
+      "yearModel": {
+        "correct": 0,
+        "total": 29
+      },
+      "km": {
+        "correct": 0,
+        "total": 29
+      },
+      "price": {
+        "correct": 0,
+        "total": 29
+      },
+      "city": {
+        "correct": 0,
+        "total": 15
+      },
+      "uf": {
+        "correct": 0,
+        "total": 18
+      },
+      "transmission": {
+        "correct": 0,
+        "total": 5
+      },
+      "fuel": {
+        "correct": 0,
+        "total": 7
+      },
+      "sellerType": {
+        "correct": 0,
+        "total": 8
+      },
+      "phone": {
+        "correct": 0,
+        "total": 29
+      }
+    },
+    "overallFieldAccuracy": 0,
+    "redFlags": {
+      "found": 0,
+      "expected": 6
+    },
+    "summaryCopied": [],
+    "errors": [],
+    "mismatches": [
+      {
+        "id": "c01",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "trimId",
+        "expected": "inscription",
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "yearFab",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "yearModel",
+        "expected": 2020,
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "km",
+        "expected": 41000,
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "price",
+        "expected": 239900,
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "fuel",
+        "expected": "hibrido_plugin",
+        "actual": null
+      },
+      {
+        "id": "c01",
+        "field": "phone",
+        "expected": "+5511900000001",
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "modelId",
+        "expected": "s60",
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "yearFab",
+        "expected": 2018,
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "km",
+        "expected": 48000,
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "price",
+        "expected": 165000,
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "city",
+        "expected": "Curitiba",
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "uf",
+        "expected": "PR",
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "sellerType",
+        "expected": "particular",
+        "actual": null
+      },
+      {
+        "id": "c02",
+        "field": "phone",
+        "expected": "+5541900000002",
+        "actual": null
+      },
+      {
+        "id": "c03",
+        "field": "modelId",
+        "expected": "xc40",
+        "actual": null
+      },
+      {
+        "id": "c03",
+        "field": "yearModel",
+        "expected": 2022,
+        "actual": null
+      },
+      {
+        "id": "c03",
+        "field": "km",
+        "expected": 28000,
+        "actual": null
+      },
+      {
+        "id": "c03",
+        "field": "price",
+        "expected": 189000,
+        "actual": null
+      },
+      {
+        "id": "c03",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "c03",
+        "field": "fuel",
+        "expected": "eletrico",
+        "actual": null
+      },
+      {
+        "id": "c03",
+        "field": "phone",
+        "expected": "+5511900000003",
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "modelId",
+        "expected": "xc90",
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "yearFab",
+        "expected": 2020,
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "yearModel",
+        "expected": 2021,
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "km",
+        "expected": 38000,
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "price",
+        "expected": 365000,
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "city",
+        "expected": "Curitiba",
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "uf",
+        "expected": "PR",
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "c04",
+        "field": "phone",
+        "expected": "+554130000004",
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "modelId",
+        "expected": "v40",
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "engineId",
+        "expected": "t4",
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "yearModel",
+        "expected": 2016,
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "km",
+        "expected": 68000,
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "price",
+        "expected": 92000,
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "c05",
+        "field": "phone",
+        "expected": "+5511900000005",
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "modelId",
+        "expected": "850",
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "engineId",
+        "expected": "t5r",
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "yearModel",
+        "expected": 1995,
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "km",
+        "expected": 180000,
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "price",
+        "expected": 89900,
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "transmission",
+        "expected": "manual",
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "sellerType",
+        "expected": "particular",
+        "actual": null
+      },
+      {
+        "id": "c06",
+        "field": "phone",
+        "expected": "+5511900000006",
+        "actual": null
+      },
+      {
+        "id": "c07",
+        "field": "modelId",
+        "expected": "c30",
+        "actual": null
+      },
+      {
+        "id": "c07",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c07",
+        "field": "yearModel",
+        "expected": 2010,
+        "actual": null
+      },
+      {
+        "id": "c07",
+        "field": "km",
+        "expected": 92000,
+        "actual": null
+      },
+      {
+        "id": "c07",
+        "field": "price",
+        "expected": 55000,
+        "actual": null
+      },
+      {
+        "id": "c07",
+        "field": "transmission",
+        "expected": "manual",
+        "actual": null
+      },
+      {
+        "id": "c07",
+        "field": "phone",
+        "expected": "+5541900000007",
+        "actual": null
+      },
+      {
+        "id": "c08",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c08",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c08",
+        "field": "yearModel",
+        "expected": 2014,
+        "actual": null
+      },
+      {
+        "id": "c08",
+        "field": "km",
+        "expected": 102000,
+        "actual": null
+      },
+      {
+        "id": "c08",
+        "field": "price",
+        "expected": 70000,
+        "actual": null
+      },
+      {
+        "id": "c08",
+        "field": "phone",
+        "expected": "+5562900000008",
+        "actual": null
+      },
+      {
+        "id": "c08",
+        "field": "redFlag:repasse",
+        "expected": true,
+        "actual": false
+      },
+      {
+        "id": "c08",
+        "field": "redFlag:pedido_de_sinal",
+        "expected": true,
+        "actual": false
+      },
+      {
+        "id": "c09",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "engineId",
+        "expected": "d5",
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "trimId",
+        "expected": "inscription",
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "yearModel",
+        "expected": 2017,
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "km",
+        "expected": 110000,
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "price",
+        "expected": 125000,
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "city",
+        "expected": "Uberlândia",
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "uf",
+        "expected": "MG",
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "fuel",
+        "expected": "diesel",
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "phone",
+        "expected": "+5534900000009",
+        "actual": null
+      },
+      {
+        "id": "c09",
+        "field": "redFlag:documento_pendente",
+        "expected": true,
+        "actual": false
+      },
+      {
+        "id": "c10",
+        "field": "modelId",
+        "expected": "ex30",
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "engineId",
+        "expected": "twin-motor",
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "trimId",
+        "expected": "ultra",
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "yearModel",
+        "expected": 2025,
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "km",
+        "expected": 5000,
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "price",
+        "expected": 239000,
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "city",
+        "expected": "Curitiba",
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "uf",
+        "expected": "PR",
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "fuel",
+        "expected": "eletrico",
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "sellerType",
+        "expected": "particular",
+        "actual": null
+      },
+      {
+        "id": "c10",
+        "field": "phone",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "modelId",
+        "expected": "s90",
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "trimId",
+        "expected": "inscription",
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "km",
+        "expected": 48000,
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "price",
+        "expected": 260000,
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "city",
+        "expected": "Brasília",
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "uf",
+        "expected": "DF",
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "c11",
+        "field": "phone",
+        "expected": "+5561900000011",
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "modelId",
+        "expected": "xc40",
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "engineId",
+        "expected": "t4",
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "yearFab",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "yearModel",
+        "expected": 2020,
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "km",
+        "expected": 46000,
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "price",
+        "expected": 135000,
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "city",
+        "expected": "Londrina",
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "uf",
+        "expected": "PR",
+        "actual": null
+      },
+      {
+        "id": "c12",
+        "field": "phone",
+        "expected": "+5543900000012",
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "modelId",
+        "expected": "v60",
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "yearModel",
+        "expected": 2017,
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "km",
+        "expected": 64000,
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "price",
+        "expected": 115000,
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "c13",
+        "field": "phone",
+        "expected": "+5511900000013",
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "modelId",
+        "expected": "xc90",
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "engineId",
+        "expected": "d5",
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "trimId",
+        "expected": "inscription",
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "yearFab",
+        "expected": 2018,
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "km",
+        "expected": 95000,
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "price",
+        "expected": 265000,
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "city",
+        "expected": "Goiânia",
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "uf",
+        "expected": "GO",
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "fuel",
+        "expected": "diesel",
+        "actual": null
+      },
+      {
+        "id": "c14",
+        "field": "phone",
+        "expected": "+5562900000014",
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "trimId",
+        "expected": "polestar-engineered",
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "yearFab",
+        "expected": 2021,
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "yearModel",
+        "expected": 2022,
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "km",
+        "expected": 18000,
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "price",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "city",
+        "expected": "Curitiba",
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "uf",
+        "expected": "PR",
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "c15",
+        "field": "phone",
+        "expected": "+5541900000015",
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "modelId",
+        "expected": "s60",
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "trimId",
+        "expected": "r",
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "yearModel",
+        "expected": 2005,
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "km",
+        "expected": 140000,
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "price",
+        "expected": 58000,
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "transmission",
+        "expected": "manual",
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "phone",
+        "expected": "+5511900000016",
+        "actual": null
+      },
+      {
+        "id": "c16",
+        "field": "redFlag:leilao",
+        "expected": true,
+        "actual": false
+      },
+      {
+        "id": "c17",
+        "field": "modelId",
+        "expected": "c40",
+        "actual": null
+      },
+      {
+        "id": "c17",
+        "field": "yearModel",
+        "expected": 2023,
+        "actual": null
+      },
+      {
+        "id": "c17",
+        "field": "km",
+        "expected": 21000,
+        "actual": null
+      },
+      {
+        "id": "c17",
+        "field": "price",
+        "expected": 205000,
+        "actual": null
+      },
+      {
+        "id": "c17",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "c17",
+        "field": "fuel",
+        "expected": "eletrico",
+        "actual": null
+      },
+      {
+        "id": "c17",
+        "field": "phone",
+        "expected": "+5511900000017",
+        "actual": null
+      },
+      {
+        "id": "c18",
+        "field": "modelId",
+        "expected": "xc90",
+        "actual": null
+      },
+      {
+        "id": "c18",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "c18",
+        "field": "trimId",
+        "expected": "ultimate-dark",
+        "actual": null
+      },
+      {
+        "id": "c18",
+        "field": "yearModel",
+        "expected": 2024,
+        "actual": null
+      },
+      {
+        "id": "c18",
+        "field": "km",
+        "expected": 15000,
+        "actual": null
+      },
+      {
+        "id": "c18",
+        "field": "price",
+        "expected": 420000,
+        "actual": null
+      },
+      {
+        "id": "c18",
+        "field": "phone",
+        "expected": "+5511900000018",
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "modelId",
+        "expected": "240",
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "engineId",
+        "expected": null,
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "yearModel",
+        "expected": 1992,
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "km",
+        "expected": 250000,
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "price",
+        "expected": 45000,
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "city",
+        "expected": "Curitiba",
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "transmission",
+        "expected": "manual",
+        "actual": null
+      },
+      {
+        "id": "c19",
+        "field": "phone",
+        "expected": "+5541900000019",
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "trimId",
+        "expected": "dynamic",
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "yearModel",
+        "expected": 2013,
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "km",
+        "expected": 102000,
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "price",
+        "expected": 85000,
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "city",
+        "expected": "Goiânia",
+        "actual": null
+      },
+      {
+        "id": "c20",
+        "field": "phone",
+        "expected": "+5562900000020",
+        "actual": null
+      },
+      {
+        "id": "c21",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c21",
+        "field": "engineId",
+        "expected": "b5",
+        "actual": null
+      },
+      {
+        "id": "c21",
+        "field": "yearModel",
+        "expected": 2022,
+        "actual": null
+      },
+      {
+        "id": "c21",
+        "field": "km",
+        "expected": 30000,
+        "actual": null
+      },
+      {
+        "id": "c21",
+        "field": "price",
+        "expected": 245000,
+        "actual": null
+      },
+      {
+        "id": "c21",
+        "field": "phone",
+        "expected": "+5516900000021",
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "modelId",
+        "expected": "ex40",
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "engineId",
+        "expected": "single-motor",
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "trimId",
+        "expected": "plus",
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "yearModel",
+        "expected": 2025,
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "km",
+        "expected": 9000,
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "price",
+        "expected": 219000,
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "fuel",
+        "expected": "eletrico",
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "c22",
+        "field": "phone",
+        "expected": "+554130000022",
+        "actual": null
+      },
+      {
+        "id": "c23",
+        "field": "modelId",
+        "expected": "v40-cc",
+        "actual": null
+      },
+      {
+        "id": "c23",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c23",
+        "field": "yearModel",
+        "expected": 2018,
+        "actual": null
+      },
+      {
+        "id": "c23",
+        "field": "km",
+        "expected": 39000,
+        "actual": null
+      },
+      {
+        "id": "c23",
+        "field": "price",
+        "expected": 129000,
+        "actual": null
+      },
+      {
+        "id": "c23",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "c23",
+        "field": "phone",
+        "expected": "+5511900000023",
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "engineId",
+        "expected": "t6",
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "yearModel",
+        "expected": 2016,
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "km",
+        "expected": 84000,
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "price",
+        "expected": 99900,
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "city",
+        "expected": "Brasília",
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "phone",
+        "expected": "+5561900000024",
+        "actual": null
+      },
+      {
+        "id": "c24",
+        "field": "redFlag:sinistro",
+        "expected": true,
+        "actual": false
+      },
+      {
+        "id": "c24",
+        "field": "redFlag:abaixo_do_mercado",
+        "expected": true,
+        "actual": false
+      },
+      {
+        "id": "c25",
+        "field": "modelId",
+        "expected": "s40",
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "yearModel",
+        "expected": 2009,
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "km",
+        "expected": 110000,
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "price",
+        "expected": 42000,
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "city",
+        "expected": "Salvador",
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "uf",
+        "expected": "BA",
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "transmission",
+        "expected": "automatico",
+        "actual": null
+      },
+      {
+        "id": "c25",
+        "field": "phone",
+        "expected": "+5571900000025",
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "modelId",
+        "expected": "xc90",
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "engineId",
+        "expected": "t6",
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "yearModel",
+        "expected": 2017,
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "km",
+        "expected": 78000,
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "price",
+        "expected": 215000,
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "city",
+        "expected": "Recife",
+        "actual": null
+      },
+      {
+        "id": "c26",
+        "field": "phone",
+        "expected": "+5581900000026",
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "modelId",
+        "expected": "xc40",
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "km",
+        "expected": 52000,
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "price",
+        "expected": 145000,
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "uf",
+        "expected": "RJ",
+        "actual": null
+      },
+      {
+        "id": "c27",
+        "field": "phone",
+        "expected": "+5521900000027",
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "engineId",
+        "expected": "t8",
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "trimId",
+        "expected": "r-design",
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "yearFab",
+        "expected": 2020,
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "yearModel",
+        "expected": 2021,
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "km",
+        "expected": 41000,
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "price",
+        "expected": 249000,
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "city",
+        "expected": "Santos",
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "uf",
+        "expected": "SP",
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "sellerType",
+        "expected": "loja",
+        "actual": null
+      },
+      {
+        "id": "c28",
+        "field": "phone",
+        "expected": "+5513900000028",
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "modelId",
+        "expected": "xc60",
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "engineId",
+        "expected": "t5",
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "trimId",
+        "expected": "momentum",
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "yearModel",
+        "expected": 2019,
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "km",
+        "expected": 61000,
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "price",
+        "expected": 159900,
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "city",
+        "expected": "Curitiba",
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "uf",
+        "expected": "PR",
+        "actual": null
+      },
+      {
+        "id": "c40",
+        "field": "phone",
+        "expected": "+5541900000040",
+        "actual": null
+      }
+    ],
+    "usage": {
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "cacheWriteTokens": 0,
+      "cacheReadTokens": 0
+    },
+    "extractedCalls": 0,
+    "costUsd": null,
+    "costPer1000PostsUsd": null,
+    "costPer1000ExtractionsUsd": null,
+    "avgLatencyMs": null
+  },
+  "results": [
+    {
+      "id": "c01",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c02",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c03",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c04",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c05",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c06",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c07",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c08",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c09",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c10",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c11",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c12",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c13",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c14",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c15",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c16",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c17",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c18",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c19",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c20",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c21",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c22",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c23",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c24",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c25",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c26",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c27",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c28",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c29",
+      "prefilterPass": false,
+      "prefilterReason": "not_volvo",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c30",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c31",
+      "prefilterPass": false,
+      "prefilterReason": "sold",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c32",
+      "prefilterPass": false,
+      "prefilterReason": "wanted_ad",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c33",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c34",
+      "prefilterPass": false,
+      "prefilterReason": "not_brazil",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c35",
+      "prefilterPass": false,
+      "prefilterReason": "no_sale_signal",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c36",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c37",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c38",
+      "prefilterPass": false,
+      "prefilterReason": "no_sale_signal",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c39",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    },
+    {
+      "id": "c40",
+      "prefilterPass": true,
+      "prefilterReason": "ok",
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheReadTokens": 0
+      }
+    }
+  ]
+}
