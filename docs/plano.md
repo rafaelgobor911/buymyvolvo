@@ -173,7 +173,7 @@ O conjunto fictício segue em 100% (40/40, 6/6 alertas); 1 resumo ainda cita "ve
 
 **Resíduos:** um resumo inverteu o sentido de "primeira [revisão] feita agora" para "ainda por fazer". Erros de compreensão assim não têm regra que pegue; sugestão para a Fase 5/7: marcar o texto como "resumo automático do post; confira no original".
 
-### Repasse e ágio (09/11/2026)
+### Repasse e ágio (08/11/2026)
 
 Pedido do dono do produto: muitos anúncios do Instagram são de **repasse**, com preço bem abaixo do mercado, e o comprador precisa saber disso. Itens 1 a 4 aprovados:
 
@@ -197,7 +197,7 @@ Pedido do dono do produto: muitos anúncios do Instagram são de **repasse**, co
 
 ## Fase 4: decisões
 
-Plano aprovado em 09/11/2026.
+Plano aprovado em 08/11/2026.
 
 - **Clique:** o botão aponta para `/r/{código do anúncio}` (o fim do slug). A rota grava o lead e redireciona (302) para o WhatsApp com a mensagem; o telefone nunca vai para o HTML da página. Sem telefone, o botão vira "Falar com o vendedor no Instagram" (Direct pelo @ ou, sem @, o post).
 - **Código do lead:** `VX-` + 5 caracteres sem 0/O/1/I/L (fáceis de ler em voz alta), gerado no clique.
@@ -217,7 +217,7 @@ Plano aprovado em 09/11/2026.
 
 ## Fase 5: decisões
 
-Plano aprovado em 09/11/2026, entregue em duas partes (5a e 5b) por causa do tamanho e do limite de uso.
+Plano aprovado em 08/11/2026, entregue em duas partes (5a e 5b) por causa do tamanho e do limite de uso.
 
 - **Login:** conta Google via Supabase Auth; acesso para o e-mail do dono do produto (em `ADMIN_EMAILS`, fora do código). O projeto do Supabase ainda não existe: até lá vale o **login de teste** (só com modo de prévia e fora de produção), e o login real é conferido quando o projeto for criado.
 - **Auditoria:** toda ação do admin vai para `audit_log` (append-only). Correções da moderação vão para `extraction_corrections`.
@@ -233,6 +233,22 @@ Acesso, Início com alertas (fila, jobs com falha ou alerta, fontes falhando, or
 - Testar o login com Google quando existir o projeto do Supabase (URL e chave anônima nas variáveis; provedor Google ligado no Supabase; URL de retorno `/admin/auth/callback`).
 - Remover pelo admin ainda não grava na blocklist (a repostagem já é ignorada pelo pipeline); a tela de remoções e blocklist é da 5b.
 
-### 5b (próxima)
+### 5b (entregue)
 
-Fontes (contas e hashtags, orçamento da janela de 7 dias), Leads (por dia, anúncio e vendedor; visitas por anúncio para a taxa de clique; CSV), Jobs (histórico, erros, custo de IA, rodar agora com ensaio), Vendedores, Remoções e Blocklist, e o reprocessamento de legenda editada (preço e km com o valor anterior no histórico).
+- **Fontes:** contas e hashtags com última leitura, erros, posts e anúncios no ar; pausar/retomar; cadastro (avisa que hashtag nova gasta vaga); orçamento da janela de 7 dias com a data em que cada vaga libera.
+- **Leads:** 7, 30 ou 90 dias; contatos, cliques, visitas e taxa de contato; por anúncio, por dia e por vendedor; CSV (`;` + BOM, sem hash de IP/UA).
+- **Visitas:** contador diário por anúncio (`listing_views_daily`), sem dado do visitante; robôs e pré-carregamento não contam.
+- **Jobs:** histórico com estatísticas, erros, alertas e custo de IA; "rodar agora" com ensaio (45 s por vez).
+- **Remoções:** confirmar (bloqueia telefone, @ e posts) ou recusar (o anúncio volta ao ar); prazo de 48 h destacado. O seed tem um pedido fictício.
+- **Blocklist:** bloquear e desbloquear manualmente, com validação e auditoria.
+- **Vendedores:** lista com plano, verificação, anúncios no ar e contatos em 30 dias.
+- **Legenda editada:** reprocessada uma vez no `process-posts`; preço e km seguem o post, com o valor anterior no histórico.
+
+**Pendências da Fase 5:**
+
+- Login com Google: testar quando existir o projeto do Supabase.
+- O formulário público de remoção (que cria os pedidos) é da Fase 6.
+
+## Próxima fase (Fase 6: vendedor)
+
+Reivindicação do anúncio (login com Instagram, código no WhatsApp ou verificação manual), Termos do Anunciante versionados (rascunho para revisão jurídica), painel do vendedor (anúncios, leads, edição, fotos com licença, "marcar como vendido" com a pergunta sobre o site), formulário de remoção sem login e blocklist.

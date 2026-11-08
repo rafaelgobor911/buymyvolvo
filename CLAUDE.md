@@ -144,6 +144,10 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - Aprovar exige ano-modelo e preço ou contato (a mesma regra do banco). Anúncio ainda em moderação ganha slug novo com os dados corrigidos (mesmo `short_id`); anúncio publicado mantém o slug.
 - Formulários: `useActionState` com envio por `startTransition` (o React não limpa os campos quando o servidor devolve erro). Telefone já gravado é mantido mesmo com DDD fictício; telefone novo precisa ser válido.
 - Atalhos da moderação: A aprova, S salva, R vai ao motivo da rejeição, J/K próximo/anterior, Ctrl+Enter aprova de dentro de um campo.
+- **Operação (5b):** Fontes (contas e hashtags; fontes `.demo`/`_demo` só rodam com `--fixtures`; hashtag nova gasta uma vaga na primeira leitura), Leads, Jobs ("rodar agora" com ensaio e 45 s de orçamento), Remoções, Blocklist e Vendedores (só leitura até a Fase 6).
+- **Visitas:** a página do anúncio soma `listing_views_daily` com `after()` (só contador por dia, sem dado do visitante; robôs e prefetch fora). Taxa de contato = leads ÷ visitas. O CSV de leads usa `;` + BOM (Excel em PT-BR), não traz hash de IP/UA e a exportação vai para o `audit_log`.
+- **Remoção:** confirmar o pedido põe telefone, @ e posts do anúncio na blocklist (`blockListingContacts`); recusar devolve o anúncio ao ar. Mudar o status para "removido" no admin oferece o mesmo bloqueio.
+- **Legenda editada:** o `process-posts` re-extrai uma vez cada legenda editada (`raw_posts.reprocessed_at`) de anúncios não reivindicados no ar ou em moderação, e atualiza preço e km; os valores anteriores ficam no `audit_log` (`listing.caption_update`).
 - O e2e reaplica o `seed.sql` antes da suíte (`tests/e2e/global-setup.ts`), porque os testes do admin aprovam e rejeitam anúncios fictícios. Capturas de tela do admin usam o banco de teste (só dados fictícios).
 
 ## Variáveis de ambiente
