@@ -22,6 +22,13 @@ describe("parseQuery: acceptance table (PROMPT.md §5)", () => {
     expect(r.text).toBe("");
   });
 
+  it("P6/P8 (Recharge naming) → Single Motor / Twin Motor", () => {
+    expect(parse("xc40 p8").engineIds).toEqual(["twin-motor"]);
+    expect(parse("c40 recharge p6").engineIds).toEqual(["single-motor"]);
+    expect(parse("ex40 p6").engineIds).toEqual(["single-motor"]);
+    expect(parse("ec40 p8").engineIds).toEqual(["twin-motor"]);
+  });
+
   it("xc60 t8 polestar → Polestar Engineered", () => {
     const r = parse("xc60 t8 polestar");
     expect(r.modelIds).toEqual(["xc60"]);

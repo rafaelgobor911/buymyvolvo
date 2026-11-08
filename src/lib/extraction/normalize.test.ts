@@ -235,6 +235,29 @@ describe("normalizeExtraction", () => {
     ]);
   });
 
+  it("reads P6/P8 and trusts the version as written over the model's engine", () => {
+    const p6 = norm({
+      model: "XC40",
+      engine: "Twin Motor",
+      trim: "Plus",
+      version_text: "P6 Recharge Electric Plus",
+      year_fab: 2024,
+      year_model: 2024,
+      fuel: "eletrico",
+    });
+    expect(p6.engineId).toBe("single-motor");
+    expect(
+      norm({
+        model: "C40",
+        engine: "P8",
+        version_text: null,
+        year_fab: 2022,
+        year_model: 2022,
+        fuel: "eletrico",
+      }).engineId,
+    ).toBe("twin-motor");
+  });
+
   it("prefers the price snippet over a wrong number from the model", () => {
     expect(norm({ price: 1, price_text: "R$ 159.900" }).priceCents).toBe(15_990_000);
   });
@@ -247,14 +270,21 @@ describe("normalizeExtraction", () => {
   });
 
   it("penalizes combinations that do not exist or were not sold in Brazil", () => {
-    const b5 = norm({ engine: "B5", trim: null, year_fab: 2022, year_model: 2022, fuel: null });
+    const b5 = norm({
+      engine: "B5",
+      trim: null,
+      version_text: "B5",
+      year_fab: 2022,
+      year_model: 2022,
+      fuel: null,
+    });
     expect(b5.issues.map((i) => i.code)).toContain("engine_not_in_brazil");
     expect(b5.confidence).toBeLessThan(0.85);
 
     const t8OldXc60 = norm({ year_fab: 2014, year_model: 2014, trim: null });
     expect(t8OldXc60.issues.map((i) => i.code)).toContain("engine_mismatch");
 
-    const v90 = norm({ model: "V90", engine: "T6", trim: null, fuel: null });
+    const v90 = norm({ model: "V90", engine: "T6", trim: null, version_text: "T6", fuel: null });
     expect(v90.issues.map((i) => i.code)).toContain("model_not_in_brazil");
   });
 

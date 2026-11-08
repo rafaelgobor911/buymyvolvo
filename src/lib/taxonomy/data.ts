@@ -459,13 +459,14 @@ export const ENGINES: EngineDef[] = [
     brazil: false,
   },
   {
+    // P6: Recharge naming of the XC40/C40 single motor, still used in EX40/EC40 ads.
     id: "single-motor",
     name: "Single Motor",
     fuels: ["eletrico"],
     platforms: ["CMA", "SEA"],
     yearStart: 2022,
     yearEnd: null,
-    aliases: ["single", "single motor extended range", "extended range"],
+    aliases: ["single", "single motor extended range", "extended range", "p6"],
   },
   {
     // "Recharge" and "Pure Electric" are treated as fuel, not as an engine.
@@ -475,7 +476,8 @@ export const ENGINES: EngineDef[] = [
     platforms: ["CMA", "SEA", "SPA2"],
     yearStart: 2020,
     yearEnd: null,
-    aliases: ["twin", "twin motor performance"],
+    // P8: Recharge naming of the XC40/C40 twin motor, still used in EX40/EC40 ads.
+    aliases: ["twin", "twin motor performance", "p8"],
   },
 ];
 

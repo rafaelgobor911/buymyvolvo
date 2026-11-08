@@ -112,8 +112,8 @@ values
   ('b4', 'B4', array['hibrido_leve'], array['CMA', 'SPA'], null, '{}'::text[], 2020, null, false, null, null),
   ('b5', 'B5', array['hibrido_leve'], array['CMA', 'SPA'], null, '{}'::text[], 2020, null, false, null, null),
   ('b6', 'B6', array['hibrido_leve'], array['SPA'], null, '{}'::text[], 2020, null, false, null, null),
-  ('single-motor', 'Single Motor', array['eletrico'], array['CMA', 'SEA'], null, array['single', 'single motor extended range', 'extended range'], 2022, null, true, null, null),
-  ('twin-motor', 'Twin Motor', array['eletrico'], array['CMA', 'SEA', 'SPA2'], null, array['twin', 'twin motor performance'], 2020, null, true, null, null)
+  ('single-motor', 'Single Motor', array['eletrico'], array['CMA', 'SEA'], null, array['single', 'single motor extended range', 'extended range', 'p6'], 2022, null, true, null, null),
+  ('twin-motor', 'Twin Motor', array['eletrico'], array['CMA', 'SEA', 'SPA2'], null, array['twin', 'twin motor performance', 'p8'], 2020, null, true, null, null)
 on conflict (id) do update set name = excluded.name, fuels = excluded.fuels, platforms = excluded.platforms,
   model_ids = excluded.model_ids, aliases = excluded.aliases, year_start = excluded.year_start,
   year_end = excluded.year_end, sold_in_brazil = excluded.sold_in_brazil,

@@ -5,7 +5,7 @@
  */
 import { describeBrazilOffers, ENGINES, MODELS, TRIMS } from "@/lib/taxonomy";
 
-export const EXTRACTION_PROMPT_VERSION = "2026-11-08.3";
+export const EXTRACTION_PROMPT_VERSION = "2026-11-08.4";
 
 const years = (start: number, end: number | null) => (end ? `${start}-${end}` : `${start}+`);
 
@@ -34,7 +34,8 @@ function taxonomySection(): string {
         : Array.isArray(e.brazil)
           ? ` [in Brazil only: ${describeBrazilOffers(e.brazil)}]`
           : "";
-    return `- ${e.name}: ${e.fuels.join("/")}, ${years(e.yearStart, e.yearEnd)}${brazil}`;
+    const written = e.aliases.length ? ` (also written ${e.aliases.join(", ")})` : "";
+    return `- ${e.name}${written}: ${e.fuels.join("/")}, ${years(e.yearStart, e.yearEnd)}${brazil}`;
   }).join("\n");
 
   const trims = TRIMS.map(

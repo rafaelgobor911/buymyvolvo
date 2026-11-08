@@ -326,7 +326,9 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
 
   // Taxonomy
   const modelId = matchModel(x.model) ?? matchModel(x.version_text);
-  const engineId = matchEngine(x.engine, x.version_text);
+  // The version as written beats the model's engine field: "P6 Recharge" with
+  // engine "Twin Motor" is a Single Motor.
+  const engineId = matchEngine(x.version_text, x.engine);
   const trimId = matchTrim(modelId, engineId, x.trim, x.version_text);
 
   // Numbers
