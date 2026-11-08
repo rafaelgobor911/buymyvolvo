@@ -48,8 +48,8 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ```
 src/
-  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /api/cron/[job]
-  components/            componentes do site; ui/ = shadcn; search/ = busca e filtros
+  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /api/cron/[job]
+  components/            componentes do site; ui/ = shadcn; search/ = busca e filtros; admin/ = telas do admin
   content/               textos editoriais (checklists por modelo, buscas populares)
   lib/
     env/                 validação de env (schema.ts, public.ts, server.ts)
@@ -60,7 +60,8 @@ src/
     extraction/          pré-filtro, schema, prompt, extract (Claude), normalize, dedupe, pipeline
     instagram/           cliente da Graph API (graph.ts), recursos (api.ts) e Instagram fictício (fixtures.ts)
     jobs/                executor (trava + job_runs + dry-run), coleta, manutenção e registro dos jobs
-    leads/               código do lead, mensagem, links (contact.ts), hash/robôs (request.ts), recordClick (record.ts)
+    leads/               código do lead, mensagem (message.ts), links (contact.ts), hash/robôs (request.ts), recordClick (record.ts)
+    admin/               acesso (auth, access), formulário, anúncios, configurações e painel inicial do admin
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
 scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
 scripts/job.ts           roda jobs localmente · scripts/sources.ts: fontes monitoradas
@@ -132,6 +133,18 @@ docs/                    PROMPT.md, plano.md, meta-setup.md
 - Mensagem: `app_settings.whatsapp_message_template` com `{modelo} {versao} {ano} {site} {url} {ref}` (aceita `{versão}`, `{nome_do_site}`, `{url_curta}`); `{url}` é o link curto `/a/<short_id>`.
 - Anúncios fictícios (DDD 20) não abrem WhatsApp: o clique mostra `/r/previa/<código>` com a mensagem. Essa página só existe para eles.
 - `HASH_SALT` é obrigatório em `/r`; o Playwright e a CI usam um salt descartável de teste.
+
+## Admin (Fase 5)
+
+- `/admin` (grupo `(painel)`): Início (contagens e alertas), Moderação, Anúncios e Configurações. Login com **Google via Supabase Auth**; o e-mail precisa estar em `ADMIN_EMAILS`. A sessão é validada no servidor com `getUser()`; `src/proxy.ts` (só `/admin`) renova o cookie e marca `noindex`.
+- **Toda página e Server Action do admin chama `requireAdmin()`** (`lib/admin/auth.ts`), dentro de `<Suspense>`. Nunca confie só no layout. `currentAdmin()` chama `connection()` (a checagem lê o relógio).
+- **Login de teste:** `ADMIN_TEST_LOGIN_EMAIL` entra sem Google, só com `NEXT_PUBLIC_DEMO_MODE` ligado e fora de `VERCEL_ENV=production`; cookie assinado com `HASH_SALT` (12 h). Playwright e CI usam `admin.teste@example.com`. **Nunca defina num ambiente publicado.**
+- Dados do admin em `src/lib/admin/` com `sql` por parâmetro (como os jobs). Toda escrita grava `audit_log` (append-only: ator, ação, antes e depois). Correções feitas na moderação vão para `extraction_corrections` (material para o gabarito).
+- **`rejected`** some do site, mas uma repostagem volta para `pending_review` (o pipeline grava `listing.reopen`). **`removed`** é o pedido do vendedor e nunca volta.
+- Aprovar exige ano-modelo e preço ou contato (a mesma regra do banco). Anúncio ainda em moderação ganha slug novo com os dados corrigidos (mesmo `short_id`); anúncio publicado mantém o slug.
+- Formulários: `useActionState` com envio por `startTransition` (o React não limpa os campos quando o servidor devolve erro). Telefone já gravado é mantido mesmo com DDD fictício; telefone novo precisa ser válido.
+- Atalhos da moderação: A aprova, S salva, R vai ao motivo da rejeição, J/K próximo/anterior, Ctrl+Enter aprova de dentro de um campo.
+- O e2e reaplica o `seed.sql` antes da suíte (`tests/e2e/global-setup.ts`), porque os testes do admin aprovam e rejeitam anúncios fictícios. Capturas de tela do admin usam o banco de teste (só dados fictícios).
 
 ## Variáveis de ambiente
 

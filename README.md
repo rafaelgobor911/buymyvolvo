@@ -6,16 +6,16 @@ Buscador de anúncios de Volvo à venda no Brasil. Reúne posts de venda publica
 
 ## Status
 
-| Fase | Escopo                                      | Situação                |
-| ---- | ------------------------------------------- | ----------------------- |
-| 0    | Setup, convenções, guia da Meta             | ✅ aprovada             |
-| 1    | Taxonomia, banco, busca com dados fictícios | ✅ aprovada             |
-| 2    | Extração com IA                             | ✅ aprovada             |
-| 3    | Conectores do Instagram                     | ✅ aprovada             |
-| 4    | Leads e WhatsApp                            | 🔄 aguardando aprovação |
-| 5    | Admin e moderação                           | ⏳                      |
-| 6    | Vendedor                                    | ⏳                      |
-| 7    | Produção                                    | ⏳                      |
+| Fase | Escopo                                      | Situação                   |
+| ---- | ------------------------------------------- | -------------------------- |
+| 0    | Setup, convenções, guia da Meta             | ✅ aprovada                |
+| 1    | Taxonomia, banco, busca com dados fictícios | ✅ aprovada                |
+| 2    | Extração com IA                             | ✅ aprovada                |
+| 3    | Conectores do Instagram                     | ✅ aprovada                |
+| 4    | Leads e WhatsApp                            | ✅ aprovada                |
+| 5    | Admin e moderação                           | 🔄 5a aguardando aprovação |
+| 6    | Vendedor                                    | ⏳                         |
+| 7    | Produção                                    | ⏳                         |
 
 ## Stack
 

@@ -215,6 +215,24 @@ Plano aprovado em 09/11/2026.
 - `HASH_SALT` definitivo nas variáveis da Vercel (Fase 7); aqui e na CI usamos salts descartáveis de teste.
 - Nome do site: aparece na mensagem e precisa estar definido antes de ir ao ar.
 
-## Próxima fase (Fase 5: admin e moderação)
+## Fase 5: decisões
 
-Todas as telas da seção 10 do `PROMPT.md`: moderação, fontes e orçamento de hashtags, anúncios, leads (por dia, anúncio e vendedor; export CSV), vendedores, remoções, blocklist, jobs e configurações (mensagem do WhatsApp, limiares, prazos).
+Plano aprovado em 09/11/2026, entregue em duas partes (5a e 5b) por causa do tamanho e do limite de uso.
+
+- **Login:** conta Google via Supabase Auth; acesso para o e-mail do dono do produto (em `ADMIN_EMAILS`, fora do código). O projeto do Supabase ainda não existe: até lá vale o **login de teste** (só com modo de prévia e fora de produção), e o login real é conferido quando o projeto for criado.
+- **Auditoria:** toda ação do admin vai para `audit_log` (append-only). Correções da moderação vão para `extraction_corrections`.
+- **Rejeitado × removido:** rejeitado (não é anúncio, não é Volvo, extração ruim, suspeita de golpe…) volta para a fila numa repostagem; removido (pedido do vendedor) nunca volta.
+- **Resumo automático:** a página pública mostra "Resumo automático do post; confira no original." em anúncios do Instagram não reivindicados.
+
+### 5a (entregue)
+
+Acesso, Início com alertas (fila, jobs com falha ou alerta, fontes falhando, orçamento de hashtags, remoções pendentes), Moderação (post original ao lado dos campos, motivos, aprovar/salvar/rejeitar, atalhos), Anúncios (busca por código/modelo/cidade/telefone e status, edição, troca de status, histórico) e Configurações (mensagem do WhatsApp com prévia, limiares e prazos, com validação). O seed ganhou 3 posts fictícios em moderação.
+
+**Pendências da 5a:**
+
+- Testar o login com Google quando existir o projeto do Supabase (URL e chave anônima nas variáveis; provedor Google ligado no Supabase; URL de retorno `/admin/auth/callback`).
+- Remover pelo admin ainda não grava na blocklist (a repostagem já é ignorada pelo pipeline); a tela de remoções e blocklist é da 5b.
+
+### 5b (próxima)
+
+Fontes (contas e hashtags, orçamento da janela de 7 dias), Leads (por dia, anúncio e vendedor; visitas por anúncio para a taxa de clique; CSV), Jobs (histórico, erros, custo de IA, rodar agora com ensaio), Vendedores, Remoções e Blocklist, e o reprocessamento de legenda editada (preço e km com o valor anterior no histórico).
