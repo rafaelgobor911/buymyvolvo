@@ -1,24 +1,25 @@
 # Avaliação da extração
 
-- Data: 2026-11-08T12:27:53.618Z
+- Data: 2026-11-08T16:38:56.852Z
 - Modelo: claude-haiku-5-5
-- Versão do prompt: 2026-11-08.3
+- Versão do prompt: 2026-11-08.6
 - Casos: 40 (conjunto em `evals/extraction/dataset.ts`)
 
 ## Resumo
 
-| Métrica                                | Resultado      |
-| -------------------------------------- | -------------- |
-| Pré-filtro correto                     | 100.0% (40/40) |
-| "É anúncio de Volvo?" correto          | 100.0% (40/40) |
-| Campos corretos (geral)                | 100.0%         |
-| Sinais de alerta encontrados           | 100.0% (6/6)   |
-| Resumos que copiam a legenda           | 0              |
-| Erros de extração                      | 0              |
-| Custo desta rodada                     | US$ 0.0065     |
-| Custo por 1.000 posts (com pré-filtro) | US$ 0.1621     |
-| Custo por 1.000 extrações              | US$ 0.1965     |
-| Latência média por extração            | 1474 ms        |
+| Métrica                                     | Resultado      |
+| ------------------------------------------- | -------------- |
+| Pré-filtro correto                          | 100.0% (40/40) |
+| "É anúncio de Volvo?" correto               | 100.0% (40/40) |
+| Campos corretos (geral)                     | 100.0%         |
+| Sinais de alerta encontrados                | 100.0% (6/6)   |
+| Resumos que copiam a legenda                | 0              |
+| Resumos que falam do vendedor ou do negócio | 1 (c08)        |
+| Erros de extração                           | 0              |
+| Custo desta rodada                          | US$ 0.0064     |
+| Custo por 1.000 posts (com pré-filtro)      | US$ 0.1608     |
+| Custo por 1.000 extrações                   | US$ 0.1950     |
+| Latência média por extração                 | 1378 ms        |
 
 ## Acurácia por campo
 
@@ -40,7 +41,7 @@
 
 ## Tokens
 
-Entrada 3199 · saída 8656 · gravação em cache 0 · leitura de cache 183612. Custos de cache estimados com os multiplicadores padrão (ver `src/lib/extraction/cost.ts`).
+Entrada 3199 · saída 8373 · gravação em cache 0 · leitura de cache 192720. Custos de cache estimados com os multiplicadores padrão (ver `src/lib/extraction/cost.ts`).
 
 ## Pré-filtro
 

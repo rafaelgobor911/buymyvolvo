@@ -183,7 +183,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     id: "r08",
     origin: "business_discovery",
     igUsername: "matellimotors",
-    bio: "Entusiasta Volvo 🇸🇪\n•Fazendo o que ninguém faz 🤷🏻‍♂️\n•Uma LOJA especializada VOLVO: Rua São Sebastião 1766 - Ribeirão Preto SP\n📲 (16) 90000-0103",
+    bio: "Entusiasta Volvo 🇸🇪\n•Fazendo o que ninguém faz 🤷🏻‍♂️\n•Uma LOJA especializada VOLVO: Rua São Sebastião 1766 - Ribeirão Preto SP\n📲 (16) 90000-0102",
     caption:
       "Esse Volvo XC60, que é recém chegada aqui na Matelli, já passou pelo SIGNATURE MATELLI. \n\nTrata-se de um carro 2024, Versão Plus, Recharge T8 híbrida Plugin com 462cv , sendo 317 do motor a combustão e 145 do motor elétrico traseiro.\n\nPossui uma bateria com capacidade bruta de 18,8 kWh, com uma autonomia elétrica de aproximadamente 65 Quilômetros. \n\nJá com Google Built-in, com sistema Android e atualizações OTA (Over the air)\n\nA Cor externa é Denin Blue Onyx , sendo um azul metálico com influência do cinza, e a interna o aclamado Blond, único interior que trás o volante bicolor. \n\nPossui acabamentos em em madeira natural Grey Ash decor, uma madeira clara com tons cinzas. \n\nKm atual 55.897, com todas as revisões em concessionária volvo. \n\nVeículo em Ribeirão Preto SP.\n\nEnviamos para todo Brasil. \n\nValor R$244.000,00\n\n(16) 90000-0102\n\n<nome>\n\n#viral #carros #volvo #volvocars #volvoxc60",
     expected: {
@@ -206,7 +206,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     id: "r09",
     origin: "business_discovery",
     igUsername: "matellimotors",
-    bio: "Entusiasta Volvo 🇸🇪\n•Fazendo o que ninguém faz 🤷🏻‍♂️\n•Uma LOJA especializada VOLVO: Rua São Sebastião 1766 - Ribeirão Preto SP\n📲 (16) 90000-0104",
+    bio: "Entusiasta Volvo 🇸🇪\n•Fazendo o que ninguém faz 🤷🏻‍♂️\n•Uma LOJA especializada VOLVO: Rua São Sebastião 1766 - Ribeirão Preto SP\n📲 (16) 90000-0103",
     caption:
       "800 KM DE AUTONOMIA ? BEM VINDOS AO FUTURO! \n\n#viral #carros #volvo #volvocars #volvocarsbr",
     note: "conteúdo da loja, não é anúncio",
@@ -219,7 +219,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     id: "r10",
     origin: "business_discovery",
     igUsername: "matellimotors",
-    bio: "Entusiasta Volvo 🇸🇪\n•Fazendo o que ninguém faz 🤷🏻‍♂️\n•Uma LOJA especializada VOLVO: Rua São Sebastião 1766 - Ribeirão Preto SP\n📲 (16) 90000-0105",
+    bio: "Entusiasta Volvo 🇸🇪\n•Fazendo o que ninguém faz 🤷🏻‍♂️\n•Uma LOJA especializada VOLVO: Rua São Sebastião 1766 - Ribeirão Preto SP\n📲 (16) 90000-0104",
     caption:
       "10.000 MIL KM ATRAS DE UM VOLVO!\n\nA Matelli Motors está pela Suécia. \n\n#viral #carros #volvo #segurança #volvocars",
     note: "conteúdo da loja, não é anúncio",
@@ -281,9 +281,9 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     id: "r13",
     origin: "business_discovery",
     igUsername: "safetycarmotors",
-    bio: "| Desde 2007 realizando sonhos… 🏎️🇧🇷\n| Nosso WhatsApp (75) 90000-0107\n| Mais informações no link ⬇️",
+    bio: "| Desde 2007 realizando sonhos… 🏎️🇧🇷\n| Nosso WhatsApp (75) 90000-0105\n| Mais informações no link ⬇️",
     caption:
-      "#SafetycarMotors \nVOLVO Ex30 Ultra \n2024/24\n18.000 km\n💰R$205.000\n➖➖➖➖➖➖➖➖➖➖➖➖\n* Teto panorâmico \n* Câmera 360°\n* Assistente semiautônomo de estacionamento\n* Bancos dianteiros com ajustes elétricos (motorista com aquecimento)\n* Sistema de som Harman Kardon\n* Central multimídia de 12,3” com Google integrado\n* Apple CarPlay\n* Controle de cruzeiro adaptativo\n* Frenagem autônoma de emergência\n* Assistente de permanência em faixa\n* Monitor de ponto cego\n* Rodas de liga leve de 20”\n➖➖➖➖➖➖➖➖➖➖➖➖\nEmplacado 2026\nRevisão a cada 30.000km ou 2 anos, primeira feita agora.\nGarantia total até 2027\nGarantia da bateria até 2032\n➖➖➖➖➖➖➖➖➖➖➖➖\n* Motor: elétrico traseiro\n* Potência: 272 cv (200 kW)\n* Torque: 343 Nm (35 kgfm)\n* Tração: traseira (RWD)\n* Câmbio: automático de 1 marcha\n* 0 a 100 km/h: 5,3 s\n* Velocidade máxima: 180 km/h (limitada) \n➖➖➖➖➖➖➖➖➖➖➖➖\n💹WhatsApp:(75) 90000-0106✔️\n💻<site>✔️\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n#volvosafetycar #xc40safetycar #estoquesafetycar #rdsafetycar volvoxc40safetycar",
+      "#SafetycarMotors \nVOLVO Ex30 Ultra \n2024/24\n18.000 km\n💰R$205.000\n➖➖➖➖➖➖➖➖➖➖➖➖\n* Teto panorâmico \n* Câmera 360°\n* Assistente semiautônomo de estacionamento\n* Bancos dianteiros com ajustes elétricos (motorista com aquecimento)\n* Sistema de som Harman Kardon\n* Central multimídia de 12,3” com Google integrado\n* Apple CarPlay\n* Controle de cruzeiro adaptativo\n* Frenagem autônoma de emergência\n* Assistente de permanência em faixa\n* Monitor de ponto cego\n* Rodas de liga leve de 20”\n➖➖➖➖➖➖➖➖➖➖➖➖\nEmplacado 2026\nRevisão a cada 30.000km ou 2 anos, primeira feita agora.\nGarantia total até 2027\nGarantia da bateria até 2032\n➖➖➖➖➖➖➖➖➖➖➖➖\n* Motor: elétrico traseiro\n* Potência: 272 cv (200 kW)\n* Torque: 343 Nm (35 kgfm)\n* Tração: traseira (RWD)\n* Câmbio: automático de 1 marcha\n* 0 a 100 km/h: 5,3 s\n* Velocidade máxima: 180 km/h (limitada) \n➖➖➖➖➖➖➖➖➖➖➖➖\n💹WhatsApp:(75) 90000-0105✔️\n💻<site>✔️\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n#volvosafetycar #xc40safetycar #estoquesafetycar #rdsafetycar volvoxc40safetycar",
     note: "motor não escrito; hashtags citam xc40",
     expected: {
       prefilter: true,
@@ -300,16 +300,16 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       fuel: "eletrico",
       transmission: "automatico",
       sellerType: "loja",
-      phone: "+5575900000106",
+      phone: "+5575900000105",
     },
   },
   {
     id: "r14",
     origin: "business_discovery",
     igUsername: "safetycarmotors",
-    bio: "| Desde 2007 realizando sonhos… 🏎️🇧🇷\n| Nosso WhatsApp (75) 90000-0109\n| Mais informações no link ⬇️",
+    bio: "| Desde 2007 realizando sonhos… 🏎️🇧🇷\n| Nosso WhatsApp (75) 90000-0106\n| Mais informações no link ⬇️",
     caption:
-      "#SafetycarMotors \nVOLVO XC60 T8 ULTIMATE DARK HíBRIDO \n2023/2024\n26.000 km\n💰R$285.000\n➖➖➖➖➖➖➖➖➖➖➖➖➖\n✅Cambio de cristal \n✅Sistema de som Harman/Kardon\n☑️sistema city safety/que freia sozinho✔️\n☑️Bancos com aquecedores✔️\n☑️teto solar✔️\n☑️rodas aro 21”✔️\n☑️central multimídia✔️\n☑️Potencia Eletrico+combustão 462cv✔️\n☑️0 á 100: 4,8 segundos \n☑️Consumo cidade: 19,2 km/l consumo pista: 20 km/l\n☑️Autonomia: cidade 1344 / pista 1400 km\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n•Teto solar panorâmico\n•Faróis de Led \n•bancos elétricos\n•interna com detalhes amadeirados \n•Dupla saída de escapamento\n•Int.Preto\n•câmera de ré 360°\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\nCâmbio novo de 8 marchas \nGasolina \n2.0 TURBO \n462🐎\n72,3 de torque \n0 a 100:⏱4,8 segundos \n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n💹WhatsApp:(75) 90000-0108✔️\n💻<site>✔️\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n#volvosafetycar #xc60safetycar #estoquesafetycar #rdsafetycar volvoxc60safetycar",
+      "#SafetycarMotors \nVOLVO XC60 T8 ULTIMATE DARK HíBRIDO \n2023/2024\n26.000 km\n💰R$285.000\n➖➖➖➖➖➖➖➖➖➖➖➖➖\n✅Cambio de cristal \n✅Sistema de som Harman/Kardon\n☑️sistema city safety/que freia sozinho✔️\n☑️Bancos com aquecedores✔️\n☑️teto solar✔️\n☑️rodas aro 21”✔️\n☑️central multimídia✔️\n☑️Potencia Eletrico+combustão 462cv✔️\n☑️0 á 100: 4,8 segundos \n☑️Consumo cidade: 19,2 km/l consumo pista: 20 km/l\n☑️Autonomia: cidade 1344 / pista 1400 km\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n•Teto solar panorâmico\n•Faróis de Led \n•bancos elétricos\n•interna com detalhes amadeirados \n•Dupla saída de escapamento\n•Int.Preto\n•câmera de ré 360°\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\nCâmbio novo de 8 marchas \nGasolina \n2.0 TURBO \n462🐎\n72,3 de torque \n0 a 100:⏱4,8 segundos \n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n💹WhatsApp:(75) 90000-0106✔️\n💻<site>✔️\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n#volvosafetycar #xc60safetycar #estoquesafetycar #rdsafetycar volvoxc60safetycar",
     expected: {
       prefilter: true,
       isListing: true,
@@ -324,7 +324,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       uf: null,
       fuel: "hibrido_plugin",
       sellerType: "loja",
-      phone: "+5575900000108",
+      phone: "+5575900000106",
     },
   },
   {
@@ -333,7 +333,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     igUsername: "webcarsbrasil",
     bio: "▪ Vendemos seu carro, valorizamos seu tempo.\n▪ Compre e venda seu veículo conosco!\n▪ Muito conteúdo automotivo e bom humor!\n👇Entre em contato",
     caption:
-      '🤷🏻‍♂️ Tô errado?\n🇸🇪 Volvo XC60 T5 Inscription AWD\n📖 2019 com 84.000 km\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nMotor 2.0 Turbo Gasolina com 254cv\nCâmbio automático de 8 marchas\n0 a 100km/h em 6,8s\n35,7 kgfm de torque\nTração Integral 4x4\nDirecão Elétrica\nCentral Multimídia Sensus\nApple CarPlay + Android Auto\nPainel Digital TFT\nBancos em Couro Nappa\nAjustes Elétricos com Memória\nAr Condicionado digital Dual Zone\nPiloto Automático Adaptativo ACC\nTeto Solar Panorâmico\nKeyless Entry + Start\nPorta-Malas Elétrico\nSensores Dianteiros e Traseiros\nFaróis Full LED Thor Hammer\nRodas de Liga Leve 20"\nVolvo City Safety\nCâmera de ré\nMonitor de ponto cego\nFrenagem Autônoma de Emergência\nAssistente de Permanência em Faixa\nAssistente de Partida em Rampa\nFreio de Estacionamento Eletrônico\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰R$ 145.000\n▪️Entre em contato para mais informações!\n☎️(11) 90000-0110',
+      '🤷🏻‍♂️ Tô errado?\n🇸🇪 Volvo XC60 T5 Inscription AWD\n📖 2019 com 84.000 km\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nMotor 2.0 Turbo Gasolina com 254cv\nCâmbio automático de 8 marchas\n0 a 100km/h em 6,8s\n35,7 kgfm de torque\nTração Integral 4x4\nDirecão Elétrica\nCentral Multimídia Sensus\nApple CarPlay + Android Auto\nPainel Digital TFT\nBancos em Couro Nappa\nAjustes Elétricos com Memória\nAr Condicionado digital Dual Zone\nPiloto Automático Adaptativo ACC\nTeto Solar Panorâmico\nKeyless Entry + Start\nPorta-Malas Elétrico\nSensores Dianteiros e Traseiros\nFaróis Full LED Thor Hammer\nRodas de Liga Leve 20"\nVolvo City Safety\nCâmera de ré\nMonitor de ponto cego\nFrenagem Autônoma de Emergência\nAssistente de Permanência em Faixa\nAssistente de Partida em Rampa\nFreio de Estacionamento Eletrônico\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰R$ 145.000\n▪️Entre em contato para mais informações!\n☎️(11) 90000-0107',
     expected: {
       prefilter: true,
       isListing: true,
@@ -348,7 +348,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       fuel: "gasolina",
       transmission: "automatico",
       sellerType: "loja",
-      phone: "+5511900000110",
+      phone: "+5511900000107",
     },
   },
   {
@@ -357,7 +357,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     igUsername: "webcarsbrasil",
     bio: "▪ Vendemos seu carro, valorizamos seu tempo.\n▪ Compre e venda seu veículo conosco!\n▪ Muito conteúdo automotivo e bom humor!\n👇Entre em contato",
     caption:
-      '🤷🏻‍♂️ Só se vive uma vez\n🇸🇪 Volvo XC90 Momentum T6\n📖 18/18 com 90.000km\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nMotor 2.0 Turbo com 320cv\nCâmbio automático de 8 marchas\n0 a 100km/h em 6,5s\n40,8 kgfm de torque\nTeto solar panorâmico\nTração Integral 4x4\n7 lugares\nHead up display\nBotão Start/ Stop\nSistema de visão 360%\nBancos com ajustes elétricos\nCockpit digital  de 12,3"\nPainel multimídia touch 9"\nControle de cruzeiro adaptativo ACC\nSistema de áudio de alta performance\nAquecimento de bancos traseiros\nFreio de estacionamento elétrico\nAr condicionado digital 4 zonas\nVolante multifuncional\nPorta-malas eletrico\n4 modos de conducão\nRecém revisado\nSem retoques\nFaróis Full Led\nRodas 19"\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰R$ 155.000\n▪️Entre em contato para mais informações!\n☎️(11) 90000-0111',
+      '🤷🏻‍♂️ Só se vive uma vez\n🇸🇪 Volvo XC90 Momentum T6\n📖 18/18 com 90.000km\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nMotor 2.0 Turbo com 320cv\nCâmbio automático de 8 marchas\n0 a 100km/h em 6,5s\n40,8 kgfm de torque\nTeto solar panorâmico\nTração Integral 4x4\n7 lugares\nHead up display\nBotão Start/ Stop\nSistema de visão 360%\nBancos com ajustes elétricos\nCockpit digital  de 12,3"\nPainel multimídia touch 9"\nControle de cruzeiro adaptativo ACC\nSistema de áudio de alta performance\nAquecimento de bancos traseiros\nFreio de estacionamento elétrico\nAr condicionado digital 4 zonas\nVolante multifuncional\nPorta-malas eletrico\n4 modos de conducão\nRecém revisado\nSem retoques\nFaróis Full Led\nRodas 19"\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰R$ 155.000\n▪️Entre em contato para mais informações!\n☎️(11) 90000-0108',
     expected: {
       prefilter: true,
       isListing: true,
@@ -373,7 +373,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       fuel: "gasolina",
       transmission: "automatico",
       sellerType: "loja",
-      phone: "+5511900000111",
+      phone: "+5511900000108",
     },
   },
   {
@@ -382,7 +382,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     igUsername: "webcarsbrasil",
     bio: "▪ Vendemos seu carro, valorizamos seu tempo.\n▪ Compre e venda seu veículo conosco!\n▪ Muito conteúdo automotivo e bom humor!\n👇Entre em contato",
     caption:
-      '🤷🏻‍♂️ Pra mim não tem nem disputa.\n🇸🇪 Volvo XC60 T8 Hybrid Polestar\n📖 2024 com 18.000km\n🤌🏼 Silver Dawn Metalic\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n▪️Faz até 29km/l no modo híbrido\n▪️Roda 22" + Câmbio Cristal Orrefors\n▪️Roda até 78km no Modo 100% Elétrico\n▪️Garantia estendida Volvo até 12/2027\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nConjunto hibrido com 462cv\n0 a 100km/h em 4,8s\n72,4 kgfm de torque\nGeartronicT 8\nHead Up Displav\nTracão Intearal 4x4\nAlerta de Ponto Cego\nKeyless Entry + Start/Stop\nCintos & Pincas em Amarelo\nMonitoramento Pressão Pneus\nControle de Cruzeiro Adaptativo\nDetector de Pedestre + Pilot Assist\nCitv Safetv c/ 5 Modos de Conducão\nSuspensão esportiva ajustável Öhlins\nMultimídia Sensus Connect Touch de 9"\n4G Nativo + Sistema Operacional Google\nPainel Instrumentos Configurável 12,3\'\nDecoracão em Alumínio Metal Mesh\nAssistente para Mudança de Faixa\nBancos Dianteiros c/ Ventilacão\nFrenagem com Visão Noturna\nCâmbio de Cristal Orrefors\nFreios dianteiors Akebono\nHarman Kardon Sound\nTeto Duplo Panorâmico\nInterior Couro Soft\nCâmera 360⁰\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰R$ 343.000\n▪️Entre em contato para mais informações!\n☎️(11) 90000-0112',
+      '🤷🏻‍♂️ Pra mim não tem nem disputa.\n🇸🇪 Volvo XC60 T8 Hybrid Polestar\n📖 2024 com 18.000km\n🤌🏼 Silver Dawn Metalic\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n▪️Faz até 29km/l no modo híbrido\n▪️Roda 22" + Câmbio Cristal Orrefors\n▪️Roda até 78km no Modo 100% Elétrico\n▪️Garantia estendida Volvo até 12/2027\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nConjunto hibrido com 462cv\n0 a 100km/h em 4,8s\n72,4 kgfm de torque\nGeartronicT 8\nHead Up Displav\nTracão Intearal 4x4\nAlerta de Ponto Cego\nKeyless Entry + Start/Stop\nCintos & Pincas em Amarelo\nMonitoramento Pressão Pneus\nControle de Cruzeiro Adaptativo\nDetector de Pedestre + Pilot Assist\nCitv Safetv c/ 5 Modos de Conducão\nSuspensão esportiva ajustável Öhlins\nMultimídia Sensus Connect Touch de 9"\n4G Nativo + Sistema Operacional Google\nPainel Instrumentos Configurável 12,3\'\nDecoracão em Alumínio Metal Mesh\nAssistente para Mudança de Faixa\nBancos Dianteiros c/ Ventilacão\nFrenagem com Visão Noturna\nCâmbio de Cristal Orrefors\nFreios dianteiors Akebono\nHarman Kardon Sound\nTeto Duplo Panorâmico\nInterior Couro Soft\nCâmera 360⁰\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰R$ 343.000\n▪️Entre em contato para mais informações!\n☎️(11) 90000-0109',
     note: "'T8 Hybrid Polestar'",
     expected: {
       prefilter: true,
@@ -397,7 +397,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       uf: null,
       fuel: "hibrido_plugin",
       sellerType: "loja",
-      phone: "+5511900000112",
+      phone: "+5511900000109",
     },
   },
   {
@@ -406,7 +406,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     igUsername: "webcarsbrasil",
     bio: "▪ Vendemos seu carro, valorizamos seu tempo.\n▪ Compre e venda seu veículo conosco!\n▪ Muito conteúdo automotivo e bom humor!\n👇Entre em contato",
     caption:
-      '😍 Ahhh como eu amo esse carro!\n🇸🇪 Volvo S60 T8 R-Design Hybrid\n📖 20/20 com apenas 53.000km\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nMotor 2.0 Turbo + eletrico com 407cv\n0 a 100km/h em 4,4s\nCâmbio AT8\nApple CarPlay"\nTração Integral 4x4\nFull LED Direcionais\nAlerta de Ponto Cego\nKeyless Entry + Start/Stop\nCâmera de Ré + Pdd. Shifts\n14 Alto Falantes + Subwoofer\nMonitoramento Pressão Pneus\nAlerta Colisão Frontal + Rodas 19"\nVolvo On Call + Grade Piano Black\nCity Safety + 3 Modos de Condução\nMultimídia Sensus Connect Touch 9"\nFrenagem Automática em Emergência\nNavigation PRO com RSI (Road Sign Info)\nCintos c/ Pré-Tensores e Limitador esforço\nRetrovisores c/ Escurecimento Automático\nPainel de Instrumentos Configurável 12,3"\nVolante & Manopla em "Couro Carvão"\nControle de Cruzeiro Adaptativo ACC\nAcabamento Interno em Metal Mesh\nAssistente para Mudança de Faixa\nProteção Contra Coluna Cervical\nBancos Elétricos com Memória\nHARMAN KARDON Sound\nTeto-solar panorâmico\nTodas as revisões em CSS\nFelicidade em forma de carro\nSe esse S60 não merece seu like, o que merece?\nCurtiu? Siga a webcarsbrasil 🤝🏼\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰 R$ 192.000\n▪️Entre em contato para mais informações!\n☎️ (11) 90000-0113',
+      '😍 Ahhh como eu amo esse carro!\n🇸🇪 Volvo S60 T8 R-Design Hybrid\n📖 20/20 com apenas 53.000km\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nMotor 2.0 Turbo + eletrico com 407cv\n0 a 100km/h em 4,4s\nCâmbio AT8\nApple CarPlay"\nTração Integral 4x4\nFull LED Direcionais\nAlerta de Ponto Cego\nKeyless Entry + Start/Stop\nCâmera de Ré + Pdd. Shifts\n14 Alto Falantes + Subwoofer\nMonitoramento Pressão Pneus\nAlerta Colisão Frontal + Rodas 19"\nVolvo On Call + Grade Piano Black\nCity Safety + 3 Modos de Condução\nMultimídia Sensus Connect Touch 9"\nFrenagem Automática em Emergência\nNavigation PRO com RSI (Road Sign Info)\nCintos c/ Pré-Tensores e Limitador esforço\nRetrovisores c/ Escurecimento Automático\nPainel de Instrumentos Configurável 12,3"\nVolante & Manopla em "Couro Carvão"\nControle de Cruzeiro Adaptativo ACC\nAcabamento Interno em Metal Mesh\nAssistente para Mudança de Faixa\nProteção Contra Coluna Cervical\nBancos Elétricos com Memória\nHARMAN KARDON Sound\nTeto-solar panorâmico\nTodas as revisões em CSS\nFelicidade em forma de carro\nSe esse S60 não merece seu like, o que merece?\nCurtiu? Siga a webcarsbrasil 🤝🏼\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n💰 R$ 192.000\n▪️Entre em contato para mais informações!\n☎️ (11) 90000-0110',
     expected: {
       prefilter: true,
       isListing: true,
@@ -422,7 +422,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       fuel: "hibrido_plugin",
       transmission: "automatico",
       sellerType: "loja",
-      phone: "+5511900000113",
+      phone: "+5511900000110",
     },
   },
   {
@@ -507,7 +507,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     id: "r24",
     origin: "hashtag",
     caption:
-      "VOLVO XC40 2.0 T5 MOMENTUM AWD GEARTRONIC 2019\n\nDesempenho, sofisticação e a reconhecida segurança Volvo em um SUV premium! 🔥\n\n✅ Motor 2.0 T5 turbo a gasolina\n✅ Câmbio automático Geartronic de 8 marchas\n✅ Tração integral AWD\n✅ Bancos revestidos em couro\n✅ Banco do motorista com ajustes elétricos e memória\n✅ Suporte lombar elétrico nos bancos dianteiros\n✅ Ar-condicionado digital de duas zonas com Clean Zone\n✅ Painel de instrumentos digital de 12,3”\n✅ Central multimídia Sensus com tela de 9”\n✅ Apple CarPlay e Android Auto\n✅ Bluetooth e entradas USB dianteiras e traseira\n✅ Carregador de celular por indução\n✅ Som High Performance com 8 alto-falantes\n✅ Chave presencial e partida sem chave\n✅ Piloto automático\n✅ Seletor de modos de condução\n✅ Câmera de ré\n✅ Sensor de estacionamento traseiro\n✅ Faróis Full LED com acendimento automático\n✅ Luzes de condução diurna em LED\n✅ Sensor de chuva\n✅ Rodas de liga leve de 19 polegadas\n✅ City Safety com frenagem automática de emergência\n✅ Assistente de permanência em faixa\n✅ Sistema de alerta ao condutor\n✅ Assistente de partida em rampa e controle de descida\n✅ Freio de estacionamento eletrônico\n✅ Controles de estabilidade e tração\n✅ Airbags frontais, laterais e de cortina\n✅ Sistema Start-Stop\n✅ Fixação ISOFIX para cadeirinhas\n\n💰 R$ 124.900,00\n\n🔄 Aceitamos seu usado na troca!\n🏦 Financiamos com as melhores taxas do mercado!\n🛡️ Até 02 anos de garantia Gestauto terceirizada!\n\n📍 Rua Santa Maria, 489 — Nossa Senhora das Graças — Canoas/RS\n\n📲 (51) 90000-0114\n📲 (51) 90000-0115\n\nKern Motors: seu próximo carro está aqui! 🚗\n\n#kernmotors #kernmotorsrs #Volvo #XC40 #VolvoXC40 T5 Momentum AWD SUV Canoas",
+      "VOLVO XC40 2.0 T5 MOMENTUM AWD GEARTRONIC 2019\n\nDesempenho, sofisticação e a reconhecida segurança Volvo em um SUV premium! 🔥\n\n✅ Motor 2.0 T5 turbo a gasolina\n✅ Câmbio automático Geartronic de 8 marchas\n✅ Tração integral AWD\n✅ Bancos revestidos em couro\n✅ Banco do motorista com ajustes elétricos e memória\n✅ Suporte lombar elétrico nos bancos dianteiros\n✅ Ar-condicionado digital de duas zonas com Clean Zone\n✅ Painel de instrumentos digital de 12,3”\n✅ Central multimídia Sensus com tela de 9”\n✅ Apple CarPlay e Android Auto\n✅ Bluetooth e entradas USB dianteiras e traseira\n✅ Carregador de celular por indução\n✅ Som High Performance com 8 alto-falantes\n✅ Chave presencial e partida sem chave\n✅ Piloto automático\n✅ Seletor de modos de condução\n✅ Câmera de ré\n✅ Sensor de estacionamento traseiro\n✅ Faróis Full LED com acendimento automático\n✅ Luzes de condução diurna em LED\n✅ Sensor de chuva\n✅ Rodas de liga leve de 19 polegadas\n✅ City Safety com frenagem automática de emergência\n✅ Assistente de permanência em faixa\n✅ Sistema de alerta ao condutor\n✅ Assistente de partida em rampa e controle de descida\n✅ Freio de estacionamento eletrônico\n✅ Controles de estabilidade e tração\n✅ Airbags frontais, laterais e de cortina\n✅ Sistema Start-Stop\n✅ Fixação ISOFIX para cadeirinhas\n\n💰 R$ 124.900,00\n\n🔄 Aceitamos seu usado na troca!\n🏦 Financiamos com as melhores taxas do mercado!\n🛡️ Até 02 anos de garantia Gestauto terceirizada!\n\n📍 Rua Santa Maria, 489 — Nossa Senhora das Graças — Canoas/RS\n\n📲 (51) 90000-0111\n📲 (51) 90000-0112\n\nKern Motors: seu próximo carro está aqui! 🚗\n\n#kernmotors #kernmotorsrs #Volvo #XC40 #VolvoXC40 T5 Momentum AWD SUV Canoas",
     note: "hashtag; sem quilometragem",
     expected: {
       prefilter: true,
@@ -523,7 +523,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       fuel: "gasolina",
       transmission: "automatico",
       sellerType: "loja",
-      phone: "+5551900000114",
+      phone: "+5551900000111",
     },
   },
   {
@@ -563,7 +563,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     id: "r28",
     origin: "hashtag",
     caption:
-      "Volvo XC60 T8 Ultimate AWD 2024\n▃▃▃▃▃▃▃▃▃▃▃\n☑️ Único dono\n☑️ Baixíssima km\n☑️ Revisões em dia na Volvo por tempo\n☑️ Garantia Bateria 5 Anos ou 120Mil Km\n☑️ Sem Retoque de Pintura\n☑️ Sem Detalhes \n▃▃▃▃▃▃▃▃▃▃▃\n2023/2024\nApenas 21.500km\nMotor 2.0 Turbo Gasolina + Motor elétrico \nPotência combinada 462cv\nCambio 8 Marchas\nSom Harman Kardon\nHead-up Display\nCarregador por indução\nTeto Panorâmico\nPainel Digital\nAdaptive Cruise Control\nLane Assistant\nLeitor de placas de sinalização\nFrenagem Automática de emergência\nFaróis Full Led\nMultimídia\nBluetooth\nGPS\nApple CarPlay\nKeyless\nStart/Stop\nCâmera 360°\nAr condicionado com ionizador\nAcionamento remoto do motor\nRodas 20”\nRetrovisores aquecidos\nPorta-luvas climatizado\nPorta-malas elétrico\n▃▃▃▃▃▃▃▃▃▃ \nValor: R$ 279.900,00\n📲 (43) 90000-0116\n▃▃▃▃▃▃▃▃▃▃ \nAs informações contidas no anúncio e a procedência da negociação são de total responsabilidade do proprietário do veículo.\n\nANUNCIE CONOSCO\n___________________\n#volvo #volvoxc60 #volvoxc60rdesign #londrina #oportunidade",
+      "Volvo XC60 T8 Ultimate AWD 2024\n▃▃▃▃▃▃▃▃▃▃▃\n☑️ Único dono\n☑️ Baixíssima km\n☑️ Revisões em dia na Volvo por tempo\n☑️ Garantia Bateria 5 Anos ou 120Mil Km\n☑️ Sem Retoque de Pintura\n☑️ Sem Detalhes \n▃▃▃▃▃▃▃▃▃▃▃\n2023/2024\nApenas 21.500km\nMotor 2.0 Turbo Gasolina + Motor elétrico \nPotência combinada 462cv\nCambio 8 Marchas\nSom Harman Kardon\nHead-up Display\nCarregador por indução\nTeto Panorâmico\nPainel Digital\nAdaptive Cruise Control\nLane Assistant\nLeitor de placas de sinalização\nFrenagem Automática de emergência\nFaróis Full Led\nMultimídia\nBluetooth\nGPS\nApple CarPlay\nKeyless\nStart/Stop\nCâmera 360°\nAr condicionado com ionizador\nAcionamento remoto do motor\nRodas 20”\nRetrovisores aquecidos\nPorta-luvas climatizado\nPorta-malas elétrico\n▃▃▃▃▃▃▃▃▃▃ \nValor: R$ 279.900,00\n📲 (43) 90000-0113\n▃▃▃▃▃▃▃▃▃▃ \nAs informações contidas no anúncio e a procedência da negociação são de total responsabilidade do proprietário do veículo.\n\nANUNCIE CONOSCO\n___________________\n#volvo #volvoxc60 #volvoxc60rdesign #londrina #oportunidade",
     note: "hashtag; cidade só em hashtag; plataforma de anúncios",
     expected: {
       prefilter: true,
@@ -576,7 +576,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
       km: 21500,
       price: 279900,
       fuel: "hibrido_plugin",
-      phone: "+5543900000116",
+      phone: "+5543900000113",
     },
   },
   {
@@ -596,7 +596,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     igUsername: "bslmotors",
     bio: "🚗 Comercialização de Veículos Semi novos e 0km \n📍 Vinhedo-Sp\n📲 FALE CONOSCO ATRAVÉS DO LINK👇🏻",
     caption:
-      "❌ VENDIDO \n\n🔋Volvo EX30 Ultra 69kw\n📅 2024\n💎 15.400 KM / Versão Topo de Linha (Ultra) / Único Dono/ Garantia de Fábrica até 2028 / Garantia da Bateria até 2033.\n🤩 Pintura 100% Original, sem reparos! \n🤌🏻 0 a 100km/h em apenas 5,3s.\n💰 R$ 202.900,00\n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n🛠 Completo \nSistema de infoentretenimento com tela central de 12,3” e Google Built-in.\nPiloto automático adaptativo (ACC) com assistente de direção.\nAlerta de abertura de portas e monitoramento de ponto cego.\nSistema de som premium Harman Kardon com Soundbar integrada.\nCâmeras 360º com visão 3D para auxílio em manobras.\nFaróis em LED com design Martelo de Thor.\nBancos dianteiros com ajuste elétrico.\nRodas de liga leve exclusivas aro 19”\nCarregamento de celular por indução.\nChave presencial (Cartão NFC).\nIluminação ambiente interna\nAr-condicionado digital.\nTeto solar panorâmico.\nPark Pilot Assist\n\n⚙️Motorização 100% Elétrico\nBateria de 69 kWh com 272cv.\nAutonomia declarada de até 350km.\nTração traseira (RWD)\n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n📍 BSL MOTORS - Vinhedo-SP\n📲(19) 90000-0117",
+      "❌ VENDIDO \n\n🔋Volvo EX30 Ultra 69kw\n📅 2024\n💎 15.400 KM / Versão Topo de Linha (Ultra) / Único Dono/ Garantia de Fábrica até 2028 / Garantia da Bateria até 2033.\n🤩 Pintura 100% Original, sem reparos! \n🤌🏻 0 a 100km/h em apenas 5,3s.\n💰 R$ 202.900,00\n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n🛠 Completo \nSistema de infoentretenimento com tela central de 12,3” e Google Built-in.\nPiloto automático adaptativo (ACC) com assistente de direção.\nAlerta de abertura de portas e monitoramento de ponto cego.\nSistema de som premium Harman Kardon com Soundbar integrada.\nCâmeras 360º com visão 3D para auxílio em manobras.\nFaróis em LED com design Martelo de Thor.\nBancos dianteiros com ajuste elétrico.\nRodas de liga leve exclusivas aro 19”\nCarregamento de celular por indução.\nChave presencial (Cartão NFC).\nIluminação ambiente interna\nAr-condicionado digital.\nTeto solar panorâmico.\nPark Pilot Assist\n\n⚙️Motorização 100% Elétrico\nBateria de 69 kWh com 272cv.\nAutonomia declarada de até 350km.\nTração traseira (RWD)\n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n📍 BSL MOTORS - Vinhedo-SP\n📲(19) 90000-0114",
     note: "VENDIDO",
     expected: {
       prefilter: false,
@@ -609,7 +609,7 @@ export const REAL_EVAL_CASES: EvalCase[] = [
     igUsername: "bslmotors",
     bio: "🚗 Comercialização de Veículos Semi novos e 0km \n📍 Vinhedo-Sp\n📲 FALE CONOSCO ATRAVÉS DO LINK👇🏻",
     caption:
-      "❌ VENDIDO\n\n🔋 VOLVO EX30 Ultra 69kw\n📅  2024\n💎  11.400 KM / Versão Topo de Linha (Ultra) / Único Dono / Garantia de Fábrica / Garantia da Bateria até 2032 / Pintura 100% Original, sem reparos!\n🆙 Cloud Blue com interno Breeze (Material misto em couro). \n🤌🏻 0 a 100km/h em apenas 5,3s.\n💰 R$ 204.800,00\n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n🛠 Completo\nSistema de infoentretenimento com tela central de 12,3” e Google Built-in.\nPiloto automático adaptativo (ACC) com assistente de direção.\nAlerta de abertura de portas e monitoramento de ponto cego.\nSistema de som premium Harman Kardon com Soundbar integrada.\nCâmeras 360º com visão 3D para auxílio em manobras.\nFaróis em LED com design Martelo de Thor.\nBancos dianteiros com ajuste elétrico.\nRodas de liga leve exclusivas aro 19”\nCarregamento de celular por indução.\nChave presencial (Cartão NFC).\nIluminação ambiente interna\nAr-condicionado digital.\nTeto solar panorâmico.\nPark Pilot Assist\n\n⚙️Motorização 100% Elétrico\nBateria de 69 kWh com 272cv.\nAutonomia declarada de até 390km / Autonomia real de até 420km em ciclo urbano. \n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n📍 BSL MOTORS - Vinhedo-SP\n📲(19) 90000-0118",
+      "❌ VENDIDO\n\n🔋 VOLVO EX30 Ultra 69kw\n📅  2024\n💎  11.400 KM / Versão Topo de Linha (Ultra) / Único Dono / Garantia de Fábrica / Garantia da Bateria até 2032 / Pintura 100% Original, sem reparos!\n🆙 Cloud Blue com interno Breeze (Material misto em couro). \n🤌🏻 0 a 100km/h em apenas 5,3s.\n💰 R$ 204.800,00\n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n🛠 Completo\nSistema de infoentretenimento com tela central de 12,3” e Google Built-in.\nPiloto automático adaptativo (ACC) com assistente de direção.\nAlerta de abertura de portas e monitoramento de ponto cego.\nSistema de som premium Harman Kardon com Soundbar integrada.\nCâmeras 360º com visão 3D para auxílio em manobras.\nFaróis em LED com design Martelo de Thor.\nBancos dianteiros com ajuste elétrico.\nRodas de liga leve exclusivas aro 19”\nCarregamento de celular por indução.\nChave presencial (Cartão NFC).\nIluminação ambiente interna\nAr-condicionado digital.\nTeto solar panorâmico.\nPark Pilot Assist\n\n⚙️Motorização 100% Elétrico\nBateria de 69 kWh com 272cv.\nAutonomia declarada de até 390km / Autonomia real de até 420km em ciclo urbano. \n▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃\n📍 BSL MOTORS - Vinhedo-SP\n📲(19) 90000-0115",
     note: "VENDIDO",
     expected: {
       prefilter: false,

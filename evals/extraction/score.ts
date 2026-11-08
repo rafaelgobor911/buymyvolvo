@@ -16,6 +16,10 @@ export interface CaseResult {
   latencyMs?: number;
 }
 
+/** Heuristic: a summary about the seller or the deal (store, financing, trade-in, delivery). */
+export const SELLER_TALK =
+  /\b(loja|lojista|anunciante|anunciad[oa] por|revenda|vendedor|intermedi\w*|financ\w*|aceit\w*[^.]{0,30}troca|na troca|propostas?|negocia\w*|sinal|entrega para|envia\w* para)\b/i;
+
 export const SCORED_FIELDS = [
   "modelId",
   "engineId",
@@ -66,6 +70,8 @@ export interface EvalReport {
   overallFieldAccuracy: number;
   redFlags: { found: number; expected: number };
   summaryCopied: string[];
+  /** Summaries that talk about the seller or the deal instead of the car. */
+  summarySeller: string[];
   errors: Array<{ id: string; error: string }>;
   mismatches: FieldMismatch[];
   usage: TokenUsage;
@@ -94,6 +100,7 @@ export function scoreResults(
     overallFieldAccuracy: 0,
     redFlags: { found: 0, expected: 0 },
     summaryCopied: [],
+    summarySeller: [],
     errors: [],
     mismatches: [],
     usage: emptyUsage(),
@@ -129,6 +136,8 @@ export function scoreResults(
 
     if (r.normalized?.issues.some((i) => i.code === "summary_copied"))
       report.summaryCopied.push(c.id);
+    if (r.normalized?.isListing && SELLER_TALK.test(r.normalized.summary))
+      report.summarySeller.push(c.id);
     if (!exp.isListing) continue;
 
     for (const field of SCORED_FIELDS) {
@@ -214,7 +223,8 @@ export function renderMarkdown(
       `| "É anúncio de Volvo?" correto | ${pct(report.isListing.correct, report.isListing.total)} |`,
       `| Campos corretos (geral) | ${(report.overallFieldAccuracy * 100).toFixed(1)}% |`,
       `| Sinais de alerta encontrados | ${pct(report.redFlags.found, report.redFlags.expected)} |`,
-      `| Resumos que copiam a legenda | ${report.summaryCopied.length} |`,
+      `| Resumos que copiam a legenda | ${report.summaryCopied.length}${report.summaryCopied.length ? ` (${report.summaryCopied.join(", ")})` : ""} |`,
+      `| Resumos que falam do vendedor ou do negócio | ${report.summarySeller.length}${report.summarySeller.length ? ` (${report.summarySeller.join(", ")})` : ""} |`,
       `| Erros de extração | ${report.errors.length} |`,
       `| Custo desta rodada | ${usd(report.costUsd)} |`,
       `| Custo por 1.000 posts (com pré-filtro) | ${usd(report.costPer1000PostsUsd)} |`,
