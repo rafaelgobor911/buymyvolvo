@@ -120,6 +120,34 @@ export function normalizeKm(text: string | null, value: number | null): number |
 }
 
 /** Fab/model years: 2-digit years expanded, model year within [fab, fab + 1]. */
+/**
+ * The single fab/model year pair written in the caption, if any: "19/20",
+ * "2019/2020" or "2024/24", with model = fab or fab + 1. Dates such as
+ * "04/2023" or "12/2027" do not fit the shapes; two different pairs → null.
+ */
+export function yearPairFromCaption(
+  caption: string,
+  now: Date,
+): { fab: number; model: number } | null {
+  const max = now.getFullYear() + 1;
+  const full = (y: string) => {
+    const n = Number(y);
+    return y.length === 4 ? n : n <= max % 100 ? 2000 + n : 1900 + n;
+  };
+  const found = new Map<string, { fab: number; model: number }>();
+  for (const m of caption.matchAll(
+    /(?<![\d/]|\d[.,])(\d{4}|\d{2})\s?\/\s?(\d{4}|\d{2})(?![\d/]|[.,]\d)/g,
+  )) {
+    const [a, b] = [m[1]!, m[2]!];
+    if (a.length === 2 && b.length === 4) continue; // "04/2023" is a month
+    const fab = full(a);
+    const model = full(b);
+    if (fab < 1970 || model > max || (model !== fab && model !== fab + 1)) continue;
+    found.set(`${fab}/${model}`, { fab, model });
+  }
+  return found.size === 1 ? [...found.values()][0]! : null;
+}
+
 export function normalizeYears(
   fab: number | null,
   model: number | null,
@@ -169,6 +197,11 @@ function matchEngine(...texts: Array<string | null>): string | null {
     if (ids.length > 0) return ids[0]!;
   }
   return null;
+}
+
+/** Engines the caption itself names (codes, names and aliases such as P8). */
+function writtenEngines(caption: string): string[] {
+  return parseQuery(fixLetterO(caption.slice(0, 4000)), { expand: false }).engineIds;
 }
 
 function matchTrim(
@@ -327,12 +360,20 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
   // Taxonomy
   const modelId = matchModel(x.model) ?? matchModel(x.version_text);
   // The version as written beats the model's engine field: "P6 Recharge" with
-  // engine "Twin Motor" is a Single Motor.
-  const engineId = matchEngine(x.version_text, x.engine);
+  // engine "Twin Motor" is a Single Motor. And an engine the caption never
+  // names is a guess (from power, battery or trim): drop it.
+  const guessedEngine = matchEngine(x.version_text, x.engine);
+  const engineId =
+    guessedEngine && writtenEngines(ctx.caption).includes(guessedEngine) ? guessedEngine : null;
   const trimId = matchTrim(modelId, engineId, x.trim, x.version_text);
 
   // Numbers
-  const years = normalizeYears(x.year_fab, x.year_model, now);
+  // Like price and km, a fab/model pair written in the caption ("20/20",
+  // "2019/2020", "2024/24") beats the model's reading of it.
+  const written = yearPairFromCaption(ctx.caption, now);
+  const years = written
+    ? normalizeYears(written.fab, written.model, now)
+    : normalizeYears(x.year_fab, x.year_model, now);
   if (!years.ok) issue("year_invalid", "Ano de fabricação/modelo incoerente.", 0.15);
   // A price in another currency is not a price in reais: drop it and send the
   // post to moderation (it is most likely not a Brazilian listing).
@@ -421,11 +462,18 @@ export function normalizeExtraction(x: Extraction, ctx: NormalizeContext): Norma
   }
 
   // Contact: phones the model saw + any in the caption; the profile bio is the fallback.
+  // Order: numbers the model read that are in the caption, other caption
+  // numbers, the model's remaining ones, and the profile bio last (fallback).
+  const fromModel = x.phones.map(normalizePhoneBR).filter((p): p is string => p !== null);
+  const inCaption = extractPhones(ctx.caption);
+  const inBio = ctx.bio ? extractPhones(ctx.bio) : [];
   const phones = [
-    ...x.phones.map(normalizePhoneBR).filter((p): p is string => p !== null),
-    ...extractPhones(ctx.caption),
+    ...fromModel.filter((p) => inCaption.includes(p)),
+    ...inCaption,
+    ...fromModel.filter((p) => !inBio.includes(p)),
+    ...inBio,
   ];
-  const contactPhone = phones[0] ?? (ctx.bio ? (extractPhones(ctx.bio)[0] ?? null) : null);
+  const contactPhone = phones[0] ?? null;
   const contactIgUsername = ctx.igUsername?.replace(/^@/, "").toLowerCase() || null;
 
   // Red flags: the model's + rule-based ones.

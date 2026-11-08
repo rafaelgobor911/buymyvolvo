@@ -9,6 +9,7 @@ import {
   normalizePhoneBR,
   normalizePrice,
   normalizeYears,
+  yearPairFromCaption,
 } from "./normalize";
 import type { Extraction } from "./schema";
 
@@ -96,6 +97,19 @@ describe("numbers", () => {
     [null, 92_000, 92_000],
   ])("km %s / %s → %s", (text, value, expected) => {
     expect(normalizeKm(text, value)).toBe(expected);
+  });
+
+  it.each([
+    ["Volvo S60 T8 R-Design 📖 20/20 com 53.000km", { fab: 2020, model: 2020 }],
+    ["XC60 T8 Inscription 19/20, R$ 239.900", { fab: 2019, model: 2020 }],
+    ["Ultimate Dark 2023/2024 26.000 km", { fab: 2023, model: 2024 }],
+    ["EX30 Ultra 2024/24 18.000 km", { fab: 2024, model: 2024 }],
+    ["XC40 2019, revisão 04/2023, garantia até 12/2027", null],
+    ["Rodas 235/55 aro 19, ano 2019", null],
+    ["XC60 19/20 e XC90 21/22 no estoque", null],
+    ["Placa final 7, IPVA 2026 pago", null],
+  ])("yearPairFromCaption(%j)", (caption, expected) => {
+    expect(yearPairFromCaption(caption, NOW)).toEqual(expected);
   });
 
   it("years: 2-digit, single year, reversed and invalid", () => {
@@ -236,26 +250,56 @@ describe("normalizeExtraction", () => {
   });
 
   it("reads P6/P8 and trusts the version as written over the model's engine", () => {
-    const p6 = norm({
-      model: "XC40",
-      engine: "Twin Motor",
-      trim: "Plus",
-      version_text: "P6 Recharge Electric Plus",
-      year_fab: 2024,
-      year_model: 2024,
-      fuel: "eletrico",
-    });
+    const p6 = norm(
+      {
+        model: "XC40",
+        engine: "Twin Motor",
+        trim: "Plus",
+        version_text: "P6 Recharge Electric Plus",
+        year_fab: 2024,
+        year_model: 2024,
+        fuel: "eletrico",
+      },
+      "VOLVO XC40 P6 RECHARGE ELECTRIC PLUS ✅Ano 2024 ✅Km 25 mil 💰Valor 209.900,00",
+    );
     expect(p6.engineId).toBe("single-motor");
-    expect(
-      norm({
+    const p8 = norm(
+      {
         model: "C40",
         engine: "P8",
         version_text: null,
         year_fab: 2022,
         year_model: 2022,
         fuel: "eletrico",
-      }).engineId,
-    ).toBe("twin-motor");
+      },
+      "C40 Recharge P8 2022, 30 mil km, R$ 210.000",
+    );
+    expect(p8.engineId).toBe("twin-motor");
+  });
+
+  it("drops an engine the caption never names (engine only when written)", () => {
+    const ex30 = norm(
+      {
+        model: "EX30",
+        engine: "Single Motor",
+        trim: "Ultra",
+        version_text: "Ultra",
+        year_fab: 2024,
+        year_model: 2024,
+        fuel: "eletrico",
+      },
+      "VOLVO Ex30 Ultra 2024/24 18.000 km R$205.000. Motor: elétrico traseiro, 272 cv",
+    );
+    expect(ex30.engineId).toBeNull();
+    expect(ex30.fuel).toBe("eletrico");
+  });
+
+  it("trusts the year pair written in the caption over the model's reading", () => {
+    const n = norm(
+      { year_fab: 2019, year_model: 2020 },
+      "Volvo S60 T8 R-Design 20/20, 53.000 km, R$ 192.000",
+    );
+    expect([n.yearFab, n.yearModel]).toEqual([2020, 2020]);
   });
 
   it("prefers the price snippet over a wrong number from the model", () => {
@@ -270,21 +314,30 @@ describe("normalizeExtraction", () => {
   });
 
   it("penalizes combinations that do not exist or were not sold in Brazil", () => {
-    const b5 = norm({
-      engine: "B5",
-      trim: null,
-      version_text: "B5",
-      year_fab: 2022,
-      year_model: 2022,
-      fuel: null,
-    });
+    const b5 = norm(
+      {
+        engine: "B5",
+        trim: null,
+        version_text: "B5",
+        year_fab: 2022,
+        year_model: 2022,
+        fuel: null,
+      },
+      "Vendo XC60 B5 2022 importado, 30 mil km, R$ 245.000",
+    );
     expect(b5.issues.map((i) => i.code)).toContain("engine_not_in_brazil");
     expect(b5.confidence).toBeLessThan(0.85);
 
-    const t8OldXc60 = norm({ year_fab: 2014, year_model: 2014, trim: null });
+    const t8OldXc60 = norm(
+      { year_fab: 2014, year_model: 2014, trim: null },
+      "XC60 T8 2014, 90 mil km, R$ 100.000",
+    );
     expect(t8OldXc60.issues.map((i) => i.code)).toContain("engine_mismatch");
 
-    const v90 = norm({ model: "V90", engine: "T6", trim: null, version_text: "T6", fuel: null });
+    const v90 = norm(
+      { model: "V90", engine: "T6", trim: null, version_text: "T6", fuel: null },
+      "V90 T6 19/20, 40 mil km, R$ 210.000",
+    );
     expect(v90.issues.map((i) => i.code)).toContain("model_not_in_brazil");
   });
 
@@ -319,6 +372,15 @@ describe("normalizeExtraction", () => {
     expect(n.contactPhone).toBeNull();
     expect(n.contactIgUsername).toBe("loja.exemplo");
     expect(n.redFlags).not.toContain("sem_contato");
+  });
+
+  it("prefers the caption's phone over the bio's, even if the model listed the bio first", () => {
+    const n = normalizeExtraction(ext({ phones: ["(41) 90000-0900", "(41) 90000-0001"] }), {
+      caption,
+      bio: "Loja em Curitiba. WhatsApp (41) 90000-0900",
+      now: NOW,
+    });
+    expect(n.contactPhone).toBe("+5541900000001");
   });
 
   it("falls back to a phone in the profile bio", () => {
