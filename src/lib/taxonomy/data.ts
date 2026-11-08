@@ -258,7 +258,8 @@ export const MODELS: ModelDef[] = [
     id: "ex40",
     name: "EX40",
     bodyTypes: ["suv"],
-    aliases: ["xc40 pure electric", "xc40 recharge pure electric"],
+    // "XC40 Recharge Pure Electric" before 2024 is an XC40 (fuel: elétrico), not an EX40.
+    aliases: [],
     renamedFrom: { modelId: "xc40", scope: "electric" },
     generations: [{ id: "ex40", name: "EX40", yearStart: 2024, yearEnd: null, platform: "CMA" }],
   },

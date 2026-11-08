@@ -29,7 +29,7 @@ values
   ('v90', 'V90', array['perua'], '{}'::text[], null, null, null, 1997, null, false, 22, null),
   ('v90-cc', 'V90 Cross Country', array['perua'], array['v90 cc', 'v90 cross'], 'v90', null, null, 2017, null, false, 23, null),
   ('xc40', 'XC40', array['suv'], '{}'::text[], null, null, null, 2018, null, true, 24, null),
-  ('ex40', 'EX40', array['suv'], array['xc40 pure electric', 'xc40 recharge pure electric'], null, 'xc40', 'electric', 2024, null, true, 25, null),
+  ('ex40', 'EX40', array['suv'], '{}'::text[], null, 'xc40', 'electric', 2024, null, true, 25, null),
   ('c40', 'C40', array['suv'], array['c40 recharge'], null, null, null, 2022, 2024, true, 26, null),
   ('ec40', 'EC40', array['suv'], '{}'::text[], null, 'c40', 'all', 2024, null, true, 27, null),
   ('xc60', 'XC60', array['suv'], '{}'::text[], null, null, null, 2009, null, true, 28, null),

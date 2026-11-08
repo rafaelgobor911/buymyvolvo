@@ -348,6 +348,12 @@ const isMaxQualifier = (q: string | undefined) => !!q && new RegExp(`^${MAX_Q}$`
 
 export interface ParseOptions {
   now?: Date;
+  /**
+   * Search mode (default): a base model brings its variants and renamed
+   * successors, and a base trim its Dark variants. Set to false to get only
+   * what was literally written (used when normalizing a single listing).
+   */
+  expand?: boolean;
 }
 
 const MAX_NGRAM = 5;
@@ -638,7 +644,8 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
   // --- post-processing -----------------------------------------------------
   const yearWindow = { min: result.yearMin, max: result.yearMax };
 
-  for (const id of [...result.modelIds]) {
+  const expand = options.expand !== false;
+  for (const id of expand ? [...result.modelIds] : []) {
     const model = getModel(id);
     for (const variant of variantsOf(id)) pushUnique(result.modelIds, variant.id);
     for (const renamed of MODELS.filter((m) => m.renamedFrom?.modelId === id)) {
@@ -679,7 +686,7 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
   }
 
   // A base trim also brings its variants (Ultimate → Ultimate Dark) when they fit the models.
-  for (const id of [...result.trimIds]) {
+  for (const id of expand ? [...result.trimIds] : []) {
     for (const variant of trimVariantsOf(id)) {
       if (
         result.modelIds.length === 0 ||
