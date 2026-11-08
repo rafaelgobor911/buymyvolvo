@@ -221,7 +221,8 @@ export function generateSeedSql(): string {
     "insert into public.listings (",
     "  id, slug, status, origin, model_id, engine_id, trim_id, version_text, year_fab, year_model, km,",
     "  price_cents, city, uf, color, transmission, fuel, options, summary_ptbr, seller_type, seller_id,",
-    "  contact_phone_e164, confidence, is_claimed, first_seen_at, last_seen_at, sold_at, removed_at",
+    "  contact_phone_e164, confidence, red_flags, is_claimed, first_seen_at, last_seen_at, sold_at,",
+    "  removed_at",
     ") values",
   ];
 
@@ -254,6 +255,7 @@ export function generateSeedSql(): string {
       sellerIndex >= 0 ? lit(fixtureSellerId(sellerIndex)) : "null",
       lit(phone),
       "0.95",
+      arr(l.redFlags ?? []),
       sellerIndex >= 0 ? "true" : "false",
       seen,
       seen,
@@ -272,6 +274,7 @@ export function generateSeedSql(): string {
     "  transmission = excluded.transmission, fuel = excluded.fuel, options = excluded.options,",
     "  summary_ptbr = excluded.summary_ptbr, seller_type = excluded.seller_type, seller_id = excluded.seller_id,",
     "  contact_phone_e164 = excluded.contact_phone_e164, confidence = excluded.confidence,",
+    "  red_flags = excluded.red_flags,",
     "  is_claimed = excluded.is_claimed, first_seen_at = excluded.first_seen_at,",
     "  last_seen_at = excluded.last_seen_at, sold_at = excluded.sold_at, removed_at = excluded.removed_at;",
     "",

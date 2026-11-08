@@ -10,6 +10,7 @@
  * (e.g. "s60 t5" must not return S60 T4 or V60 T5). Every row uses only
  * models, engines and trims sold in Brazil (owner review, 2026-11-07).
  */
+import type { RedFlag } from "@/lib/extraction/schema";
 import type { Fuel, Transmission } from "@/lib/taxonomy";
 
 export interface FixtureSeller {
@@ -46,6 +47,8 @@ export interface FixtureListing {
   status?: Status;
   seller?: string;
   origin?: "instagram" | "direct";
+  /** Alerts the (fictitious) post declares: repasse, ágio, leilão... */
+  redFlags?: RedFlag[];
 }
 
 type Row = [
@@ -64,7 +67,9 @@ type Row = [
   fuel: Fuel,
   options: string[],
   daysAgo: number,
-  extra?: Partial<Pick<FixtureListing, "versionText" | "status" | "seller" | "origin">>,
+  extra?: Partial<
+    Pick<FixtureListing, "versionText" | "status" | "seller" | "origin" | "redFlags">
+  >,
 ];
 
 const A = "automatico";
@@ -80,7 +85,7 @@ const ROWS: Row[] = [
   ["s60", "t8", "polestar-engineered", 2020, 2021, 22_000, 270_000, "São Paulo", "SP", "loja", "branco", A, "hibrido_plugin", ["freios Brembo", "suspensão Öhlins", "som Bowers & Wilkins"], 3, { seller: "sp" }],
   ["s60", "t5", "r-design", 2012, 2013, 98_000, 82_000, "Porto Alegre", "RS", "particular", "azul", A, "gasolina", ["teto solar"], 20],
   ["s60", "t6", "r-design", 2014, 2015, 81_000, 99_000, "Florianópolis", "SC", "particular", "azul", A, "gasolina", ["tração integral", "rodas aro 19"], 6],
-  ["s60", null, "r", 2004, 2005, 140_000, 58_000, "São Paulo", "SP", "particular", "prata", A, "gasolina", ["tração integral"], 15, { versionText: "R 2.5T AWD" }],
+  ["s60", null, "r", 2004, 2005, 140_000, 58_000, "São Paulo", "SP", "particular", "prata", A, "gasolina", ["tração integral"], 15, { versionText: "R 2.5T AWD", redFlags: ["leilao"] }],
   ["s60", "t5", "momentum", 2018, 2019, 61_000, 159_000, "Curitiba", "PR", "loja", "preto", A, "gasolina", [], 5],
   ["v60", "t5", "momentum", 2016, 2017, 64_000, 115_000, "São Paulo", "SP", "loja", "cinza", A, "gasolina", [], 4],
   ["xc60", "t5", "momentum", 2016, 2017, 70_000, 125_000, "Joinville", "SC", "particular", "verde", A, "gasolina", [], 9],
@@ -90,7 +95,7 @@ const ROWS: Row[] = [
   ["xc60", "t8", "inscription", 2018, 2019, 56_000, 235_000, "São Paulo", "SP", "particular", "preto", A, "hibrido_plugin", ["bancos com ventilação", "head-up display"], 7],
   ["xc60", "t8", "r-design", 2020, 2021, 41_000, 249_000, "Santos", "SP", "loja", "azul", A, "hibrido_plugin", ["teto solar panorâmico"], 10],
   ["xc60", "t5", "momentum", 2018, 2019, 52_000, 195_000, "Ribeirão Preto", "SP", "loja", "prata", A, "gasolina", [], 11],
-  ["xc60", "t5", "dynamic", 2013, 2014, 102_000, 85_000, "Goiânia", "GO", "particular", "preto", A, "gasolina", [], 14],
+  ["xc60", "t5", "dynamic", 2013, 2014, 102_000, 85_000, "Goiânia", "GO", "particular", "preto", A, "gasolina", [], 14, { redFlags: ["repasse"] }],
   ["xc60", "d5", "inscription", 2016, 2017, 110_000, 125_000, "Uberlândia", "MG", "particular", "prata", A, "diesel", ["tração integral"], 25],
   ["xc60", "t6", "r-design", 2015, 2016, 84_000, 120_000, "Brasília", "DF", "loja", "branco", A, "gasolina", [], 5],
   ["xc60", "t8", "ultimate-dark", 2022, 2023, 25_000, 305_000, "Porto Alegre", "RS", "loja", "preto", A, "hibrido_plugin", ["som Bowers & Wilkins"], 0, { seller: "poa" }],
@@ -100,7 +105,7 @@ const ROWS: Row[] = [
   ["ex40", "single-motor", "core", 2024, 2024, 15_000, 199_900, "Campinas", "SP", "loja", "cinza", A, "eletrico", [], 6],
   ["xc40", "t5", "r-design", 2018, 2019, 52_000, 145_000, "Rio de Janeiro", "RJ", "particular", "vermelho", A, "gasolina", [], 8],
   ["xc40", "t5", "ultimate", 2022, 2023, 20_000, 210_000, "Belo Horizonte", "MG", "loja", "preto", A, "hibrido_plugin", [], 12, { versionText: "Recharge T5 Plug-in" }],
-  ["xc40", "t4", "momentum", 2019, 2020, 46_000, 135_000, "Londrina", "PR", "particular", "branco", A, "gasolina", [], 16],
+  ["xc40", "t4", "momentum", 2019, 2020, 46_000, 135_000, "Londrina", "PR", "particular", "branco", A, "gasolina", [], 16, { redFlags: ["agio"] }],
   ["xc40", "t5", "inscription", 2021, 2022, 33_000, 189_000, "Maringá", "PR", "loja", "cinza", A, "hibrido_plugin", [], 9, { versionText: "Recharge T5 Plug-in" }],
   ["c40", "twin-motor", null, 2022, 2023, 21_000, 205_000, "São Paulo", "SP", "particular", "verde", A, "eletrico", [], 5, { versionText: "Recharge Twin" }],
   ["ec40", "twin-motor", "ultimate", 2024, 2025, 6_000, 265_000, "Florianópolis", "SC", "loja", "azul", A, "eletrico", [], 2],
@@ -110,7 +115,7 @@ const ROWS: Row[] = [
   ["v40", "t4", "momentum", 2014, 2015, 80_000, 79_000, "Niterói", "RJ", "particular", "prata", A, "gasolina", [], 18],
   ["v40-cc", "t4", null, 2016, 2017, 61_000, 99_000, "Belo Horizonte", "MG", "particular", "marrom", A, "gasolina", [], 10],
   ["v40-cc", "t5", "r-design", 2018, 2019, 39_000, 129_000, "São Paulo", "SP", "loja", "azul", A, "gasolina", ["tração integral"], 4],
-  ["v40", "t4", "r-design", 2013, 2014, 95_000, 74_000, "Curitiba", "PR", "particular", "vermelho", A, "gasolina", [], 22],
+  ["v40", "t4", "r-design", 2013, 2014, 95_000, 74_000, "Curitiba", "PR", "particular", "vermelho", A, "gasolina", [], 22, { redFlags: ["repasse"] }],
   // XC90 (the "xc90 t8 2020 a 2022 até 60 mil km" case)
   ["xc90", "t8", "inscription", 2019, 2020, 45_000, 330_000, "São Paulo", "SP", "loja", "preto", A, "hibrido_plugin", ["7 lugares", "som Bowers & Wilkins", "suspensão a ar"], 2, { seller: "sp" }],
   ["xc90", "t8", "r-design", 2020, 2021, 38_000, 365_000, "Curitiba", "PR", "loja", "cinza", A, "hibrido_plugin", ["7 lugares", "suspensão a ar"], 4],
@@ -127,7 +132,7 @@ const ROWS: Row[] = [
   ["c70", "t5", null, 2008, 2009, 98_000, 69_000, "Rio de Janeiro", "RJ", "particular", "prata", A, "gasolina", ["capota rígida retrátil"], 19],
   ["s40", "t5", null, 2008, 2009, 110_000, 42_000, "Salvador", "BA", "particular", "preto", A, "gasolina", [], 23],
   ["v50", "t5", null, 2007, 2008, 120_000, 45_000, "Caxias do Sul", "RS", "particular", "azul", A, "gasolina", [], 26],
-  ["s80", "t6", null, 2008, 2009, 125_000, 52_000, "Ribeirão Preto", "SP", "particular", "preto", A, "gasolina", ["tração integral"], 28],
+  ["s80", "t6", null, 2008, 2009, 125_000, 52_000, "Ribeirão Preto", "SP", "particular", "preto", A, "gasolina", ["tração integral"], 28, { redFlags: ["repasse", "documento_pendente"] }],
   ["xc70", "t6", null, 2011, 2012, 140_000, 68_000, "Blumenau", "SC", "particular", "marrom", A, "gasolina", ["tração integral"], 24],
   ["v70", "t5", null, 2003, 2004, 190_000, 32_000, "São Paulo", "SP", "particular", "prata", A, "gasolina", [], 29],
   ["s90", "t8", "inscription", 2018, 2019, 48_000, 260_000, "Brasília", "DF", "loja", "azul", A, "hibrido_plugin", [], 5],
