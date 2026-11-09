@@ -2,7 +2,7 @@
 
 # CLAUDE.md: convenções do projeto
 
-Agregador e buscador de anúncios de **Volvo seminovos e usados no Brasil**. Fontes: posts do Instagram coletados **só pela API oficial da Meta** e anúncios cadastrados direto no site. O nome do site ainda é provisório (`NEXT_PUBLIC_SITE_NAME`, padrão `[NOME_DO_SITE]`). O site terá domínio próprio, com links cruzados para a comunidade Made by Sweden (madebysweden.com.br).
+Agregador e buscador de anúncios de **Volvo seminovos e usados no Brasil**. Fontes: posts do Instagram coletados **só pela API oficial da Meta** e anúncios cadastrados direto no site. Nome: **Buy My Volvo** (`NEXT_PUBLIC_SITE_NAME`), domínio **buymyvolvo.com.br**, com links cruzados para a comunidade Made by Sweden (madebysweden.com.br). Operação em produção: [`RUNBOOK.md`](RUNBOOK.md).
 
 A especificação completa está em `docs/PROMPT.md`. O plano revisado e as decisões em aberto estão em `docs/plano.md`.
 
@@ -22,7 +22,7 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 - **Busca:** Postgres full-text (`portuguese`) + `unaccent` + `pg_trgm`. Só proponha Meilisearch/Typesense se o Postgres se mostrar insuficiente.
 - **IA:** Anthropic API, modelo de extração configurável (`ANTHROPIC_MODEL_EXTRACTION`, padrão `claude-haiku-5-5`), **structured outputs** (`output_config.format` com o schema Zod) e nova validação Zod com 1 retry. O Haiku 5.5 **rejeita `temperature`**: a previsibilidade vem de `thinking: disabled` + `effort: "low"`. O prompt de sistema é gerado da taxonomia, fica byte-estável e vai em cache (`cache_control`); dados do post só na mensagem do usuário, entre aspas, como dado (nunca como instrução). Antes de mexer no código da API, carregue a skill `claude-api`.
 - **Testes:** Vitest (unidade, `*.test.ts` ao lado do código) e Playwright (e2e em `tests/e2e/`, projetos `desktop` e `mobile`).
-- **Deploy:** Vercel + Supabase. Crons protegidos por `CRON_SECRET`, idempotentes e com lock.
+- **Deploy:** Vercel (plano Hobby por enquanto: só uso não comercial) + Supabase. Crons protegidos por `CRON_SECRET`, idempotentes e com lock, chamados pelo GitHub Actions (`.github/workflows/jobs.yml`). Migrations de produção pelo workflow manual `db-migrate.yml` (nunca o seed).
 
 ## Comandos
 
@@ -36,7 +36,8 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 | `npm test`                  | Vitest (`test:watch` em modo watch)                                                                        |
 | `npm run test:e2e`          | Playwright. Em sandbox sem browser, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`                              |
 | `npm run check`             | format:check + lint + typecheck + test + build (critério de fim de fase)                                   |
-| `npm run db:setup`          | Aplica migrations pendentes e carrega os anúncios fictícios                                                |
+| `npm run db:setup`          | Aplica migrations pendentes e carrega os anúncios fictícios (só banco local)                               |
+| `npm run db:status`         | Lista as migrations pendentes sem aplicar (`db:migrate` aplica só as migrations)                           |
 | `npm run db:reset`          | **Só local:** apaga tudo, migra e popula de novo                                                           |
 | `npm run db:generate`       | Gera a migration da taxonomia e o `supabase/seed.sql` a partir do TypeScript                               |
 | `npm run extract:eval`      | Avalia a extração: 40 legendas fictícias ou `--set=real` (35 reais); `--offline`: só pré-filtro, sem custo |
@@ -48,9 +49,9 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ```
 src/
-  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /vendedor (+ /anuncios/[id]), /termos-do-anunciante, /auth/callback, /fotos/[...] (só local), /api/cron/[job]
-  components/            componentes do site; ui/ = shadcn; search/ = busca e filtros; admin/ = telas do admin
-  content/               textos editoriais (checklists por modelo, buscas populares)
+  app/                   rotas: / , /busca , /volvo (+ /[modelo]/[versão|uf]/[uf]), /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /vendedor (+ /anuncios/[id]), /termos, /privacidade, /termos-do-anunciante, /auth/callback, /fotos/[...] (só local), /api/cron/[job], sitemap.xml, robots.txt
+  components/            componentes do site; ui/ = shadcn; search/ = busca e filtros; admin/ = telas do admin; analytics/ = banner de cookies e eventos
+  content/               textos editoriais (checklists por modelo, buscas populares, textos das páginas de modelo) e jurídicos (legal.ts, seller-terms.ts)
   lib/
     env/                 validação de env (schema.ts, public.ts, server.ts)
     taxonomy/            modelos, gerações, motores, versões (data.ts = fonte única)
@@ -66,6 +67,9 @@ src/
     removals/            pedido de remoção sem login
     photos/              fotos do vendedor: processamento (sharp), armazenamento (Supabase ou local) e banco
     billing/             planos (só estrutura) e a interface BillingProvider
+    seo/                 páginas por modelo/versão/UF (landing.ts, puro), contagens (queries.ts) e JSON-LD
+    analytics/           consentimento (LGPD), Google tag (GA4/Ads) e itens dos eventos
+    auth/                login por link no e-mail (Supabase) e retorno das sessões
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
 scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
 scripts/job.ts           roda jobs localmente · scripts/sources.ts: fontes monitoradas
@@ -78,7 +82,9 @@ tests/
   integration/           Vitest contra TEST_DATABASE_URL (RLS, buscas de aceitação)
   unit/                  Vitest sem banco
   e2e/                   Playwright (desktop + mobile)
-docs/                    PROMPT.md, plano.md, meta-setup.md, login-google.md
+docs/                    PROMPT.md, plano.md, meta-setup.md, login-google.md, login-email.md
+RUNBOOK.md               colocar no ar, rotina e incidentes
+.github/workflows/       ci.yml, jobs.yml (agendamento), db-migrate.yml (manual)
 ```
 
 ## Banco de dados
@@ -166,6 +172,20 @@ docs/                    PROMPT.md, plano.md, meta-setup.md, login-google.md
 - **Armazenamento:** Supabase Storage (bucket público `listing-photos`, criado no primeiro envio) quando `SUPABASE_SERVICE_ROLE_KEY` existe; sem a chave, só em modo de prévia fora de produção, a pasta local `.data/photos` servida por `/fotos/...`. Sem nenhum dos dois, o envio fica indisponível.
 - Consultas públicas de fotos só usam as colunas liberadas ao `anon` (ordem por `position, id`; `created_at` não é público).
 - **Planos:** só a estrutura (`lib/billing/plans.ts`: Gratuito, Destaque, Loja Pro; preços "[a definir]") e `BillingProvider` sem implementação. O admin define o plano à mão em Vendedores.
+
+## Produção (Fase 7)
+
+- **SEO:** `/volvo/<modelo>[/<motor|versão|uf>][/<uf>]` (`lib/seo/landing.ts`, puro: as mesmas regras servem página, sitemap e links). Ids de motor, versão e UF não colidem. É a forma indexável dos filtros da busca; `/busca` continua `noindex, follow`. O `proxy.ts` responde 308 (maiúsculas) e 404 (caminho inválido) antes da página começar o streaming. Página com menos de 1 anúncio (modelo) ou 2 (versão/UF) aparece, mas fica `noindex` e fora do sitemap.
+- **Preço nas páginas de modelo:** só a faixa dos preços **pedidos** nos nossos anúncios ativos, sem repasses, com o aviso de que não é tabela de referência. Nada de FIPE ou média de mercado sem fonte.
+- **Texto das páginas de modelo:** gerado da taxonomia (anos-modelo no Brasil, gerações, combustível); parágrafo editorial opcional em `content/landing-texts.ts` (REVISAR).
+- **JSON-LD:** `Car` + `Offer` só em anúncio ativo (sem telefone; imagem só das fotos licenciadas), `BreadcrumbList` nas páginas de modelo, `WebSite` na home. Use `<JsonLd>` (escapa `<`).
+- **Metadados para robôs:** o Googlebot entra na lista `htmlLimitedBots` (`next.config.ts`), então canonical, descrição e `noindex` chegam no primeiro `<head>`. Navegadores recebem metadados por streaming.
+- **Páginas jurídicas** (`/termos`, `/privacidade`, `/termos-do-anunciante`): rascunhos, `noindex` e fora do sitemap até a revisão do advogado. Descrevem o que o sistema faz hoje; mudou o tratamento de dados, mude o texto.
+- **Analytics:** só com `NEXT_PUBLIC_GA_MEASUREMENT_ID` (e/ou `NEXT_PUBLIC_GOOGLE_ADS_ID`). Sem eles, nem banner nem script. Consent Mode **básico**: o Google tag só carrega depois do consentimento; categorias medição e publicidade (a de publicidade só aparece com o Ads configurado, e ligar o Ads pede o consentimento de novo). Eventos: `view_item` (anúncio), `generate_lead` (clique de contato, + conversão do Ads com `NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL`) e `search` (sem e-mail/telefone no termo). Clique rastreado = `data-track="<evento>"` + `data-track-params` (JSON). Nunca mande dado pessoal ou do vendedor para o Google.
+- **Login por link no e-mail** (`lib/auth/login-link.ts`): admin só para `ADMIN_EMAILS` (resposta igual para qualquer e-mail); vendedor, qualquer e-mail. As rotas de retorno aceitam `token_hash` (modelo de e-mail de `docs/login-email.md`) e `code` (PKCE).
+- **Build de produção** (`VERCEL_ENV=production`) falha se faltar `NEXT_PUBLIC_SITE_URL` https, `DATABASE_URL`, `HASH_SALT`, `CRON_SECRET` ou `ADMIN_EMAILS`, ou se houver modo de prévia, login de teste ou salt de teste (`lib/env/production.ts`).
+- **Esqueletos de carregamento** têm pelo menos a altura da tela (`min-h-svh`): sem isso o rodapé aparece e pula quando a página chega (CLS no celular).
+- **Testes:** `tests/e2e/a11y.spec.ts` (axe, WCAG 2.1 AA, claro e escuro) e `tests/e2e/seo.spec.ts`. O Playwright usa um GA4 falso (`G-E2ETEST000`) e começa com os cookies já "recusados"; `analytics.spec.ts` testa o banner sem isso e nunca carrega o script real.
 
 ## Variáveis de ambiente
 

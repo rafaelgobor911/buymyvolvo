@@ -17,6 +17,7 @@
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
     "db:generate": "tsx scripts/db/cli.ts generate",
     "db:migrate": "tsx scripts/db/cli.ts migrate",
+    "db:status": "tsx scripts/db/cli.ts status",
     "db:seed": "tsx scripts/db/cli.ts seed",
     "db:setup": "tsx scripts/db/cli.ts setup",
     "db:reset": "tsx scripts/db/cli.ts reset",

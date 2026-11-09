@@ -4,7 +4,7 @@
 
 | Tema                          | Decisão                                                                                                            |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Nome e domínio                | **Provisório**: `NEXT_PUBLIC_SITE_NAME` (padrão `[NOME_DO_SITE]`). Definir até a Fase 7                            |
+| Nome e domínio                | **Buy My Volvo**, **buymyvolvo.com.br** (decidido em 09/11/2026)                                                   |
 | Relação com a Made by Sweden  | **Domínio próprio + links cruzados** (conteúdo "o que checar neste modelo", divulgação na comunidade)              |
 | Conta do Instagram para a API | **@buymyvolvo**, ligada à Página "Buy My Volvo" (Business Suite) e ao app "Buy My Volvo" (modo de desenvolvimento) |
 | Repositório                   | GitHub (você cria e conecta; eu faço o push)                                                                       |
@@ -279,6 +279,47 @@ Remoção sem login (com limite por aparelho e campo armadilha), login do vended
 - Login com Google (credencial no Google Cloud) e login com Instagram (app da Meta) seguem pendentes.
 - Benefícios e preços dos planos Destaque e Loja Pro; escolha do meio de pagamento (Mercado Pago, Asaas ou Stripe).
 
-## Próxima fase (Fase 7: produção)
+## Fase 7: decisões
 
-SEO (páginas por modelo/versão/UF, schema.org, sitemap), páginas legais em rascunho, analytics, revisão de desempenho e acessibilidade, deploy (Vercel + Supabase, migrations sem o seed), crons em produção e um `RUNBOOK.md`.
+Decidido em 09/11/2026: nome **Buy My Volvo** e domínio **buymyvolvo.com.br**; **Google Analytics** pensando em anúncios no futuro; **Vercel gratuita** por enquanto; incluir o **login por link no e-mail**. A 7a é o código e a documentação; a 7b é o deploy, junto com o dono do produto.
+
+### 7a (entregue)
+
+- **SEO:**
+  - Páginas `/volvo`, `/volvo/<modelo>`, `/volvo/<modelo>/<motor ou versão>`, `/volvo/<modelo>/<uf>` e `/volvo/<modelo>/<motor ou versão>/<uf>`. Cada uma mostra contagem, faixa dos preços pedidos (só os nossos anúncios, sem repasses, com aviso de que não é tabela de referência), texto gerado da taxonomia, checklist e links internos por versão e por estado.
+  - Páginas com poucos anúncios ficam `noindex` e fora do sitemap.
+  - JSON-LD `Car` + `Offer` nos anúncios ativos.
+  - Sitemap dinâmico, `robots.txt` com o sitemap e imagem de compartilhamento padrão (só texto, sem marca da Volvo).
+- **Jurídico:** Termos de Uso e Política de Privacidade em rascunho para o advogado (`noindex`), com controlador, encarregado, prazos e foro "[a definir]". Rodapé com links para eles, para os Termos do Anunciante e para a Made by Sweden.
+- **Analytics:**
+  - GA4 e Google Ads só depois do consentimento (Consent Mode básico, sinais v2), com banner de cookies (medição e publicidade).
+  - Eventos `view_item`, `generate_lead` (evento-chave e conversão do Ads) e `search`.
+  - Sem o ID configurado, nada carrega.
+- **Login por link no e-mail** para o admin (só `ADMIN_EMAILS`) e para os vendedores. Isso destrava a área do vendedor sem depender da credencial do Google. Configuração em `docs/login-email.md`.
+- **Acessibilidade e desempenho:**
+  - axe (WCAG 2.1 AA) sem violações nas páginas públicas, no banner e no admin, nos temas claro e escuro.
+  - Lighthouse mobile depois das correções: desempenho 94–100, acessibilidade 100, boas práticas 100, CLS 0.
+- **Operação:**
+  - Workflow manual de migrations (`db-migrate.yml`, só lista ou aplica; nunca o seed).
+  - Jobs agendados pelo GitHub Actions (`jobs.yml`), porque a Vercel Hobby só roda cron 1 vez por dia.
+  - Checagem que barra o build de produção mal configurado.
+  - `RUNBOOK.md`.
+
+**Pendências para a 7b:**
+
+- **Vercel:**
+  - projeto ligado ao GitHub, com Fluid Compute ligado;
+  - variáveis de produção (lista no `RUNBOOK.md`);
+  - domínio no registro.br.
+- **Supabase:**
+  - migrations pelo workflow;
+  - URL Configuration;
+  - modelos de e-mail;
+  - SMTP próprio para os vendedores;
+  - chave secreta.
+- **GitHub:** `SITE_URL`, `CRON_SECRET` e `MIGRATION_DATABASE_URL`.
+- **Google:**
+  - propriedade GA4 (marcar `generate_lead` como evento-chave);
+  - Search Console (enviar o sitemap).
+- **Testes de fumaça** no site publicado, incluindo o WhatsApp num celular real e o login por link.
+- **Plano da Vercel:** os termos limitam o Hobby a uso não comercial. Ao monetizar (anúncios, planos ou comissão), passar para o Pro.

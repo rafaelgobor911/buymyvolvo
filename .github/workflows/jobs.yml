@@ -1,0 +1,90 @@
+# Runs the collection and maintenance jobs on the production site by calling
+# /api/cron/<job> with CRON_SECRET. The free Vercel plan (Hobby) runs its own
+# crons only once a day, so the schedule lives here.
+#
+# Needs: repository variable SITE_URL (https://buymyvolvo.com.br) and
+# repository secret CRON_SECRET (the same value as on Vercel). Without
+# SITE_URL the workflow does nothing (before go-live).
+#
+# Every hour at :17 (UTC):
+#   - collect-business-discovery  every 3 hours (00, 03, 06 … UTC)
+#   - collect-hashtags            every hour (each hashtag is due once a day;
+#                                 sources not reached in 240 s wait for the next call)
+#   - process-posts               every hour, after the collections
+#   - token-health, expire-listings  once a day, at 09:17 UTC (06:17 in Brasília)
+# Jobs hold a lock and are idempotent: a late or repeated run is harmless.
+name: Jobs agendados
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job (auto = o que estiver na hora)"
+        type: choice
+        default: auto
+        options:
+          - auto
+          - collect-business-discovery
+          - collect-hashtags
+          - process-posts
+          - token-health
+          - expire-listings
+      dry_run:
+        description: "Ensaio (não grava nada)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: scheduled-jobs
+  cancel-in-progress: false
+
+jobs:
+  run:
+    if: ${{ vars.SITE_URL != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Choose jobs
+        id: plan
+        env:
+          INPUT_JOB: ${{ inputs.job || 'auto' }}
+        run: |
+          if [ "$INPUT_JOB" != "auto" ]; then
+            jobs="$INPUT_JOB"
+          else
+            hour=$((10#$(date -u +%H)))
+            jobs=""
+            [ $((hour % 3)) -eq 0 ] && jobs="collect-business-discovery"
+            jobs="$jobs collect-hashtags process-posts"
+            [ "$hour" -eq 9 ] && jobs="$jobs token-health expire-listings"
+          fi
+          echo "jobs=$jobs" >> "$GITHUB_OUTPUT"
+          echo "Jobs: $jobs"
+      - name: Call jobs
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          JOBS: ${{ steps.plan.outputs.jobs }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+        run: |
+          failed=""
+          for job in $JOBS; do
+            url="$SITE_URL/api/cron/$job"
+            [ "$DRY_RUN" = "1" ] && url="$url?dry_run=1"
+            echo "::group::$job"
+            code=$(curl -sS -X POST -m 295 -o response.json -w '%{http_code}' \
+              -H "Authorization: Bearer $CRON_SECRET" "$url" || echo "000")
+            # The run summary: status, counts, AI cost and alerts (no secrets).
+            jq -c '{status, stats, alerts}' response.json 2>/dev/null || head -c 500 response.json
+            echo "::endgroup::"
+            if [ "$code" != "200" ]; then
+              echo "::error title=$job::HTTP $code"
+              failed="$failed $job"
+            fi
+          done
+          if [ -n "$failed" ]; then
+            echo "Failed:$failed"
+            exit 1
+          fi

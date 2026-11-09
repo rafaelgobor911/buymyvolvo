@@ -1,0 +1,41 @@
+# Applies pending migrations to the production database (Supabase). Manual
+# only: Actions → "Banco: migrations" → Run workflow. Never loads the seed.
+#
+# Needs the repository secret MIGRATION_DATABASE_URL: the Supabase "Session
+# pooler" connection string (port 5432), not the transaction pooler the app uses.
+name: "Banco: migrations"
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Aplicar as migrations (desmarcado: só lista as pendentes)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: db-migrate
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    env:
+      DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Pending migrations
+        run: npm run db:status
+      - name: Apply
+        if: ${{ inputs.apply }}
+        run: npm run db:migrate
+      - name: After
+        if: ${{ inputs.apply }}
+        run: npm run db:status

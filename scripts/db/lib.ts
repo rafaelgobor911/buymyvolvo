@@ -55,6 +55,23 @@ export async function bootstrapIfNeeded(sql: Sql, log = console.log) {
   if (state === "missing") log("• local bootstrap applied (Supabase roles and schemas)");
 }
 
+/** Migration files not applied yet (read-only; the table may not exist on a new database). */
+export async function pendingMigrations(sql: Sql): Promise<string[]> {
+  const [{ exists } = { exists: false }] = await sql<{ exists: boolean }[]>`
+    select to_regclass('supabase_migrations.schema_migrations') is not null as exists`;
+  const applied = new Set(
+    exists
+      ? (
+          await sql<{ version: string }[]>`select version from supabase_migrations.schema_migrations`
+        ).map((r) => r.version)
+      : [],
+  );
+  return (await readdir(MIGRATIONS_DIR))
+    .filter((f) => f.endsWith(".sql"))
+    .sort()
+    .filter((f) => !applied.has(f.split("_")[0]!));
+}
+
 export async function migrate(sql: Sql, log = console.log): Promise<string[]> {
   await bootstrapIfNeeded(sql, log);
   await sql.unsafe(`
