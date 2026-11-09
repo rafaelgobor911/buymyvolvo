@@ -10,6 +10,7 @@ import postgres from "postgres";
  */
 const E2E_SELLER = "vendedor.teste@example.com";
 const E2E_CLEANUP = `
+  delete from public.listing_photos where listing_id::text like '00000000-0000-4000-8000-%';
   delete from public.listing_claims
     where seller_id in (select id from public.sellers where email = '${E2E_SELLER}');
   delete from public.terms_acceptances

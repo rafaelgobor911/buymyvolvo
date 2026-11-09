@@ -57,7 +57,7 @@ test.describe("Vendedor", () => {
     await expect(admin.getByRole("listitem").filter({ hasText: code })).toContainText("Aprovada");
 
     await seller.goto("/vendedor", { waitUntil: "networkidle" });
-    await expect(seller.getByText("vendedor verificado")).toBeVisible();
+    await expect(seller.getByText(/@example\.com · vendedor verificado/)).toBeVisible();
     const card = seller.getByRole("article").filter({ hasText: "EC40 Twin Motor Ultimate 2025" });
     await card.getByLabel("Não, vendi por outro caminho").check();
     await card.getByRole("button", { name: "Marcar como vendido" }).click();
