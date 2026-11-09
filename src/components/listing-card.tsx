@@ -16,8 +16,18 @@ export function listingTitle(l: Pick<Listing, "modelName" | "engineName" | "trim
   return [l.modelName, l.engineName, l.trimName].filter(Boolean).join(" ");
 }
 
-export function ListingCard({ listing, now }: { listing: Listing; now: Date }) {
+export function ListingCard({
+  listing,
+  now,
+  headingLevel = 3,
+}: {
+  listing: Listing;
+  now: Date;
+  /** Card title level: one below the section heading that holds the grid. */
+  headingLevel?: 2 | 3;
+}) {
   const title = listingTitle(listing);
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary/40">
       {listing.coverUrl ? (
@@ -35,14 +45,14 @@ export function ListingCard({ listing, now }: { listing: Listing; now: Date }) {
       )}
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="leading-snug font-medium">
+          <Heading className="leading-snug font-medium">
             <Link
               href={`/anuncio/${listing.slug}`}
               className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:underline"
             >
               Volvo {title}
             </Link>
-          </h3>
+          </Heading>
           {listing.isClaimed && (
             <BadgeCheck
               className="mt-0.5 size-5 shrink-0 text-primary"
@@ -90,12 +100,20 @@ export function RepasseBadge({ className }: { className?: string }) {
   );
 }
 
-export function ListingGrid({ listings, now }: { listings: Listing[]; now: Date }) {
+export function ListingGrid({
+  listings,
+  now,
+  headingLevel,
+}: {
+  listings: Listing[];
+  now: Date;
+  headingLevel?: 2 | 3;
+}) {
   return (
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {listings.map((listing) => (
         <li key={listing.id} className="flex">
-          <ListingCard listing={listing} now={now} />
+          <ListingCard listing={listing} now={now} headingLevel={headingLevel} />
         </li>
       ))}
     </ul>

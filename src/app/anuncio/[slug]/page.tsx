@@ -472,9 +472,10 @@ function ContactActions({ listing }: { listing: ListingDetail }) {
 }
 
 function DetailSkeleton() {
+  // At least a screen tall: the footer must not show and then jump when the page streams in.
   return (
     <div
-      className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_22rem]"
+      className="mx-auto grid min-h-svh w-full max-w-6xl content-start gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_22rem]"
       aria-busy="true"
     >
       <Skeleton className="aspect-[16/9] rounded-2xl" />

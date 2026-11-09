@@ -34,6 +34,8 @@ export async function generateMetadata(props: PageProps<"/busca">): Promise<Meta
   const term = typeof q === "string" && q.trim() ? q.trim().slice(0, 60) : null;
   return {
     title: term ? `“${term}”: Volvo à venda` : "Buscar Volvo à venda",
+    description:
+      "Busque Volvo seminovos e usados por modelo, versão, ano, km, preço e cidade, em anúncios de lojas e particulares.",
     // The indexable form of model/version/state filters is /volvo/... (src/lib/seo/landing.ts).
     robots: { index: false, follow: true },
   };
@@ -101,7 +103,7 @@ async function SearchResults({ searchParams }: { searchParams: Promise<RawParams
             <EmptyState chips={chips} params={params} />
           ) : (
             <>
-              <ListingGrid listings={result.items} now={now} />
+              <ListingGrid listings={result.items} now={now} headingLevel={2} />
               <Pagination params={params} page={result.page} pageCount={result.pageCount} />
             </>
           )}
@@ -159,7 +161,11 @@ function EmptyState({ chips, params }: { chips: FilterChip[]; params: RawParams 
 
 function ResultsSkeleton() {
   return (
-    <div className="flex flex-col gap-6" aria-busy="true" aria-label="Carregando resultados">
+    <div
+      className="flex min-h-svh flex-col gap-6"
+      aria-busy="true"
+      aria-label="Carregando resultados"
+    >
       <Skeleton className="h-11 w-full rounded-xl" />
       <div className="grid gap-8 lg:grid-cols-[17rem_1fr]">
         <Skeleton className="hidden h-[32rem] rounded-2xl lg:block" />

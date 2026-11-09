@@ -372,7 +372,7 @@ function breadcrumbs(landing: Landing): Crumb[] {
 
 function LandingSkeleton() {
   return (
-    <div className="flex flex-col gap-8" aria-busy="true" aria-label="Carregando">
+    <div className="flex min-h-svh flex-col gap-8" aria-busy="true" aria-label="Carregando">
       <Skeleton className="h-5 w-48" />
       <Skeleton className="h-10 w-3/4 max-w-xl" />
       <Skeleton className="h-28 rounded-2xl" />
