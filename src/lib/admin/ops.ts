@@ -58,3 +58,22 @@ export async function listSellers(sql: Sql): Promise<SellerRow[]> {
     from public.sellers s
     order by s.display_name`;
 }
+
+/** Plans are set by hand while there is no payment provider. */
+export async function setSellerPlan(
+  sql: Sql,
+  input: { sellerId: string; plan: string; actor: string },
+): Promise<boolean> {
+  if (!["free", "destaque", "loja_pro"].includes(input.plan)) return false;
+  return sql.begin(async (tx) => {
+    const [row] = await tx<{ plan: string | null }[]>`
+      select plan from public.sellers where id = ${input.sellerId} for update`;
+    if (!row || row.plan === input.plan) return false;
+    await tx`update public.sellers set plan = ${input.plan} where id = ${input.sellerId}`;
+    await tx`
+      insert into public.audit_log (actor, action, entity, entity_id, changes)
+      values (${input.actor}, 'seller.plan', 'seller', ${input.sellerId},
+        ${tx.json({ plan: { from: row.plan, to: input.plan } })})`;
+    return true;
+  });
+}

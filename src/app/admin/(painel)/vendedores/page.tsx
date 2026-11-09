@@ -3,10 +3,15 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { AdminSkeleton, formatDateTime, PageTitle } from "@/components/admin/bits";
+import { Button } from "@/components/ui/button";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { requireAdmin } from "@/lib/admin/auth";
 import { listSellers } from "@/lib/admin/ops";
+import { PLANS } from "@/lib/billing/plans";
 import { db } from "@/lib/db/client";
 import { SELLER_TYPE_LABELS, type SellerType } from "@/lib/taxonomy";
+
+import { setSellerPlanAction } from "../ops-actions";
 
 export const metadata: Metadata = { title: "Vendedores" };
 
@@ -32,8 +37,8 @@ async function SellersView() {
     <div className="flex flex-col gap-5">
       <PageTitle title="Vendedores" />
       <p className="text-sm text-muted-foreground">
-        Vendedores que reivindicaram anúncios. A reivindicação, os termos e o painel do vendedor
-        chegam na Fase 6.
+        Vendedores que reivindicaram anúncios. Enquanto não há cobrança, o plano é definido aqui à
+        mão.
       </p>
       {sellers.length === 0 ? (
         <p className="text-muted-foreground">Nenhum vendedor cadastrado.</p>
@@ -60,7 +65,26 @@ async function SellersView() {
                     </p>
                   </td>
                   <td className="px-3 py-2">{(s.verifiedVia && VERIFIED[s.verifiedVia]) ?? "—"}</td>
-                  <td className="px-3 py-2">{s.plan ?? "—"}</td>
+                  <td className="px-3 py-2">
+                    <form action={setSellerPlanAction} className="flex items-center gap-1">
+                      <input type="hidden" name="id" value={s.id} />
+                      <NativeSelect
+                        name="plano"
+                        defaultValue={s.plan ?? "free"}
+                        aria-label={`Plano de ${s.displayName}`}
+                        size="sm"
+                      >
+                        {PLANS.map((p) => (
+                          <NativeSelectOption key={p.id} value={p.id}>
+                            {p.name}
+                          </NativeSelectOption>
+                        ))}
+                      </NativeSelect>
+                      <Button type="submit" variant="ghost" size="sm" className="rounded-lg">
+                        Salvar
+                      </Button>
+                    </form>
+                  </td>
                   <td className="px-3 py-2 text-right tabular-nums">{s.activeListings}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{s.leads30d}</td>
                 </tr>

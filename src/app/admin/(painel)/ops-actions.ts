@@ -9,6 +9,7 @@ import { refresh } from "next/cache";
 import { actorOf, requireAdmin } from "@/lib/admin/auth";
 import { addBlock, confirmRemoval, rejectRemoval, removeBlock } from "@/lib/admin/blocklist";
 import { approveClaim, rejectClaim } from "@/lib/admin/claims";
+import { setSellerPlan } from "@/lib/admin/ops";
 import type { FormState } from "@/lib/admin/form-state";
 import { addSources, setSourceActive, type SourceType } from "@/lib/admin/sources";
 import { db } from "@/lib/db/client";
@@ -136,4 +137,14 @@ export async function claimDecisionAction(_prev: FormState, form: FormData): Pro
     status: "saved",
     message: approve ? "Reivindicação aprovada." : "Reivindicação recusada.",
   };
+}
+
+export async function setSellerPlanAction(form: FormData) {
+  const admin = await requireAdmin();
+  await setSellerPlan(db(), {
+    sellerId: str(form, "id"),
+    plan: str(form, "plano"),
+    actor: actorOf(admin),
+  });
+  refresh();
 }
