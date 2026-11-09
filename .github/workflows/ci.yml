@@ -33,6 +33,8 @@ jobs:
       ADMIN_EMAILS: admin.teste@example.com
       ADMIN_TEST_LOGIN_EMAIL: admin.teste@example.com
       SELLER_TEST_LOGIN_EMAIL: vendedor.teste@example.com
+      # Fake GA4 ID so the build includes the consent banner (e2e never loads Google's script).
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: G-E2ETEST000
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

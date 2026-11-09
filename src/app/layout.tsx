@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import { Analytics } from "@/components/analytics/analytics";
 import { DemoBanner } from "@/components/demo-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
+import { analyticsEnabled, googleTagConfig } from "@/lib/analytics/config";
 import { site } from "@/lib/site";
 
 import "./globals.css";
@@ -48,6 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <SiteFooter />
+          {analyticsEnabled && <Analytics config={googleTagConfig} />}
         </ThemeProvider>
       </body>
     </html>

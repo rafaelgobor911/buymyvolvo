@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { after, connection } from "next/server";
 import { cache, Suspense } from "react";
 
+import { TrackEvent } from "@/components/analytics/analytics";
 import { JsonLd } from "@/components/json-ld";
 import { ListingAlerts } from "@/components/listing-alerts";
 import { ListingGrid, listingTitle, RepasseBadge } from "@/components/listing-card";
@@ -23,6 +24,7 @@ import {
   formatRelativeDays,
   formatYears,
 } from "@/lib/listings/format";
+import { leadParams, type ListingForAnalytics, viewItemParams } from "@/lib/analytics/items";
 import { db } from "@/lib/db/client";
 import { isBot, isPrefetch } from "@/lib/leads/request";
 import { getListingBySlug, getSimilarListings, type ListingDetail } from "@/lib/listings/queries";
@@ -106,6 +108,13 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pt-6 pb-32 sm:px-6 lg:pb-16">
+      {isActive && (
+        <TrackEvent
+          name="view_item"
+          id={listing.id}
+          params={viewItemParams(forAnalytics(listing))}
+        />
+      )}
       {isActive && (
         <JsonLd
           data={[
@@ -409,6 +418,17 @@ function FactsTable({ listing, now }: { listing: ListingDetail; now: Date }) {
  * Instagram when the post has no phone). The phone never reaches the HTML.
  * A plain <a> (not next/link) so nothing prefetches the click.
  */
+const forAnalytics = (listing: ListingDetail): ListingForAnalytics => ({
+  shortId: listing.shortId,
+  title: `Volvo ${listingTitle(listing)}`,
+  modelName: listing.modelName,
+  engineName: listing.engineName,
+  trimName: listing.trimName,
+  uf: listing.uf,
+  yearModel: listing.yearModel,
+  priceCents: listing.priceCents,
+});
+
 function ContactActions({ listing }: { listing: ListingDetail }) {
   if (listing.status !== "active") return null;
   const hasInstagram = !!(
@@ -423,6 +443,10 @@ function ContactActions({ listing }: { listing: ListingDetail }) {
         href={`/r/${listing.shortId}`}
         rel="nofollow"
         aria-describedby="contato-nota"
+        data-track="generate_lead"
+        data-track-params={JSON.stringify(
+          leadParams(forAnalytics(listing), listing.hasPhone ? "whatsapp" : "instagram"),
+        )}
         className={cn(buttonVariants(), "h-12 w-full rounded-xl text-base")}
       >
         <MessageCircle aria-hidden />

@@ -7,6 +7,8 @@ const baseURL = `http://localhost:${PORT}`;
 // `npx playwright install` is not available).
 const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined;
 const E2E_ADMIN = "admin.teste@example.com";
+/** Fake GA4 ID: the consent banner shows; tests never load Google's script. */
+export const E2E_GA_ID = "G-E2ETEST000";
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -17,6 +19,27 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL,
+    // Cookie choice already made ("recusar"), so the banner stays out of the way;
+    // tests/e2e/analytics.spec.ts starts without it.
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: baseURL,
+          localStorage: [
+            {
+              name: "bmv-consent",
+              value: JSON.stringify({
+                v: "1:analytics",
+                analytics: false,
+                ads: false,
+                at: "2026-11-09T00:00:00.000Z",
+              }),
+            },
+          ],
+        },
+      ],
+    },
     locale: "pt-BR",
     timezoneId: "America/Sao_Paulo",
     launchOptions: { executablePath },
@@ -38,6 +61,7 @@ export default defineConfig({
       ADMIN_EMAILS: [process.env.ADMIN_EMAILS, E2E_ADMIN].filter(Boolean).join(","),
       ADMIN_TEST_LOGIN_EMAIL: E2E_ADMIN,
       SELLER_TEST_LOGIN_EMAIL: "vendedor.teste@example.com",
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: E2E_GA_ID,
       // Tests never talk to the real Supabase project (Google login shows as unavailable).
       NEXT_PUBLIC_SUPABASE_URL: "",
       NEXT_PUBLIC_SUPABASE_ANON_KEY: "",

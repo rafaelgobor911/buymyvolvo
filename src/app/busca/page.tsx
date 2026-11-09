@@ -4,6 +4,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { TrackEvent } from "@/components/analytics/analytics";
 import { ListingGrid } from "@/components/listing-card";
 import { FiltersForm } from "@/components/search/filters-form";
 import { FiltersSheet } from "@/components/search/filters-sheet";
@@ -20,6 +21,13 @@ import {
   removeChipHref,
   resolveSearch,
 } from "@/lib/search/filters";
+
+/** Search terms go to Google Analytics: drop anything that looks like an e-mail or phone. */
+const withoutContacts = (q: string) =>
+  q
+    .replace(/\S+@\S+/g, "")
+    .replace(/\+?\d[\d\s().-]{7,}\d/g, "")
+    .trim();
 
 export async function generateMetadata(props: PageProps<"/busca">): Promise<Metadata> {
   const q = (await props.searchParams).q;
@@ -51,6 +59,13 @@ async function SearchResults({ searchParams }: { searchParams: Promise<RawParams
 
   return (
     <>
+      {filters.q && (
+        <TrackEvent
+          name="search"
+          id={filters.q}
+          params={{ search_term: withoutContacts(filters.q), results: result.total }}
+        />
+      )}
       <div className="flex flex-col gap-4">
         <SearchBox defaultValue={filters.q} size="md" />
         <InterpretedChips chips={chips} params={params} filters={filters} />

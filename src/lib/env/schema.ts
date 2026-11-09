@@ -29,6 +29,24 @@ export const publicEnvSchema = z.object({
   ),
   NEXT_PUBLIC_SUPABASE_URL: optionalUrl,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalString,
+  /** Google Analytics 4 (G-XXXXXXX). Loads only after the visitor's consent. */
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z.preprocess(
+    blankToUndefined,
+    z
+      .string()
+      .regex(/^G-[A-Z0-9]{4,}$/, "Use the GA4 measurement ID, e.g. G-ABC123XYZ")
+      .optional(),
+  ),
+  /** Google Ads (AW-123456789), for conversions. Loads only with advertising consent. */
+  NEXT_PUBLIC_GOOGLE_ADS_ID: z.preprocess(
+    blankToUndefined,
+    z
+      .string()
+      .regex(/^AW-\d{6,}$/, "Use the Google Ads tag ID, e.g. AW-123456789")
+      .optional(),
+  ),
+  /** Conversion label of the "contact" action in Google Ads (sent on each contact click). */
+  NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL: optionalString,
   /** Shows the "fictitious data" banner and disables real contact buttons. */
   NEXT_PUBLIC_DEMO_MODE: z.preprocess(
     blankToUndefined,
