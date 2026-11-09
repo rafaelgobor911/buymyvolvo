@@ -3,19 +3,29 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { LoginLinkForm } from "@/components/login-link-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabaseConfigured } from "@/lib/admin/supabase";
+import { LOGIN_LINK_ERRORS, type LoginLinkError } from "@/lib/auth/login-link";
 import { safeNext } from "@/lib/sellers/access";
 import { currentSellerUser, enabledSellerTestLogin } from "@/lib/sellers/auth";
 
-import { signInSellerForTest, signInSellerWithGoogle } from "../auth-actions";
+import {
+  requestSellerLoginLink,
+  signInSellerForTest,
+  signInSellerWithGoogle,
+} from "../auth-actions";
 
 export const metadata: Metadata = { title: "Entrar como vendedor", robots: { index: false } };
 
 const ERRORS: Record<string, string> = {
   google: "Não foi possível entrar com o Google. Tente de novo.",
   "google-indisponivel": "O login com Google ainda não está disponível. Tente mais tarde.",
+  sessao: "Não foi possível entrar: o link expirou ou já foi usado. Peça outro.",
+  ...Object.fromEntries(
+    Object.entries(LOGIN_LINK_ERRORS).map(([k, v]) => [`link-${k as LoginLinkError}`, v]),
+  ),
 };
 
 export default function SellerLoginPage(props: PageProps<"/vendedor/entrar">) {
@@ -66,6 +76,17 @@ async function LoginView({
           </p>
         )}
       </form>
+      <p className="flex items-center gap-3 text-xs text-muted-foreground" aria-hidden>
+        <span className="h-px flex-1 bg-border" />
+        ou
+        <span className="h-px flex-1 bg-border" />
+      </p>
+      <LoginLinkForm
+        action={requestSellerLoginLink}
+        next={next}
+        sent={params.link === "enviado"}
+        available={google}
+      />
       {testEmail && (
         <form
           action={signInSellerForTest}

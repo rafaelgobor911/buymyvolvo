@@ -17,8 +17,9 @@ test.describe("Admin", () => {
     await page.goto("/admin/moderacao");
     await expect(page).toHaveURL(/\/admin\/entrar$/);
     await expect(page.getByRole("heading", { name: "Entrar no admin" })).toBeVisible();
-    // No Supabase project yet: Google login is shown but disabled.
+    // No Supabase project in tests: Google and the e-mail link are shown but disabled.
     await expect(page.getByRole("button", { name: "Entrar com Google" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Receber link de acesso" })).toBeDisabled();
   });
 
   test("início mostra a fila e os alertas; a navegação leva à moderação", async ({ page }) => {

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { createTestSession, TEST_SESSION_HOURS } from "@/lib/admin/access";
 import { supabaseConfigured, supabaseServer } from "@/lib/admin/supabase";
+import { sendLoginLink } from "@/lib/auth/login-link";
 import { serverEnv } from "@/lib/env/server";
 import { safeNext, SELLER_TEST_COOKIE } from "@/lib/sellers/access";
 import { enabledSellerTestLogin } from "@/lib/sellers/auth";
@@ -24,6 +25,15 @@ export async function signInSellerWithGoogle(form: FormData) {
   });
   if (error || !data.url) redirect(`/vendedor/entrar?erro=google&next=${encodeURIComponent(next)}`);
   redirect(data.url);
+}
+
+/** "Receber link por e-mail" (any e-mail: the account is created on the first login). */
+export async function requestSellerLoginLink(form: FormData) {
+  const next = nextOf(form);
+  const back = (query: string) => `/vendedor/entrar?${query}&next=${encodeURIComponent(next)}`;
+  if (form.get("site")) redirect(back("link=enviado"));
+  const result = await sendLoginLink({ email: form.get("email"), scope: "seller", next });
+  redirect(back(result.ok ? "link=enviado" : `erro=link-${result.error}`));
 }
 
 /** Test login (e2e and screenshots only; see enabledSellerTestLogin). */

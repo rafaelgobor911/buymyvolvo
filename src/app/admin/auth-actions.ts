@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { createTestSession, TEST_SESSION_COOKIE, TEST_SESSION_HOURS } from "@/lib/admin/access";
 import { enabledTestLogin } from "@/lib/admin/auth";
 import { supabaseConfigured, supabaseServer } from "@/lib/admin/supabase";
+import { sendLoginLink } from "@/lib/auth/login-link";
 import { serverEnv } from "@/lib/env/server";
 import { site } from "@/lib/site";
 
@@ -19,6 +20,13 @@ export async function signInWithGoogle() {
   });
   if (error || !data.url) redirect("/admin/entrar?erro=google");
   redirect(data.url);
+}
+
+/** "Receber link por e-mail": only ADMIN_EMAILS get one, with the same answer for everyone. */
+export async function requestAdminLoginLink(form: FormData) {
+  if (form.get("site")) redirect("/admin/entrar?link=enviado");
+  const result = await sendLoginLink({ email: form.get("email"), scope: "admin" });
+  redirect(result.ok ? "/admin/entrar?link=enviado" : `/admin/entrar?erro=link-${result.error}`);
 }
 
 /** Test login (e2e and screenshots only; see enabledTestLogin). */

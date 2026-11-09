@@ -16,7 +16,7 @@ export interface SellerUser {
   authUserId: string;
   email: string;
   name: string | null;
-  via: "google" | "test";
+  via: "supabase" | "test";
 }
 
 /** The seller test login's e-mail when it is enabled here, else null. */
@@ -54,7 +54,7 @@ export async function currentSellerUser(): Promise<SellerUser | null> {
           authUserId: user.id,
           email: user.email.toLowerCase(),
           name: meta?.full_name ?? meta?.name ?? null,
-          via: "google",
+          via: "supabase",
         };
       }
     } catch {

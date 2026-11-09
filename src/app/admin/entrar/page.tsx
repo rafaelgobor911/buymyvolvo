@@ -4,17 +4,23 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { AdminSkeleton } from "@/components/admin/bits";
+import { LoginLinkForm } from "@/components/login-link-form";
 import { Button } from "@/components/ui/button";
 import { currentAdmin, enabledTestLogin } from "@/lib/admin/auth";
 import { supabaseConfigured, supabaseServer } from "@/lib/admin/supabase";
+import { LOGIN_LINK_ERRORS, type LoginLinkError } from "@/lib/auth/login-link";
 
-import { signInForTest, signInWithGoogle, signOut } from "../auth-actions";
+import { requestAdminLoginLink, signInForTest, signInWithGoogle, signOut } from "../auth-actions";
 
 export const metadata: Metadata = { title: "Entrar" };
 
 const ERRORS: Record<string, string> = {
   google: "Não foi possível entrar com o Google. Tente de novo.",
   "google-indisponivel": "O login com Google ainda não está configurado.",
+  sessao: "Não foi possível entrar: o link expirou ou já foi usado. Peça outro.",
+  ...Object.fromEntries(
+    Object.entries(LOGIN_LINK_ERRORS).map(([k, v]) => [`link-${k as LoginLinkError}`, v]),
+  ),
 };
 
 export default function LoginPage(props: PageProps<"/admin/entrar">) {
@@ -33,7 +39,7 @@ async function LoginView({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   if (await currentAdmin()) redirect("/admin");
-  const { erro } = await searchParams;
+  const { erro, link } = await searchParams;
   const error = typeof erro === "string" ? ERRORS[erro] : undefined;
   const google = supabaseConfigured();
   const testEmail = enabledTestLogin();
@@ -51,7 +57,7 @@ async function LoginView({
         <ShieldCheck className="size-8 text-primary" aria-hidden />
         <h1 className="text-2xl font-semibold tracking-tight">Entrar no admin</h1>
         <p className="text-muted-foreground">
-          Acesso restrito à equipe, com a conta Google autorizada.
+          Acesso restrito à equipe: entre com o Google ou receba um link no e-mail autorizado.
         </p>
       </div>
 
@@ -73,18 +79,26 @@ async function LoginView({
           </form>
         </div>
       ) : (
-        <form action={signInWithGoogle} className="flex flex-col gap-2">
-          <Button type="submit" disabled={!google} className="h-11 rounded-xl text-base">
-            <LogIn aria-hidden />
-            Entrar com Google
-          </Button>
-          {!google && (
-            <p className="text-xs text-muted-foreground">
-              O login com Google é ativado quando o projeto do Supabase for configurado
-              (NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY).
-            </p>
-          )}
-        </form>
+        <>
+          <form action={signInWithGoogle} className="flex flex-col gap-2">
+            <Button type="submit" disabled={!google} className="h-11 rounded-xl text-base">
+              <LogIn aria-hidden />
+              Entrar com Google
+            </Button>
+            {!google && (
+              <p className="text-xs text-muted-foreground">
+                O login com Google é ativado quando o projeto do Supabase for configurado
+                (NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY).
+              </p>
+            )}
+          </form>
+          <OrDivider />
+          <LoginLinkForm
+            action={requestAdminLoginLink}
+            sent={link === "enviado"}
+            available={google}
+          />
+        </>
       )}
 
       {testEmail && (
@@ -102,5 +116,15 @@ async function LoginView({
         </form>
       )}
     </>
+  );
+}
+
+function OrDivider() {
+  return (
+    <p className="flex items-center gap-3 text-xs text-muted-foreground" aria-hidden>
+      <span className="h-px flex-1 bg-border" />
+      ou
+      <span className="h-px flex-1 bg-border" />
+    </p>
   );
 }

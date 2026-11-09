@@ -6,7 +6,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 export interface Admin {
   email: string;
-  via: "google" | "test";
+  via: "supabase" | "test";
 }
 
 export const isAdminEmail = (email: string | null | undefined, adminEmails: string[]) =>

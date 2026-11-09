@@ -42,7 +42,7 @@ export async function currentAdmin(): Promise<Admin | null> {
     const supabase = await supabaseServer();
     const { data } = await supabase.auth.getUser();
     const email = data.user?.email?.toLowerCase();
-    if (email && isAdminEmail(email, env.ADMIN_EMAILS)) return { email, via: "google" };
+    if (email && isAdminEmail(email, env.ADMIN_EMAILS)) return { email, via: "supabase" };
   }
   return null;
 }

@@ -76,6 +76,7 @@ test.describe("Vendedor", () => {
     await page.goto("/vendedor");
     await expect(page).toHaveURL(/\/vendedor\/entrar\?next=%2Fvendedor$/);
     await expect(page.getByRole("button", { name: "Entrar com Google" })).toBeDisabled();
+    await expect(page.getByLabel("E-mail")).toBeDisabled();
     await page.goto("/termos-do-anunciante");
     await expect(page.getByRole("heading", { name: "Termos do Anunciante" })).toBeVisible();
     await expect(page.getByRole("note")).toContainText("Rascunho para revisão jurídica");

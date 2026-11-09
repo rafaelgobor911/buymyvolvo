@@ -1,10 +1,10 @@
 /**
- * Google returns here through Supabase Auth (sellers): exchange the code for a
- * session (PKCE) and go back to the page that asked for the login.
+ * Supabase Auth returns here for sellers (Google or the e-mail link): start
+ * the session and go back to the page that asked for the login.
  */
 import type { NextRequest } from "next/server";
 
-import { supabaseConfigured, supabaseServer } from "@/lib/admin/supabase";
+import { completeSupabaseLogin } from "@/lib/auth/login-link";
 import { safeNext } from "@/lib/sellers/access";
 
 const go = (path: string) =>
@@ -13,9 +13,6 @@ const go = (path: string) =>
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const next = safeNext(params.get("next"));
-  const code = params.get("code");
-  const failed = `/vendedor/entrar?erro=google&next=${encodeURIComponent(next)}`;
-  if (!code || !supabaseConfigured()) return go(failed);
-  const { error } = await (await supabaseServer()).auth.exchangeCodeForSession(code);
-  return go(error ? failed : next);
+  const ok = await completeSupabaseLogin(params);
+  return go(ok ? next : `/vendedor/entrar?erro=sessao&next=${encodeURIComponent(next)}`);
 }
