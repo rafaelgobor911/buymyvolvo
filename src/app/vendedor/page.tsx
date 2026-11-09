@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SELLER_TERMS_VERSION } from "@/content/seller-terms";
+import { planName, PLANS } from "@/lib/billing/plans";
 import { db } from "@/lib/db/client";
 import { formatPrice } from "@/lib/listings/format";
 import { requireSellerUser } from "@/lib/sellers/auth";
@@ -150,6 +151,38 @@ async function PanelView({
         </section>
       )}
 
+      {seller && (
+        <section aria-labelledby="plano" className="flex flex-col gap-3">
+          <h2 id="plano" className="text-lg font-semibold">
+            Seu plano: {planName(seller.plan)}
+          </h2>
+          <ul className="grid gap-3 sm:grid-cols-3">
+            {PLANS.map((plan) => (
+              <li
+                key={plan.id}
+                className="flex flex-col gap-2 rounded-xl border border-border p-4 text-sm"
+                aria-current={plan.id === seller.plan ? "true" : undefined}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium">{plan.name}</span>
+                  {plan.id === seller.plan ? (
+                    <Badge variant="outline">Atual</Badge>
+                  ) : (
+                    !plan.available && <Badge variant="outline">Em breve</Badge>
+                  )}
+                </div>
+                <span className="text-muted-foreground">{plan.price}</span>
+                <ul className="flex list-disc flex-col gap-1 pl-4 text-muted-foreground">
+                  {plan.features.map((f) => (
+                    <li key={f}>{f}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <p className="text-xs text-muted-foreground">
         {seller?.termsVersionAccepted
           ? `Você aceitou os Termos do Anunciante (versão ${seller.termsVersionAccepted}).`
@@ -178,7 +211,15 @@ async function ListingPanel({ sellerId, listing }: { sellerId: string; listing: 
             {formatPrice(listing.priceCents)} · código {listing.shortId}
           </span>
         </div>
-        <Badge variant="outline">{STATUS[listing.status] ?? listing.status}</Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline">{STATUS[listing.status] ?? listing.status}</Badge>
+          <Link
+            href={`/vendedor/anuncios/${listing.id}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            Editar dados e fotos
+          </Link>
+        </div>
       </div>
       <dl className="flex gap-6 text-sm">
         <div>

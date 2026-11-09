@@ -7,6 +7,7 @@ import type postgres from "postgres";
 import { normalizePhoneBR } from "@/lib/extraction/normalize";
 
 import { generateClaimCode } from "./access";
+import type { SellerEdit } from "./edit-form";
 
 type Sql = postgres.Sql;
 
@@ -285,4 +286,81 @@ export async function markListingSold(
         ${input.leadRef ? `Contato ${input.leadRef}` : null})`;
     return { ok: true };
   });
+}
+
+// --- Editing a claimed listing ----------------------------------------------------
+
+export interface SellerEditableListing extends SellerEdit {
+  id: string;
+  slug: string;
+  shortId: string;
+  title: string;
+  status: string;
+}
+
+/** The seller's own claimed listing, or null (also when it belongs to someone else). */
+export async function sellerEditableListing(
+  sql: Sql,
+  input: { sellerId: string; listingId: string },
+): Promise<SellerEditableListing | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(input.listingId)) return null;
+  const [row] = await sql<
+    (Omit<SellerEditableListing, "priceCents"> & { priceCents: string | null })[]
+  >`
+    select l.id, l.slug, l.short_id as "shortId", l.status,
+      concat_ws(' ', m.name, e.name, t.name, l.year_model::text) as title,
+      l.price_cents as "priceCents", l.km, l.color, l.transmission, l.fuel, l.city, l.uf,
+      l.contact_phone_e164 as phone, l.contact_ig_username as "igUsername",
+      l.seller_description as description, coalesce(l.options, '{}') as options
+    from public.listings l
+    join public.vehicle_models m on m.id = l.model_id
+    left join public.vehicle_engines e on e.id = l.engine_id
+    left join public.vehicle_trims t on t.id = l.trim_id
+    where l.id = ${input.listingId} and l.seller_id = ${input.sellerId} and l.is_claimed`;
+  return row
+    ? { ...row, priceCents: row.priceCents === null ? null : Number(row.priceCents) }
+    : null;
+}
+
+export type SellerUpdateResult = { ok: true; changed: number } | { ok: false; error: string };
+
+/** Saves the seller's edits; the change list goes to audit_log. */
+export async function updateSellerListing(
+  sql: Sql,
+  input: { sellerId: string; listingId: string; edit: SellerEdit; actor: string },
+): Promise<SellerUpdateResult> {
+  const current = await sellerEditableListing(sql, input);
+  if (!current) return { ok: false, error: "Anúncio não encontrado." };
+  const changes: Record<string, { from: unknown; to: unknown }> = {};
+  for (const key of Object.keys(input.edit) as (keyof SellerEdit)[]) {
+    if (JSON.stringify(current[key]) !== JSON.stringify(input.edit[key])) {
+      changes[key] = { from: current[key], to: input.edit[key] };
+    }
+  }
+  if (Object.keys(changes).length === 0) return { ok: true, changed: 0 };
+  const e = input.edit;
+  await sql.begin(async (tx) => {
+    await tx`
+      update public.listings set
+        price_cents = ${e.priceCents}, km = ${e.km}, color = ${e.color},
+        transmission = ${e.transmission}, fuel = ${e.fuel}, city = ${e.city}, uf = ${e.uf},
+        contact_phone_e164 = ${e.phone}, contact_ig_username = ${e.igUsername},
+        seller_description = ${e.description}, options = ${e.options}
+      where id = ${input.listingId} and seller_id = ${input.sellerId}`;
+    await tx`
+      insert into public.audit_log (actor, action, entity, entity_id, changes)
+      values (${input.actor}, 'listing.seller_update', 'listing', ${input.listingId},
+        ${tx.json(changes as postgres.JSONValue)})`;
+  });
+  return { ok: true, changed: Object.keys(changes).length };
+}
+
+export async function hasAcceptedTerms(
+  sql: Sql,
+  input: { sellerId: string; terms: "seller_terms" | "photo_license"; version: string },
+): Promise<boolean> {
+  const [row] = await sql<{ ok: boolean }[]>`
+    select exists (select 1 from public.terms_acceptances
+      where seller_id = ${input.sellerId} and terms = ${input.terms} and version = ${input.version}) as ok`;
+  return row?.ok ?? false;
 }
