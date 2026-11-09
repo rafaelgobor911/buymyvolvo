@@ -62,7 +62,9 @@ export async function pendingMigrations(sql: Sql): Promise<string[]> {
   const applied = new Set(
     exists
       ? (
-          await sql<{ version: string }[]>`select version from supabase_migrations.schema_migrations`
+          await sql<
+            { version: string }[]
+          >`select version from supabase_migrations.schema_migrations`
         ).map((r) => r.version)
       : [],
   );

@@ -71,9 +71,9 @@ describe("sendLoginLink", () => {
 
 describe("completeSupabaseLogin", () => {
   it("accepts the token_hash link and the PKCE code", async () => {
-    expect(
-      await completeSupabaseLogin(new URLSearchParams("token_hash=abc&type=magiclink")),
-    ).toBe(true);
+    expect(await completeSupabaseLogin(new URLSearchParams("token_hash=abc&type=magiclink"))).toBe(
+      true,
+    );
     expect(auth.verifyOtp).toHaveBeenCalledWith({ token_hash: "abc", type: "magiclink" });
     expect(await completeSupabaseLogin(new URLSearchParams("code=xyz"))).toBe(true);
     expect(auth.exchangeCodeForSession).toHaveBeenCalledWith("xyz");
@@ -85,8 +85,8 @@ describe("completeSupabaseLogin", () => {
       false,
     );
     auth.verifyOtp.mockResolvedValue({ error: { message: "expired" } });
-    expect(
-      await completeSupabaseLogin(new URLSearchParams("token_hash=abc&type=magiclink")),
-    ).toBe(false);
+    expect(await completeSupabaseLogin(new URLSearchParams("token_hash=abc&type=magiclink"))).toBe(
+      false,
+    );
   });
 });
