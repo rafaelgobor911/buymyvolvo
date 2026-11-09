@@ -289,7 +289,7 @@ export function generateSeedSql(): string {
     "  red_flags = excluded.red_flags,",
     "  is_claimed = excluded.is_claimed, first_seen_at = excluded.first_seen_at,",
     "  last_seen_at = excluded.last_seen_at, sold_at = excluded.sold_at, removed_at = excluded.removed_at,",
-    "  rejected_at = null, review_note = null, sold_via_site = null;",
+    "  rejected_at = null, review_note = null, sold_via_site = null, seller_description = null;",
     "",
   );
 

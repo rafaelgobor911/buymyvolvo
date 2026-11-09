@@ -91,7 +91,7 @@ on conflict (id) do update set
   red_flags = excluded.red_flags,
   is_claimed = excluded.is_claimed, first_seen_at = excluded.first_seen_at,
   last_seen_at = excluded.last_seen_at, sold_at = excluded.sold_at, removed_at = excluded.removed_at,
-  rejected_at = null, review_note = null, sold_via_site = null;
+  rejected_at = null, review_note = null, sold_via_site = null, seller_description = null;
 
 insert into public.sources (id, type, handle, active, notes)
 values ('00000000-0000-4000-b000-000000000001', 'ig_business_account', 'anuncios.ficticios', false, 'Fonte fictícia do seed: posts de exemplo da moderação')
