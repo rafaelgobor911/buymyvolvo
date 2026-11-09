@@ -8,6 +8,7 @@ import { cache, Suspense } from "react";
 
 import { ListingAlerts } from "@/components/listing-alerts";
 import { ListingGrid, listingTitle, RepasseBadge } from "@/components/listing-card";
+import { ListingGallery } from "@/components/listing-gallery";
 import { ModelPlate } from "@/components/model-plate";
 import { SafetyTips } from "@/components/safety-tips";
 import { Badge } from "@/components/ui/badge";
@@ -36,12 +37,13 @@ export async function generateMetadata(props: PageProps<"/anuncio/[slug]">): Pro
   const listing = await loadListing(slug);
   if (!listing) return { title: "Anúncio não encontrado", robots: { index: false } };
   const title = `Volvo ${listingTitle(listing)} ${formatYears(listing.yearFab, listing.yearModel)}`;
+  const description = (listing.sellerDescription?.slice(0, 160) ?? listing.summary) || undefined;
   return {
     title,
-    description: listing.summary ?? undefined,
+    description,
     alternates: { canonical: `/anuncio/${listing.slug}` },
     robots: listing.status === "active" ? undefined : { index: false, follow: true },
-    openGraph: { title, description: listing.summary ?? undefined, type: "website" },
+    openGraph: { title, description, type: "website" },
   };
 }
 
@@ -103,14 +105,26 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
             <h2 id="sobre" className="text-xl font-semibold tracking-tight">
               Sobre este carro
             </h2>
-            {listing.summary && (
-              <p className="text-pretty text-muted-foreground">{listing.summary}</p>
+            {listing.sellerDescription ? (
+              <>
+                <p className="text-pretty whitespace-pre-line text-muted-foreground">
+                  {listing.sellerDescription}
+                </p>
+                <p className="text-xs text-muted-foreground">Descrição escrita pelo vendedor.</p>
+              </>
+            ) : (
+              listing.summary && (
+                <p className="text-pretty text-muted-foreground">{listing.summary}</p>
+              )
             )}
-            {listing.summary && listing.origin === "instagram" && !listing.isClaimed && (
-              <p className="text-xs text-muted-foreground">
-                Resumo automático do post; confira no original.
-              </p>
-            )}
+            {!listing.sellerDescription &&
+              listing.summary &&
+              listing.origin === "instagram" &&
+              !listing.isClaimed && (
+                <p className="text-xs text-muted-foreground">
+                  Resumo automático do post; confira no original.
+                </p>
+              )}
             {listing.options.length > 0 && (
               <ul className="flex flex-wrap gap-2 pt-1" aria-label="Destaques">
                 {listing.options.map((option) => (
@@ -247,11 +261,14 @@ function StatusNotice({ listing }: { listing: ListingDetail }) {
  */
 function MediaBlock({ listing }: { listing: ListingDetail }) {
   if (listing.isClaimed) {
+    if (listing.photos.length > 0) {
+      return <ListingGallery photos={listing.photos} title={`Volvo ${listingTitle(listing)}`} />;
+    }
     return (
       <figure className="overflow-hidden rounded-2xl border border-border">
         <ModelPlate modelName={listing.modelName} className="aspect-[16/9]" />
         <figcaption className="px-4 py-3 text-sm text-muted-foreground">
-          As fotos enviadas pelo vendedor aparecem aqui.
+          O vendedor ainda não enviou fotos.
         </figcaption>
       </figure>
     );

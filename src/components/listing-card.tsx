@@ -20,7 +20,19 @@ export function ListingCard({ listing, now }: { listing: Listing; now: Date }) {
   const title = listingTitle(listing);
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary/40">
-      <ModelPlate modelName={listing.modelName} className="aspect-[16/10]" />
+      {listing.coverUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element -- already resized WebP from our storage
+        <img
+          src={listing.coverUrl}
+          alt=""
+          loading="lazy"
+          width={640}
+          height={400}
+          className="aspect-[16/10] w-full bg-muted object-cover"
+        />
+      ) : (
+        <ModelPlate modelName={listing.modelName} className="aspect-[16/10]" />
+      )}
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-3">
           <h3 className="leading-snug font-medium">

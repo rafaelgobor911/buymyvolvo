@@ -2,6 +2,7 @@ import "server-only";
 
 import { asAnon, db, type Tx } from "@/lib/db/client";
 import { PAGE_SIZE, type SearchFilters } from "@/lib/search/filters";
+import { photoUrl } from "@/lib/photos/storage";
 import type { Fuel, SellerType, Transmission } from "@/lib/taxonomy";
 
 export type ListingStatus = "active" | "sold" | "expired";
@@ -45,6 +46,15 @@ export interface ListingCard {
   firstSeenAt: Date;
   /** Alerts the post itself declares (repasse, ágio, leilão...); internal flags removed. */
   alerts: PublicAlert[];
+  /** First photo of a claimed listing (seller's licensed photos), small size. */
+  coverUrl: string | null;
+}
+
+export interface ListingPhoto {
+  url: string;
+  urlSmall: string;
+  width: number | null;
+  height: number | null;
 }
 
 export interface ListingDetail extends ListingCard {
@@ -66,13 +76,19 @@ export interface ListingDetail extends ListingCard {
   sourceUsername: string | null;
   /** Active, backed only by hashtag posts (never re-read) older than the configured days. */
   possiblyUnavailable: boolean;
+  /** The seller's own description (claimed listings), shown instead of the automatic summary. */
+  sellerDescription: string | null;
+  /** The seller's licensed photos, in order (claimed listings only). */
+  photos: ListingPhoto[];
 }
 
 // Explicit columns only: anon has column-level grants (no phone, no internal fields).
 const CARD_COLUMNS = (tx: Tx) => tx`
   l.id, l.slug, l.status, l.origin, l.model_id, m.name as model_name, e.name as engine_name,
   t.name as trim_name, l.version_text, l.year_fab, l.year_model, l.km, l.price_cents, l.city, l.uf,
-  l.fuel, l.transmission, l.seller_type, l.is_claimed, l.is_featured, l.first_seen_at, l.red_flags`;
+  l.fuel, l.transmission, l.seller_type, l.is_claimed, l.is_featured, l.first_seen_at, l.red_flags,
+  (select p.storage_path from public.listing_photos p where p.listing_id = l.id
+    order by p.position, p.id limit 1) as cover_path`;
 
 const JOINS = (tx: Tx) => tx`
   from public.listings l
@@ -103,6 +119,7 @@ type CardRow = {
   is_featured: boolean;
   first_seen_at: Date;
   red_flags: string[] | null;
+  cover_path: string | null;
 };
 
 const toCard = (r: CardRow): ListingCard => ({
@@ -128,6 +145,7 @@ const toCard = (r: CardRow): ListingCard => ({
   isFeatured: r.is_featured,
   firstSeenAt: r.first_seen_at,
   alerts: publicAlerts(r.red_flags),
+  coverUrl: r.cover_path ? photoUrl(r.cover_path, 640) : null,
 });
 
 export interface SearchResult {
@@ -236,10 +254,12 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
         source_permalink: string | null;
         source_username: string | null;
         possibly_unavailable: boolean;
+        seller_description: string | null;
       })[]
     >`
       select ${CARD_COLUMNS(tx)}, l.engine_id, l.trim_id, l.color, l.options, l.summary_ptbr,
         l.last_seen_at, l.expires_at, l.sold_at, l.contact_ig_username, l.short_id, l.has_phone,
+        l.seller_description,
         s.display_name as seller_name, src.permalink as source_permalink, src.ig_username as source_username,
         (l.status = 'active' and l.origin = 'instagram'
           and l.first_seen_at < now() - make_interval(days => ${staleDays})
@@ -261,8 +281,20 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
       ) src on true
       where l.slug = ${slug}`;
     if (!row) return null;
+    const photoRows = await tx<
+      { storage_path: string; width: number | null; height: number | null }[]
+    >`
+      select storage_path, width, height from public.listing_photos
+      where listing_id = ${row.id} order by position, id`;
+    const photos = photoRows.flatMap((p) => {
+      const url = photoUrl(p.storage_path, 1600);
+      const urlSmall = photoUrl(p.storage_path, 640);
+      return url && urlSmall ? [{ url, urlSmall, width: p.width, height: p.height }] : [];
+    });
     return {
       ...toCard(row),
+      sellerDescription: row.seller_description,
+      photos,
       engineId: row.engine_id,
       trimId: row.trim_id,
       color: row.color,
