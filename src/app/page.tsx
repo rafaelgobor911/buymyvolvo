@@ -1,14 +1,24 @@
 import { ArrowRight, MessageCircle, ScanSearch, SlidersHorizontal } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { JsonLd } from "@/components/json-ld";
 import { ListingGrid } from "@/components/listing-card";
 import { SafetyTips } from "@/components/safety-tips";
 import { SearchBox } from "@/components/search/search-box";
 import { Skeleton } from "@/components/ui/skeleton";
 import { POPULAR_SEARCHES } from "@/content/popular";
+import { formatInteger } from "@/lib/listings/format";
 import { getRecentListings } from "@/lib/listings/queries";
+import { websiteJsonLd } from "@/lib/seo/json-ld";
+import { LANDING_ROOT } from "@/lib/seo/landing";
+import { activeLandingCounts } from "@/lib/seo/queries";
+import { absoluteUrl, site } from "@/lib/site";
+import { getModel } from "@/lib/taxonomy";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const STEPS = [
   {
@@ -31,6 +41,13 @@ const STEPS = [
 export default function HomePage() {
   return (
     <>
+      <JsonLd
+        data={websiteJsonLd({
+          name: site.name,
+          url: absoluteUrl("/"),
+          instagram: site.instagramHandle,
+        })}
+      />
       <section className="border-b border-border/70">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-14 pb-12 sm:px-6 sm:pt-20 sm:pb-16">
           <div className="flex max-w-3xl flex-col gap-4">
@@ -82,6 +99,25 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section aria-labelledby="por-modelo" className="border-b border-border/70">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
+          <div className="flex items-end justify-between gap-4">
+            <h2 id="por-modelo" className="text-2xl font-semibold tracking-tight">
+              Explore por modelo
+            </h2>
+            <Link
+              href={LANDING_ROOT}
+              className="inline-flex items-center gap-1 text-sm font-medium text-primary"
+            >
+              Todos os modelos <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+          <Suspense fallback={<Skeleton className="h-24 rounded-2xl" />}>
+            <ModelLinks />
+          </Suspense>
+        </div>
+      </section>
+
       <section aria-labelledby="como-funciona" className="border-b border-border/70">
         <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <h2 id="como-funciona" className="text-2xl font-semibold tracking-tight">
@@ -116,6 +152,31 @@ async function RecentListings() {
     return <p className="text-muted-foreground">Nenhum anúncio publicado ainda.</p>;
   }
   return <ListingGrid listings={listings} now={new Date()} />;
+}
+
+/** Models with active listings, most listings first (internal links to the landing pages). */
+async function ModelLinks() {
+  await connection();
+  const models = (await activeLandingCounts())
+    .filter((c) => c.depth === 1)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 12);
+  if (models.length === 0) return null;
+  return (
+    <ul className="flex flex-wrap gap-2">
+      {models.map((c) => (
+        <li key={c.path}>
+          <Link
+            href={c.path}
+            className="inline-flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
+          >
+            <span className="font-medium">{getModel(c.modelId)?.name ?? c.modelId}</span>
+            <span className="text-muted-foreground">{formatInteger(c.count)}</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 function RecentSkeleton() {

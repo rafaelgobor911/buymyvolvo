@@ -1,8 +1,9 @@
 import postgres from "postgres";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { getListingBySlug, searchListings } from "@/lib/listings/queries";
+import { getListingBySlug, searchListings, searchStats } from "@/lib/listings/queries";
 import { PAGE_SIZE, resolveSearch } from "@/lib/search/filters";
+import { activeLandingCounts, sitemapListings } from "@/lib/seo/queries";
 
 import { migrate } from "../../scripts/db/lib";
 import { FIXTURE_LISTINGS } from "../../scripts/db/fixtures";
@@ -207,6 +208,33 @@ describe.skipIf(!url)("database", () => {
     it("still shows sold listings (with their status)", async () => {
       const [sold] = slugOf((l) => l.status === "sold");
       expect((await getListingBySlug(sold!.slug))?.status).toBe("sold");
+    });
+  });
+
+  describe("landing pages (SEO)", () => {
+    const active = FIXTURE_LISTINGS.filter((l) => (l.status ?? "active") === "active");
+
+    it("price range of the asking prices, repasses left out", async () => {
+      const xc60 = active.filter((l) => l.model === "xc60");
+      const priced = xc60.filter((l) => !l.redFlags?.includes("repasse")).map((l) => l.price);
+      const stats = await searchStats(resolveSearch({ modelo: "xc60" }, { now: NOW }));
+      expect(stats.total).toBe(xc60.length);
+      expect(stats.priced).toBe(priced.length);
+      expect(stats.priceMinCents).toBe(Math.min(...priced) * 100);
+      expect(stats.priceMaxCents).toBe(Math.max(...priced) * 100);
+      expect(stats.yearMin).toBe(Math.min(...xc60.map((l) => l.yearModel)));
+      const empty = await searchStats(resolveSearch({ modelo: "v90" }, { now: NOW }));
+      expect(empty).toMatchObject({ total: 0, priced: 0, priceMinCents: null });
+    });
+
+    it("counts per landing come from active listings only", async () => {
+      const counts = new Map((await activeLandingCounts()).map((c) => [c.path, c.count]));
+      expect(counts.get("/volvo/xc60")).toBe(active.filter((l) => l.model === "xc60").length);
+      expect(counts.get("/volvo/xc60/t8/sp")).toBe(
+        active.filter((l) => l.model === "xc60" && l.engine === "t8" && l.uf === "SP").length,
+      );
+      const listings = await sitemapListings();
+      expect(listings).toHaveLength(active.length);
     });
   });
 });

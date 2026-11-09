@@ -11,3 +11,7 @@ export const site = {
   /** Mandatory brand disclaimer (compliance rule 6). */
   brandDisclaimer: "Não afiliado à Volvo Car Corporation.",
 } as const;
+
+/** Absolute URL on this site (canonical links, sitemap, JSON-LD). */
+export const absoluteUrl = (path: string) =>
+  `${site.url}${path.startsWith("/") ? path : `/${path}`}`;

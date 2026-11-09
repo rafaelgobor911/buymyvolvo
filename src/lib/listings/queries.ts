@@ -155,33 +155,37 @@ export interface SearchResult {
   pageCount: number;
 }
 
+/** WHERE clause of the public search (active listings matching the filters). */
+function searchWhere(tx: Tx, f: SearchFilters) {
+  const conditions = [tx`l.status = 'active'`];
+  if (f.modelIds.length) conditions.push(tx`l.model_id = any(${f.modelIds})`);
+  if (f.engineIds.length) conditions.push(tx`l.engine_id = any(${f.engineIds})`);
+  if (f.trimIds.length) conditions.push(tx`l.trim_id = any(${f.trimIds})`);
+  if (f.fuels.length) conditions.push(tx`l.fuel = any(${f.fuels})`);
+  if (f.transmission) conditions.push(tx`l.transmission = ${f.transmission}`);
+  if (f.sellerType) conditions.push(tx`l.seller_type = ${f.sellerType}`);
+  if (f.repasse === "only") conditions.push(tx`l.red_flags @> array['repasse']`);
+  if (f.repasse === "exclude") conditions.push(tx`not (l.red_flags @> array['repasse'])`);
+  if (f.yearMin !== undefined) conditions.push(tx`l.year_model >= ${f.yearMin}`);
+  if (f.yearMax !== undefined) conditions.push(tx`l.year_model <= ${f.yearMax}`);
+  if (f.priceMin !== undefined) conditions.push(tx`l.price_cents >= ${f.priceMin * 100}`);
+  if (f.priceMax !== undefined) conditions.push(tx`l.price_cents <= ${f.priceMax * 100}`);
+  if (f.kmMax !== undefined) conditions.push(tx`l.km <= ${f.kmMax}`);
+  if (f.uf) conditions.push(tx`l.uf = ${f.uf}`);
+  if (f.city) conditions.push(tx`public.normalize_text(l.city) = public.normalize_text(${f.city})`);
+  if (f.text) {
+    // Full-text (Portuguese stemming, accent-insensitive) OR trigram word similarity (typos).
+    conditions.push(tx`(
+      l.search_vector @@ websearch_to_tsquery('public.pt_unaccent', ${f.text})
+      or l.search_text operator(extensions.%>) public.normalize_text(${f.text})
+    )`);
+  }
+  return conditions.reduce((acc, c) => tx`${acc} and ${c}`);
+}
+
 export async function searchListings(f: SearchFilters): Promise<SearchResult> {
   return asAnon(async (tx) => {
-    const conditions = [tx`l.status = 'active'`];
-    if (f.modelIds.length) conditions.push(tx`l.model_id = any(${f.modelIds})`);
-    if (f.engineIds.length) conditions.push(tx`l.engine_id = any(${f.engineIds})`);
-    if (f.trimIds.length) conditions.push(tx`l.trim_id = any(${f.trimIds})`);
-    if (f.fuels.length) conditions.push(tx`l.fuel = any(${f.fuels})`);
-    if (f.transmission) conditions.push(tx`l.transmission = ${f.transmission}`);
-    if (f.sellerType) conditions.push(tx`l.seller_type = ${f.sellerType}`);
-    if (f.repasse === "only") conditions.push(tx`l.red_flags @> array['repasse']`);
-    if (f.repasse === "exclude") conditions.push(tx`not (l.red_flags @> array['repasse'])`);
-    if (f.yearMin !== undefined) conditions.push(tx`l.year_model >= ${f.yearMin}`);
-    if (f.yearMax !== undefined) conditions.push(tx`l.year_model <= ${f.yearMax}`);
-    if (f.priceMin !== undefined) conditions.push(tx`l.price_cents >= ${f.priceMin * 100}`);
-    if (f.priceMax !== undefined) conditions.push(tx`l.price_cents <= ${f.priceMax * 100}`);
-    if (f.kmMax !== undefined) conditions.push(tx`l.km <= ${f.kmMax}`);
-    if (f.uf) conditions.push(tx`l.uf = ${f.uf}`);
-    if (f.city)
-      conditions.push(tx`public.normalize_text(l.city) = public.normalize_text(${f.city})`);
-    if (f.text) {
-      // Full-text (Portuguese stemming, accent-insensitive) OR trigram word similarity (typos).
-      conditions.push(tx`(
-        l.search_vector @@ websearch_to_tsquery('public.pt_unaccent', ${f.text})
-        or l.search_text operator(extensions.%>) public.normalize_text(${f.text})
-      )`);
-    }
-    const where = conditions.reduce((acc, c) => tx`${acc} and ${c}`);
+    const where = searchWhere(tx, f);
 
     const order =
       f.sort === "menor-preco"
@@ -323,5 +327,57 @@ export async function getSimilarListings(modelId: string, excludeId: string, lim
       order by l.first_seen_at desc
       limit ${limit}`;
     return rows.map(toCard);
+  });
+}
+
+export interface SearchStats {
+  total: number;
+  /** Listings with a price, repasses left out (their prices are not comparable). */
+  priced: number;
+  priceMinCents: number | null;
+  priceMaxCents: number | null;
+  priceMedianCents: number | null;
+  yearMin: number | null;
+  yearMax: number | null;
+}
+
+/**
+ * Counts and the asking-price range of the active listings matching the
+ * filters. Only our own data (asking prices), never a market reference.
+ */
+export async function searchStats(f: SearchFilters): Promise<SearchStats> {
+  return asAnon(async (tx) => {
+    const priced = tx`l.price_cents is not null and not (l.red_flags @> array['repasse'])`;
+    const [row] = await tx<
+      {
+        total: string;
+        priced: string;
+        price_min: string | null;
+        price_max: string | null;
+        price_median: string | null;
+        year_min: number | null;
+        year_max: number | null;
+      }[]
+    >`
+      select count(*) as total,
+        count(*) filter (where ${priced}) as priced,
+        min(l.price_cents) filter (where ${priced}) as price_min,
+        max(l.price_cents) filter (where ${priced}) as price_max,
+        percentile_disc(0.5) within group (order by l.price_cents)
+          filter (where ${priced}) as price_median,
+        min(l.year_model) as year_min, max(l.year_model) as year_max
+      from public.listings l
+      where ${searchWhere(tx, f)}`;
+    const num = (v: string | null | undefined) =>
+      v === null || v === undefined ? null : Number(v);
+    return {
+      total: Number(row?.total ?? 0),
+      priced: Number(row?.priced ?? 0),
+      priceMinCents: num(row?.price_min),
+      priceMaxCents: num(row?.price_max),
+      priceMedianCents: num(row?.price_median),
+      yearMin: row?.year_min ?? null,
+      yearMax: row?.year_max ?? null,
+    };
   });
 }

@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { after, connection } from "next/server";
 import { cache, Suspense } from "react";
 
+import { JsonLd } from "@/components/json-ld";
 import { ListingAlerts } from "@/components/listing-alerts";
 import { ListingGrid, listingTitle, RepasseBadge } from "@/components/listing-card";
 import { ListingGallery } from "@/components/listing-gallery";
@@ -26,7 +27,9 @@ import { db } from "@/lib/db/client";
 import { isBot, isPrefetch } from "@/lib/leads/request";
 import { getListingBySlug, getSimilarListings, type ListingDetail } from "@/lib/listings/queries";
 import { recordView } from "@/lib/listings/views";
-import { site } from "@/lib/site";
+import { breadcrumbJsonLd, carJsonLd } from "@/lib/seo/json-ld";
+import { landingPath, LANDING_ROOT } from "@/lib/seo/landing";
+import { absoluteUrl, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { FUEL_LABELS, getModel, TRANSMISSION_LABELS } from "@/lib/taxonomy";
 
@@ -37,13 +40,38 @@ export async function generateMetadata(props: PageProps<"/anuncio/[slug]">): Pro
   const listing = await loadListing(slug);
   if (!listing) return { title: "Anúncio não encontrado", robots: { index: false } };
   const title = `Volvo ${listingTitle(listing)} ${formatYears(listing.yearFab, listing.yearModel)}`;
-  const description = (listing.sellerDescription?.slice(0, 160) ?? listing.summary) || undefined;
+  const facts = [
+    listing.priceCents !== null && formatPrice(listing.priceCents),
+    listing.km !== null && formatKm(listing.km),
+    (listing.city || listing.uf) && formatPlace(listing.city, listing.uf),
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const text = listing.sellerDescription?.slice(0, 160) ?? listing.summary;
+  const description = [facts, text].filter(Boolean).join(". ") || undefined;
+  const cover = listing.photos[0];
   return {
     title,
     description,
     alternates: { canonical: `/anuncio/${listing.slug}` },
     robots: listing.status === "active" ? undefined : { index: false, follow: true },
-    openGraph: { title, description, type: "website" },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `/anuncio/${listing.slug}`,
+      ...(cover
+        ? {
+            images: [
+              {
+                url: cover.url,
+                width: cover.width ?? undefined,
+                height: cover.height ?? undefined,
+              },
+            ],
+          }
+        : {}),
+    },
   };
 }
 
@@ -71,24 +99,57 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
   const similar = await getSimilarListings(listing.modelId, listing.id, 3);
   const title = listingTitle(listing);
   const model = getModel(listing.modelId);
-  const baseModelName = getModel(model?.parentId ?? listing.modelId)?.name ?? listing.modelName;
+  const baseModelId = model?.parentId ?? listing.modelId;
+  const baseModelName = getModel(baseModelId)?.name ?? listing.modelName;
   const isActive = listing.status === "active";
+  const url = absoluteUrl(`/anuncio/${listing.slug}`);
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pt-6 pb-32 sm:px-6 lg:pb-16">
+      {isActive && (
+        <JsonLd
+          data={[
+            carJsonLd({
+              url,
+              name: `Volvo ${title}`,
+              modelName: listing.modelName,
+              engineName: listing.engineName,
+              yearFab: listing.yearFab,
+              yearModel: listing.yearModel,
+              km: listing.km,
+              priceCents: listing.priceCents,
+              fuel: listing.fuel,
+              transmission: listing.transmission,
+              color: listing.color,
+              city: listing.city,
+              uf: listing.uf,
+              description: listing.sellerDescription ?? listing.summary,
+              images: listing.photos.map((p) =>
+                p.url.startsWith("/") ? absoluteUrl(p.url) : p.url,
+              ),
+              seller: listing.sellerName
+                ? { name: listing.sellerName, type: listing.sellerType }
+                : null,
+              available: true,
+            }),
+            breadcrumbJsonLd([
+              { name: "Volvo à venda", url: absoluteUrl(LANDING_ROOT) },
+              { name: baseModelName, url: absoluteUrl(landingPath({ modelId: baseModelId })) },
+              { name: `Volvo ${title}`, url },
+            ]),
+          ]}
+        />
+      )}
       <nav aria-label="Navegação estrutural" className="text-sm text-muted-foreground">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li>
-            <Link href="/busca" className="hover:text-foreground">
-              Busca
+            <Link href={LANDING_ROOT} className="hover:text-foreground">
+              Volvo à venda
             </Link>
           </li>
           <li aria-hidden>/</li>
           <li>
-            <Link
-              href={{ pathname: "/busca", query: { q: baseModelName.toLowerCase() } }}
-              className="hover:text-foreground"
-            >
+            <Link href={landingPath({ modelId: baseModelId })} className="hover:text-foreground">
               {baseModelName}
             </Link>
           </li>
@@ -246,7 +307,7 @@ function StatusNotice({ listing }: { listing: ListingDetail }) {
     <p role="status" className="rounded-xl border border-border bg-secondary px-4 py-3 text-sm">
       {text}{" "}
       <Link
-        href={{ pathname: "/busca", query: { q: listing.modelName.toLowerCase() } }}
+        href={landingPath({ modelId: listing.modelId })}
         className="font-medium text-primary underline-offset-4 hover:underline"
       >
         Ver outros {listing.modelName}

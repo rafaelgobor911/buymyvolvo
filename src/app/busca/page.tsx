@@ -26,7 +26,7 @@ export async function generateMetadata(props: PageProps<"/busca">): Promise<Meta
   const term = typeof q === "string" && q.trim() ? q.trim().slice(0, 60) : null;
   return {
     title: term ? `“${term}”: Volvo à venda` : "Buscar Volvo à venda",
-    // Indexable landing pages per model/version/UF arrive in Phase 7 (SEO).
+    // The indexable form of model/version/state filters is /volvo/... (src/lib/seo/landing.ts).
     robots: { index: false, follow: true },
   };
 }

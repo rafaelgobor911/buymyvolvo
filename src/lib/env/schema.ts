@@ -8,7 +8,9 @@ const optionalString = z.preprocess(blankToUndefined, z.string().min(1).optional
 const optionalSecret = z.preprocess(blankToUndefined, z.string().min(32).optional());
 const optionalUrl = z.preprocess(blankToUndefined, z.url().optional());
 
-export const DEFAULT_SITE_NAME = "[NOME_DO_SITE]";
+export const DEFAULT_SITE_NAME = "Buy My Volvo";
+/** Canonical production address; NEXT_PUBLIC_SITE_URL must be set to it on Vercel production. */
+export const PRODUCTION_SITE_URL = "https://buymyvolvo.com.br";
 export const DEFAULT_SITE_URL = "http://localhost:3000";
 export const DEFAULT_EXTRACTION_MODEL = "claude-haiku-5-5";
 export const DEFAULT_GRAPH_VERSION = "v27.0";
