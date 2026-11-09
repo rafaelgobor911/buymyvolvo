@@ -48,7 +48,7 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ```
 src/
-  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /vendedor, /termos-do-anunciante, /auth/callback, /api/cron/[job]
+  app/                   rotas: / , /busca , /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /vendedor (+ /anuncios/[id]), /termos-do-anunciante, /auth/callback, /fotos/[...] (só local), /api/cron/[job]
   components/            componentes do site; ui/ = shadcn; search/ = busca e filtros; admin/ = telas do admin
   content/               textos editoriais (checklists por modelo, buscas populares)
   lib/
@@ -64,6 +64,8 @@ src/
     admin/               acesso (auth, access), formulário, anúncios, configurações e painel inicial do admin
     sellers/             acesso e sessão do vendedor, perfil, termos, reivindicação e painel
     removals/            pedido de remoção sem login
+    photos/              fotos do vendedor: processamento (sharp), armazenamento (Supabase ou local) e banco
+    billing/             planos (só estrutura) e a interface BillingProvider
 scripts/db/              CLI de banco (migrate, seed, reset, generate) + fixtures fictícias
 scripts/extract-eval.ts  avaliação da extração (relatórios em evals/extraction/reports/)
 scripts/job.ts           roda jobs localmente · scripts/sources.ts: fontes monitoradas
@@ -158,7 +160,12 @@ docs/                    PROMPT.md, plano.md, meta-setup.md, login-google.md
 - **Login do vendedor:** Google via Supabase Auth (`/auth/callback?next=…`) ou login de teste (`SELLER_TEST_LOGIN_EMAIL`, mesmas travas do admin; cookie `bmv_seller_test` assinado com escopo próprio). `requireSellerUser(next)` em toda página e ação do vendedor. O passo a passo do Google está em `docs/login-google.md`.
 - **Reivindicação manual:** o vendedor preenche o perfil, aceita os Termos do Anunciante (versão em `content/seller-terms.ts`, aceite em `terms_acceptances`) e recebe um código `RV-XXXXXX` para mandar pelo Direct do Instagram do anúncio para `@buymyvolvo` (`site.instagramHandle`). O admin aprova em Reivindicações: o anúncio passa a ser do vendedor (`seller_id`, `is_claimed`, selo verificado) com os leads antigos; as outras reivindicações pendentes do mesmo anúncio são recusadas.
 - **Painel** (`/vendedor`): anúncios do vendedor com visitas (30 dias), contatos (data, canal e código, sem dado do comprador) e "Marcar como vendido" com a pergunta "Vendeu para alguém que chegou pelo site?" (`listings.sold_via_site`; com o código do contato, `leads.outcome`).
-- O `audit_log` aceita os atores `seller:<id>` e `public:<origem>`. O e2e limpa o vendedor de teste e os pedidos de remoção que criou antes de reaplicar o seed.
+- O `audit_log` aceita os atores `seller:<id>` e `public:<origem>`. O e2e limpa o vendedor de teste, as fotos e os pedidos de remoção que criou antes de reaplicar o seed.
+- **Edição pelo vendedor (6b)** (`/vendedor/anuncios/[id]`): preço, km, cor, câmbio, combustível, cidade/UF, WhatsApp, Instagram, itens e a descrição própria (`listings.seller_description`, pública, no lugar do resumo automático). Modelo, motor, versão e ano ficam com o admin. Tudo vai para o `audit_log` (`listing.seller_update`).
+- **Fotos** (só de anúncio reivindicado, com a licença aceita em `terms_acceptances`/`photo_license`): até 15 por anúncio, 10 MB por arquivo. O navegador reduz a foto antes de enviar (cada pedido fica pequeno) e a rota `POST /vendedor/anuncios/[id]/fotos` confere sessão, dono, licença e limite, depois o `sharp` gira, reduz e grava em WebP (1600 e 640 px) **sem metadados** (EXIF/GPS saem). A primeira foto é a capa (galeria na página e capa no card).
+- **Armazenamento:** Supabase Storage (bucket público `listing-photos`, criado no primeiro envio) quando `SUPABASE_SERVICE_ROLE_KEY` existe; sem a chave, só em modo de prévia fora de produção, a pasta local `.data/photos` servida por `/fotos/...`. Sem nenhum dos dois, o envio fica indisponível.
+- Consultas públicas de fotos só usam as colunas liberadas ao `anon` (ordem por `position, id`; `created_at` não é público).
+- **Planos:** só a estrutura (`lib/billing/plans.ts`: Gratuito, Destaque, Loja Pro; preços "[a definir]") e `BillingProvider` sem implementação. O admin define o plano à mão em Vendedores.
 
 ## Variáveis de ambiente
 

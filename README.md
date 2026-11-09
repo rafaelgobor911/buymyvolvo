@@ -14,7 +14,7 @@ Buscador de anúncios de Volvo à venda no Brasil. Reúne posts de venda publica
 | 3    | Conectores do Instagram                     | ✅ aprovada                |
 | 4    | Leads e WhatsApp                            | ✅ aprovada                |
 | 5    | Admin e moderação                           | ✅ aprovada                |
-| 6    | Vendedor                                    | 🔄 6a aguardando aprovação |
+| 6    | Vendedor                                    | 🔄 6b aguardando aprovação |
 | 7    | Produção                                    | ⏳                         |
 
 ## Stack

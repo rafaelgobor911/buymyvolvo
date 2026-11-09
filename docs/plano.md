@@ -266,6 +266,19 @@ Remoção sem login (com limite por aparelho e campo armadilha), login do vended
 - Login com Google: credencial OAuth no Google Cloud + provedor no Supabase (`docs/login-google.md`); teste de ponta a ponta no deploy.
 - Login com Instagram: depende do produto Instagram Login no app da Meta e da revisão.
 
-### 6b (próxima)
+### 6b (entregue)
 
-Edição dos dados pelo vendedor, fotos com licença no Supabase Storage (sem metadados/GPS), página pública do anúncio reivindicado (galeria, descrição própria) e a estrutura de planos (Gratuito, Destaque, Loja Pro) sem cobrança. Precisa da chave secreta do Supabase como segredo do ambiente.
+- **Edição pelo vendedor:** preço, km, cor, câmbio, combustível, local, contatos, itens e descrição própria (pública, no lugar do resumo automático). A identidade do carro (modelo, motor, versão, ano) continua com o admin.
+- **Fotos com licença:** até 15 por anúncio e 10 MB por arquivo (limites propostos, sem objeção). Licença de uso das fotos em rascunho para revisão jurídica; aceite registrado por versão. O servidor regrava cada foto em WebP sem metadados (a localização GPS do celular some), em dois tamanhos.
+- **Página do anúncio reivindicado:** galeria com as fotos do vendedor, descrição dele e capa nos cards da busca.
+- **Planos:** estrutura (Gratuito, Destaque, Loja Pro) sem preço e sem cobrança; o admin define o plano à mão.
+
+**Pendências da Fase 6:**
+
+- Chave secreta do Supabase (`SUPABASE_SERVICE_ROLE_KEY`) nas variáveis do ambiente e da Vercel: sem ela, as fotos só funcionam no modo de prévia (pasta local). O bucket `listing-photos` é criado no primeiro envio.
+- Login com Google (credencial no Google Cloud) e login com Instagram (app da Meta) seguem pendentes.
+- Benefícios e preços dos planos Destaque e Loja Pro; escolha do meio de pagamento (Mercado Pago, Asaas ou Stripe).
+
+## Próxima fase (Fase 7: produção)
+
+SEO (páginas por modelo/versão/UF, schema.org, sitemap), páginas legais em rascunho, analytics, revisão de desempenho e acessibilidade, deploy (Vercel + Supabase, migrations sem o seed), crons em produção e um `RUNBOOK.md`.
