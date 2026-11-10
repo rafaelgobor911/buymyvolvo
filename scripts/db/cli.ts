@@ -25,7 +25,7 @@ async function main() {
   }
 
   loadLocalEnv();
-  const url = process.env.DATABASE_URL;
+  const url = process.env.DATABASE_URL?.trim();
   // The fictitious listings never go to a real database (production, previews).
   if ((command === "seed" || command === "setup") && url && !isLocalUrl(url)) {
     throw new Error(`Refusing to load fictitious listings into ${new URL(url).hostname}.`);

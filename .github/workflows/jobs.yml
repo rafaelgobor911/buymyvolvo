@@ -69,20 +69,29 @@ jobs:
           JOBS: ${{ steps.plan.outputs.jobs }}
           DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
         run: |
+          # A pasted secret often carries a line break or spaces at the ends.
+          secret=$(printf '%s' "$CRON_SECRET" | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          if [ -z "$secret" ]; then
+            echo "::error title=CRON_SECRET vazio::Crie o segredo em Settings → Secrets and variables → Actions → Repository secrets (não em Environments nem em Variables)."
+            exit 1
+          fi
           failed=""
           for job in $JOBS; do
             url="$SITE_URL/api/cron/$job"
             [ "$DRY_RUN" = "1" ] && url="$url?dry_run=1"
             echo "::group::$job"
             code=$(curl -sS -X POST -m 295 -o response.json -w '%{http_code}' \
-              -H "Authorization: Bearer $CRON_SECRET" "$url" || echo "000")
-            # The run summary: status, counts, AI cost and alerts (no secrets).
-            jq -c '{status, stats, alerts}' response.json 2>/dev/null || head -c 500 response.json
+              -H "Authorization: Bearer $secret" "$url" || echo "000")
+            # The run summary: status, error, counts, AI cost and alerts (no secrets).
+            jq -c '{status, error, stats, alerts}' response.json 2>/dev/null || head -c 500 response.json
             echo "::endgroup::"
-            if [ "$code" != "200" ]; then
-              echo "::error title=$job::HTTP $code"
-              failed="$failed $job"
-            fi
+            case "$code" in
+              200) ;;
+              401) echo "::error title=$job::HTTP 401: o CRON_SECRET do GitHub não é igual ao da Vercel (depois de mudar na Vercel, faça um Redeploy)." ;;
+              503) echo "::error title=$job::HTTP 503: falta o CRON_SECRET nas variáveis da Vercel." ;;
+              *) echo "::error title=$job::HTTP $code: $(jq -r '.error // empty' response.json 2>/dev/null | head -c 300)" ;;
+            esac
+            if [ "$code" != "200" ]; then failed="$failed $job"; fi
           done
           if [ -n "$failed" ]; then
             echo "Failed:$failed"

@@ -1,8 +1,16 @@
 import { z } from "zod";
 
-/** Treats empty strings (e.g. `FOO=` in a .env file) as "not set". */
-const blankToUndefined = (value: unknown) =>
-  typeof value === "string" && value.trim() === "" ? undefined : value;
+import { databaseUrlProblem } from "./database-url";
+
+/**
+ * Trims every value (a pasted secret often ends with a line break) and treats
+ * empty strings (e.g. `FOO=` in a .env file) as "not set".
+ */
+const blankToUndefined = (value: unknown) => {
+  if (typeof value !== "string") return value;
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
+};
 
 const optionalString = z.preprocess(blankToUndefined, z.string().min(1).optional());
 const optionalSecret = z.preprocess(blankToUndefined, z.string().min(32).optional());
@@ -59,7 +67,16 @@ export const publicEnvSchema = z.object({
 
 export const serverEnvSchema = z.object({
   /** Postgres connection string. On Supabase, use the pooler URL (transaction mode). */
-  DATABASE_URL: optionalUrl,
+  DATABASE_URL: z.preprocess(
+    blankToUndefined,
+    z
+      .string()
+      .optional()
+      .superRefine((value, ctx) => {
+        const problem = value ? databaseUrlProblem(value) : null;
+        if (problem) ctx.addIssue({ code: "custom", message: problem });
+      }),
+  ),
   SUPABASE_SERVICE_ROLE_KEY: optionalString,
   ANTHROPIC_API_KEY: optionalString,
   ANTHROPIC_MODEL_EXTRACTION: z.preprocess(

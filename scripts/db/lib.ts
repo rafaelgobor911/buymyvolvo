@@ -7,6 +7,8 @@ import path from "node:path";
 
 import postgres from "postgres";
 
+import { databaseUrlProblem } from "../../src/lib/env/database-url";
+
 const ROOT = path.resolve(import.meta.dirname, "../..");
 const MIGRATIONS_DIR = path.join(ROOT, "supabase/migrations");
 const BOOTSTRAP_FILE = path.join(ROOT, "supabase/local/bootstrap.sql");
@@ -26,10 +28,14 @@ export function loadLocalEnv() {
   }
 }
 
-export function connect(url: string | undefined): Sql {
+export function connect(raw: string | undefined): Sql {
+  // A pasted secret often ends with a line break.
+  const url = raw?.trim();
   if (!url) {
     throw new Error("DATABASE_URL is not set. Copy .env.example to .env.local and fill it in.");
   }
+  const problem = databaseUrlProblem(url);
+  if (problem) throw new Error(`DATABASE_URL inválida: ${problem}`);
   return postgres(url, { max: 1, onnotice: () => {}, prepare: false });
 }
 

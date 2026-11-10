@@ -1,3 +1,5 @@
+import { databaseUrlProblem } from "./database-url";
+
 /**
  * Settings a Vercel production deployment must (and must not) have. Checked by
  * next.config.ts when VERCEL_ENV=production: a wrong setting fails the build
@@ -19,8 +21,11 @@ export function productionProblems(env: Record<string, string | undefined>): str
   for (const key of ["DATABASE_URL", "HASH_SALT", "CRON_SECRET", "ADMIN_EMAILS"]) {
     if (!set(key)) problems.push(`${key} is required in production.`);
   }
+  const dbProblem = set("DATABASE_URL") ? databaseUrlProblem(env.DATABASE_URL!) : null;
+  if (dbProblem) problems.push(`DATABASE_URL: ${dbProblem}`);
   for (const key of ["HASH_SALT", "CRON_SECRET"]) {
-    if (set(key) && (env[key]!.length < 32 || /not-a-secret|e2e|ci-only/i.test(env[key]!))) {
+    const value = env[key]?.trim() ?? "";
+    if (value && (value.length < 32 || /not-a-secret|e2e|ci-only/i.test(value))) {
       problems.push(`${key} must be a long random value of its own (not a test value).`);
     }
   }
