@@ -6,16 +6,16 @@ Buscador de anúncios de Volvo à venda no Brasil ([buymyvolvo.com.br](https://b
 
 ## Status
 
-| Fase | Escopo                                      | Situação                   |
-| ---- | ------------------------------------------- | -------------------------- |
-| 0    | Setup, convenções, guia da Meta             | ✅ aprovada                |
-| 1    | Taxonomia, banco, busca com dados fictícios | ✅ aprovada                |
-| 2    | Extração com IA                             | ✅ aprovada                |
-| 3    | Conectores do Instagram                     | ✅ aprovada                |
-| 4    | Leads e WhatsApp                            | ✅ aprovada                |
-| 5    | Admin e moderação                           | ✅ aprovada                |
-| 6    | Vendedor                                    | ✅ aprovada                |
-| 7    | Produção                                    | 🔄 7a aguardando aprovação |
+| Fase | Escopo                                      | Situação               |
+| ---- | ------------------------------------------- | ---------------------- |
+| 0    | Setup, convenções, guia da Meta             | ✅ aprovada            |
+| 1    | Taxonomia, banco, busca com dados fictícios | ✅ aprovada            |
+| 2    | Extração com IA                             | ✅ aprovada            |
+| 3    | Conectores do Instagram                     | ✅ aprovada            |
+| 4    | Leads e WhatsApp                            | ✅ aprovada            |
+| 5    | Admin e moderação                           | ✅ aprovada            |
+| 6    | Vendedor                                    | ✅ aprovada            |
+| 7    | Produção                                    | ✅ no ar em 10/11/2026 |
 
 ## Stack
 
