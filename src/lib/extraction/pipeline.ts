@@ -18,6 +18,7 @@ import { getEngine, getModel, getTrim } from "@/lib/taxonomy";
 import { addUsage, emptyUsage, estimateCostUsd, type TokenUsage } from "./cost";
 import { dedupeKey, isLikelySameCar } from "./dedupe";
 import { type ExtractInput, type ExtractResult, ExtractionError } from "./extract";
+import { fillLocation } from "./location";
 import { hasMinimumFields, type NormalizedListing, normalizeExtraction } from "./normalize";
 import { prefilter, type PrefilterOrigin } from "./prefilter";
 import { EXTRACTION_PROMPT_VERSION } from "./prompt";
@@ -83,6 +84,9 @@ interface RawPostRow {
   bio?: string | null;
   /** sources.type of the post's source, which sets the pre-filter's Brazil rule. */
   source_type?: string | null;
+  /** The shop's default location (admin, Fontes), used when the post does not say. */
+  default_city?: string | null;
+  default_uf?: string | null;
 }
 
 /** Pre-filter origin for a source type (null for posts without a known source). */
@@ -269,14 +273,18 @@ export async function processRawPost(
     }
 
     const publish = n.confidence >= threshold && hasMinimumFields(n);
+    const place = fillLocation(
+      { city: n.city, uf: n.uf },
+      { sourceCity: post.default_city, sourceUf: post.default_uf, phone: n.contactPhone },
+    );
     const slug = listingSlug(
       {
         modelName: getModel(n.modelId!)!.name,
         engineName: n.engineId ? getEngine(n.engineId)?.name : null,
         trimName: n.trimId ? getTrim(n.trimId)?.name : null,
         yearModel: n.yearModel,
-        city: n.city,
-        uf: n.uf,
+        city: place.city,
+        uf: place.uf,
       },
       shortId(),
     );
@@ -285,13 +293,13 @@ export async function processRawPost(
         slug, status, origin, model_id, engine_id, trim_id, version_text, year_fab, year_model,
         km, price_cents, city, uf, color, transmission, fuel, options, summary_ptbr, seller_type,
         contact_phone_e164, contact_ig_username, confidence, red_flags, first_seen_at,
-        last_seen_at, dedupe_key
+        last_seen_at, dedupe_key, uf_from_ddd
       ) values (
         ${slug}, ${publish ? "active" : "pending_review"}, 'instagram', ${n.modelId}, ${n.engineId},
         ${n.trimId}, ${n.versionText}, ${n.yearFab}, ${n.yearModel}, ${n.km}, ${n.priceCents},
-        ${n.city}, ${n.uf}, ${n.color}, ${n.transmission}, ${n.fuel}, ${n.options},
+        ${place.city}, ${place.uf}, ${n.color}, ${n.transmission}, ${n.fuel}, ${n.options},
         ${n.summary || null}, ${n.sellerType}, ${n.contactPhone}, ${n.contactIgUsername},
-        ${n.confidence}, ${n.redFlags}, ${post.posted_at ?? now}, ${now}, ${key}
+        ${n.confidence}, ${n.redFlags}, ${post.posted_at ?? now}, ${now}, ${key}, ${place.ufFromDdd}
       ) returning id`;
     await tx`
       insert into public.listing_sources (listing_id, raw_post_id, is_primary)
@@ -312,7 +320,9 @@ export async function processPendingRawPosts(
   const threshold = await publishThreshold(sql);
   const posts = await sql<RawPostRow[]>`
     select rp.id, rp.ig_media_id, rp.caption, rp.ig_username, rp.posted_at, s.type as source_type,
-      case when s.type = 'ig_business_account' then s.ig_biography end as bio
+      case when s.type = 'ig_business_account' then s.ig_biography end as bio,
+      case when s.type = 'ig_business_account' then s.default_city end as default_city,
+      case when s.type = 'ig_business_account' then s.default_uf end as default_uf
     from public.raw_posts rp
     left join public.sources s on s.id = rp.source_id
     where rp.processing_status = 'pending' and rp.gone_at is null

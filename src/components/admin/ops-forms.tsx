@@ -8,11 +8,13 @@ import {
   claimDecisionAction,
   removalAction,
   runJobAction,
+  setSourceLocationAction,
 } from "@/app/admin/(painel)/ops-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { IDLE } from "@/lib/admin/form-state";
+import { UF_CODES } from "@/lib/search/places";
 
 import { Field, FormMessage, type Option, textareaClass } from "./form-bits";
 
@@ -190,6 +192,65 @@ export function ClaimDecision({ id }: { id: string }) {
           className="h-9 rounded-xl px-3"
         >
           Recusar
+        </Button>
+      </div>
+      <FormMessage state={state} />
+    </form>
+  );
+}
+
+/** A shop's default location (city + UF), used when a post does not say where the car is. */
+export function SourceLocationForm({
+  id,
+  handle,
+  city,
+  uf,
+}: {
+  id: string;
+  handle: string;
+  city: string | null;
+  uf: string | null;
+}) {
+  const [state, formAction, pending] = useActionState(setSourceLocationAction, IDLE);
+  return (
+    <form onSubmit={submitWith(formAction)} className="flex flex-col gap-1.5">
+      <input type="hidden" name="id" value={id} />
+      <div className="flex items-center gap-1.5">
+        <label htmlFor={`loc-cidade-${id}`} className="sr-only">
+          Cidade padrão de @{handle}
+        </label>
+        <Input
+          id={`loc-cidade-${id}`}
+          name="cidade"
+          defaultValue={city ?? ""}
+          placeholder="Cidade"
+          className="h-8 w-36 rounded-lg text-sm"
+        />
+        <label htmlFor={`loc-uf-${id}`} className="sr-only">
+          UF padrão de @{handle}
+        </label>
+        <NativeSelect
+          id={`loc-uf-${id}`}
+          name="uf"
+          defaultValue={uf ?? ""}
+          className="h-8 w-20 rounded-lg text-sm"
+        >
+          <NativeSelectOption value="">UF</NativeSelectOption>
+          {UF_CODES.map((code) => (
+            <NativeSelectOption key={code} value={code}>
+              {code}
+            </NativeSelectOption>
+          ))}
+        </NativeSelect>
+        <Button
+          type="submit"
+          variant="outline"
+          size="sm"
+          disabled={pending}
+          className="rounded-lg"
+          aria-label={`Salvar local padrão de @${handle}`}
+        >
+          Salvar
         </Button>
       </div>
       <FormMessage state={state} />

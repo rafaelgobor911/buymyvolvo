@@ -413,6 +413,9 @@ export async function saveListing(
         version_text = ${patch.versionText}, year_fab = ${patch.yearFab},
         year_model = ${patch.yearModel}, km = ${patch.km}, price_cents = ${patch.priceCents},
         city = ${patch.city}, uf = ${patch.uf}, color = ${patch.color},
+        -- Still an estimate only while nobody typed a city or another state.
+        uf_from_ddd = coalesce(uf_from_ddd and uf is not distinct from ${patch.uf}
+          and ${patch.city}::text is null, false),
         transmission = ${patch.transmission}, fuel = ${patch.fuel},
         seller_type = ${patch.sellerType}, contact_phone_e164 = ${patch.phone},
         contact_ig_username = ${patch.igUsername}, summary_ptbr = ${patch.summary},

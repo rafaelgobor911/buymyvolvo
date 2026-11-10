@@ -65,7 +65,13 @@ test.describe("Acessibilidade: banner e áreas logadas", () => {
     test.skip(info.project.name !== "desktop", "The admin is used on desktop.");
     await page.goto("/admin/entrar");
     await page.getByRole("button", { name: "Entrar como admin de teste" }).click();
-    for (const path of ["/admin", "/admin/moderacao", "/admin/anuncios", "/admin/leads"]) {
+    for (const path of [
+      "/admin",
+      "/admin/moderacao",
+      "/admin/anuncios",
+      "/admin/leads",
+      "/admin/fontes",
+    ]) {
       await page.goto(path, { waitUntil: "networkidle" });
       expect({ path, violations: await violations(page) }).toEqual({ path, violations: [] });
     }

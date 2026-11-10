@@ -11,7 +11,12 @@ import { addBlock, confirmRemoval, rejectRemoval, removeBlock } from "@/lib/admi
 import { approveClaim, rejectClaim } from "@/lib/admin/claims";
 import { setSellerPlan } from "@/lib/admin/ops";
 import type { FormState } from "@/lib/admin/form-state";
-import { addSources, setSourceActive, type SourceType } from "@/lib/admin/sources";
+import {
+  addSources,
+  setSourceActive,
+  setSourceLocation,
+  type SourceType,
+} from "@/lib/admin/sources";
 import { db } from "@/lib/db/client";
 import { serverEnv } from "@/lib/env/server";
 import { createJobDeps, isJobName, runNamedJob } from "@/lib/jobs";
@@ -54,6 +59,28 @@ export async function toggleSourceAction(form: FormData) {
     actor: actorOf(admin),
   });
   refresh();
+}
+
+/** A shop's default location; fills the shop's listings that have none. */
+export async function setSourceLocationAction(
+  _prev: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const admin = await requireAdmin();
+  const result = await setSourceLocation(db(), {
+    id: str(form, "id"),
+    city: str(form, "cidade"),
+    uf: str(form, "uf"),
+    actor: actorOf(admin),
+  });
+  if (!result.ok) return { status: "error", message: result.error };
+  refresh();
+  return {
+    status: "saved",
+    message: result.filled
+      ? `Local salvo. ${result.filled} anúncio(s) sem local foram atualizados.`
+      : "Local salvo.",
+  };
 }
 
 /** Runs a job now (or rehearses it) within a short time budget. */

@@ -19,6 +19,14 @@ test.describe("Admin: operação", () => {
     await page.getByRole("button", { name: "Adicionar" }).click();
     await expect(page.getByText(/(Adicionadas|Já existiam): @loja_e2e\.demo/)).toBeVisible();
     await expect(page.getByText("@loja_e2e.demo", { exact: true })).toBeVisible();
+
+    // Default location of a shop (used when a post does not say where the car is).
+    await page.getByLabel("Cidade padrão de @loja_e2e.demo").fill("Vinhedo");
+    await page.getByLabel("UF padrão de @loja_e2e.demo").selectOption("SP");
+    await page.getByRole("button", { name: "Salvar local padrão de @loja_e2e.demo" }).click();
+    await expect(page.getByText(/^Local salvo\./)).toBeVisible();
+    await page.reload({ waitUntil: "networkidle" });
+    await expect(page.getByLabel("Cidade padrão de @loja_e2e.demo")).toHaveValue("Vinhedo");
   });
 
   test("jobs: ensaio pelo admin aparece no histórico", async ({ page }, info) => {

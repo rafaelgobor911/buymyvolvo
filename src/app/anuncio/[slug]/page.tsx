@@ -382,7 +382,12 @@ function FactsTable({ listing, now }: { listing: ListingDetail; now: Date }) {
     ["Câmbio", listing.transmission ? TRANSMISSION_LABELS[listing.transmission] : null],
     ["Combustível", listing.fuel ? FUEL_LABELS[listing.fuel] : null],
     ["Cor", listing.color ? listing.color[0]!.toUpperCase() + listing.color.slice(1) : null],
-    ["Local", formatPlace(listing.city, listing.uf)],
+    [
+      "Local",
+      listing.ufFromDdd && listing.uf
+        ? `${listing.uf} (estado pelo DDD do telefone)`
+        : formatPlace(listing.city, listing.uf),
+    ],
     [
       "Vendedor",
       listing.sellerName ??

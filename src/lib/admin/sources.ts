@@ -5,6 +5,7 @@
 import type postgres from "postgres";
 
 import { normalizeUsername } from "@/lib/instagram/api";
+import { isUf } from "@/lib/search/places";
 
 type Sql = postgres.Sql;
 
@@ -26,6 +27,9 @@ export interface SourceRow {
   lastError: string | null;
   consecutiveFailures: number;
   igName: string | null;
+  /** Shop accounts: location used when a post does not say where the car is. */
+  defaultCity: string | null;
+  defaultUf: string | null;
   posts: number;
   listings: number;
 }
@@ -35,6 +39,7 @@ export async function listSources(sql: Sql): Promise<SourceRow[]> {
     select s.id, s.type, s.handle, s.active, s.poll_interval_minutes as "pollIntervalMinutes",
       s.last_polled_at as "lastPolledAt", s.last_error as "lastError",
       s.consecutive_failures as "consecutiveFailures", s.ig_name as "igName",
+      s.default_city as "defaultCity", s.default_uf as "defaultUf",
       (select count(*)::int from public.raw_posts rp where rp.source_id = s.id) as posts,
       (select count(distinct ls.listing_id)::int from public.raw_posts rp
         join public.listing_sources ls on ls.raw_post_id = rp.id
@@ -129,5 +134,61 @@ export async function setSourceActive(
       values (${input.actor}, ${input.active ? "source.resume" : "source.pause"}, 'source', ${input.id},
         ${tx.json({ active: { from: row.active, to: input.active } })})`;
     return true;
+  });
+}
+
+export type SourceLocationResult = { ok: true; filled: number } | { ok: false; error: string };
+
+/**
+ * Sets (or clears) a shop's default location and fills it in on the shop's
+ * listings that have none yet, or only the state inferred from the phone's
+ * DDD. Claimed listings are the seller's: left alone. Every change is audited.
+ */
+export async function setSourceLocation(
+  sql: Sql,
+  input: { id: string; city: string; uf: string; actor: string },
+): Promise<SourceLocationResult> {
+  const city = input.city.trim().replace(/\s+/g, " ").slice(0, 80) || null;
+  const uf = input.uf.trim().toUpperCase() || null;
+  if (uf && !isUf(uf)) return { ok: false, error: "UF inválida." };
+  if (city && !uf) return { ok: false, error: "Informe a UF junto com a cidade." };
+  return sql.begin(async (tx) => {
+    const [source] = await tx<
+      { type: string; default_city: string | null; default_uf: string | null }[]
+    >`
+      select type, default_city, default_uf from public.sources where id = ${input.id} for update`;
+    if (!source || source.type !== "ig_business_account") {
+      return { ok: false as const, error: "Conta não encontrada." };
+    }
+    await tx`
+      update public.sources set default_city = ${city}, default_uf = ${uf} where id = ${input.id}`;
+    await tx`
+      insert into public.audit_log (actor, action, entity, entity_id, changes)
+      values (${input.actor}, 'source.location', 'source', ${input.id},
+        ${tx.json({
+          defaultCity: { from: source.default_city, to: city },
+          defaultUf: { from: source.default_uf, to: uf },
+        })})`;
+    if (!uf) return { ok: true as const, filled: 0 };
+    const targets = await tx<{ id: string; uf: string | null }[]>`
+      select l.id, l.uf from public.listings l
+      where l.id in (
+          select ls.listing_id from public.listing_sources ls
+          join public.raw_posts rp on rp.id = ls.raw_post_id
+          where ls.is_primary and rp.source_id = ${input.id})
+        and not l.is_claimed and l.status in ('active', 'pending_review')
+        and l.city is null and (l.uf is null or l.uf_from_ddd)
+      for update`;
+    for (const target of targets) {
+      await tx`
+        update public.listings set city = ${city}, uf = ${uf}, uf_from_ddd = false
+        where id = ${target.id}`;
+      await tx`
+        insert into public.audit_log (actor, action, entity, entity_id, changes, note)
+        values (${input.actor}, 'listing.location_fill', 'listing', ${target.id},
+          ${tx.json({ city: { from: null, to: city }, uf: { from: target.uf, to: uf } })},
+          'Local padrão da loja')`;
+    }
+    return { ok: true as const, filled: targets.length };
   });
 }

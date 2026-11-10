@@ -3,7 +3,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { AdminSkeleton, formatDateTime, PageTitle } from "@/components/admin/bits";
-import { AddSourcesForm } from "@/components/admin/ops-forms";
+import { AddSourcesForm, SourceLocationForm } from "@/components/admin/ops-forms";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/admin/auth";
@@ -31,12 +31,18 @@ const interval = (minutes: number) =>
       ? `a cada ${minutes / 60} h`
       : `a cada ${minutes} min`;
 
-function SourceTable({ rows }: { rows: SourceRow[] }) {
+function SourceTable({
+  rows,
+  withLocation = false,
+}: {
+  rows: SourceRow[];
+  withLocation?: boolean;
+}) {
   if (rows.length === 0)
     return <p className="text-sm text-muted-foreground">Nenhuma cadastrada.</p>;
   return (
     <div className="overflow-x-auto rounded-xl border border-border">
-      <table className="w-full min-w-[44rem] text-sm">
+      <table className={`w-full text-sm ${withLocation ? "min-w-[62rem]" : "min-w-[44rem]"}`}>
         <thead className="bg-muted/50 text-left text-xs text-muted-foreground">
           <tr>
             <th className="px-3 py-2 font-medium">Fonte</th>
@@ -44,6 +50,7 @@ function SourceTable({ rows }: { rows: SourceRow[] }) {
             <th className="px-3 py-2 font-medium">Última</th>
             <th className="px-3 py-2 font-medium">Posts</th>
             <th className="px-3 py-2 font-medium">No ar</th>
+            {withLocation && <th className="px-3 py-2 font-medium">Local padrão</th>}
             <th className="px-3 py-2 font-medium" />
           </tr>
         </thead>
@@ -74,6 +81,16 @@ function SourceTable({ rows }: { rows: SourceRow[] }) {
               </td>
               <td className="px-3 py-2 tabular-nums">{s.posts}</td>
               <td className="px-3 py-2 tabular-nums">{s.listings}</td>
+              {withLocation && (
+                <td className="px-3 py-2">
+                  <SourceLocationForm
+                    id={s.id}
+                    handle={s.handle}
+                    city={s.defaultCity}
+                    uf={s.defaultUf}
+                  />
+                </td>
+              )}
               <td className="px-3 py-2 text-right">
                 <form action={toggleSourceAction}>
                   <input type="hidden" name="id" value={s.id} />
@@ -105,7 +122,11 @@ async function SourcesView() {
         <h2 id="contas" className="text-lg font-semibold">
           Contas de lojas ({accounts.length})
         </h2>
-        <SourceTable rows={accounts} />
+        <p className="text-sm text-muted-foreground">
+          Local padrão: vale para os posts da loja que não dizem onde o carro está (e preenche os
+          anúncios dela que estão sem local). Sem ele, o site usa só o estado do DDD do telefone.
+        </p>
+        <SourceTable rows={accounts} withLocation />
       </section>
       <section aria-labelledby="hashtags" className="flex flex-col gap-3">
         <h2 id="hashtags" className="text-lg font-semibold">

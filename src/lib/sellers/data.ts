@@ -344,6 +344,8 @@ export async function updateSellerListing(
       update public.listings set
         price_cents = ${e.priceCents}, km = ${e.km}, color = ${e.color},
         transmission = ${e.transmission}, fuel = ${e.fuel}, city = ${e.city}, uf = ${e.uf},
+        uf_from_ddd = coalesce(uf_from_ddd and uf is not distinct from ${e.uf}
+          and ${e.city}::text is null, false),
         contact_phone_e164 = ${e.phone}, contact_ig_username = ${e.igUsername},
         seller_description = ${e.description}, options = ${e.options}
       where id = ${input.listingId} and seller_id = ${input.sellerId}`;

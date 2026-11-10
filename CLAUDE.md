@@ -120,6 +120,7 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 - Mudou o prompt ou a normalização? Rode os dois gabaritos (`npm run extract:eval` e `-- --set=real`) e compare. O gabarito real nunca é editado para "passar".
 - **Repasse e ágio vêm do texto:** `writtenSaleType()` (normalize.ts) decide os alertas `repasse` e `agio` pelas palavras da legenda, ignorando negações ("não é repasse"); o que o modelo sugerir sem apoio no texto sai. Repasse ou ágio com `pedido_de_sinal` vai para moderação.
 - Um anúncio `removed` nunca volta: uma repostagem do mesmo carro é ignorada.
+- **Local quando o post não diz** (`extraction/location.ts`, aplicado no pipeline depois da normalização): post/bio > **local padrão da loja** (`sources.default_city/default_uf`, definido em Fontes) > **estado pelo DDD** do telefone (`UF_BY_DDD`, nunca a cidade; `listings.uf_from_ddd`, e a página diz "estado pelo DDD do telefone"). A função SQL `public.uf_from_phone()` espelha o mapa (há teste). Salvar o local da loja preenche os anúncios dela sem local (ou só com o estado do DDD), com `audit_log` (`listing.location_fill`); edição manual de cidade/UF tira a marca de estimativa.
 
 ## Coleta do Instagram (Fase 3)
 
@@ -154,7 +155,7 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 - Aprovar exige ano-modelo e preço ou contato (a mesma regra do banco). Anúncio ainda em moderação ganha slug novo com os dados corrigidos (mesmo `short_id`); anúncio publicado mantém o slug.
 - Formulários: `useActionState` com envio por `startTransition` (o React não limpa os campos quando o servidor devolve erro). Telefone já gravado é mantido mesmo com DDD fictício; telefone novo precisa ser válido.
 - Atalhos da moderação: A aprova, S salva, R vai ao motivo da rejeição, J/K próximo/anterior, Ctrl+Enter aprova de dentro de um campo.
-- **Operação (5b):** Fontes (contas e hashtags; fontes `.demo`/`_demo` só rodam com `--fixtures`; hashtag nova gasta uma vaga na primeira leitura), Leads, Jobs ("rodar agora" com ensaio e 45 s de orçamento), Remoções, Blocklist e Vendedores (só leitura até a Fase 6).
+- **Operação (5b):** Fontes (contas e hashtags, com o local padrão de cada loja; fontes `.demo`/`_demo` só rodam com `--fixtures`; hashtag nova gasta uma vaga na primeira leitura), Leads, Jobs ("rodar agora" com ensaio e 45 s de orçamento), Remoções, Blocklist e Vendedores (só leitura até a Fase 6).
 - **Visitas:** a página do anúncio soma `listing_views_daily` com `after()` (só contador por dia, sem dado do visitante; robôs e prefetch fora). Taxa de contato = leads ÷ visitas. O CSV de leads usa `;` + BOM (Excel em PT-BR), não traz hash de IP/UA e a exportação vai para o `audit_log`.
 - **Remoção:** confirmar o pedido põe telefone, @ e posts do anúncio na blocklist (`blockListingContacts`); recusar devolve o anúncio ao ar. Mudar o status para "removido" no admin oferece o mesmo bloqueio.
 - **Legenda editada:** o `process-posts` re-extrai uma vez cada legenda editada (`raw_posts.reprocessed_at`) de anúncios não reivindicados no ar ou em moderação, e atualiza preço e km; os valores anteriores ficam no `audit_log` (`listing.caption_update`).

@@ -78,6 +78,8 @@ export interface ListingDetail extends ListingCard {
   possiblyUnavailable: boolean;
   /** The seller's own description (claimed listings), shown instead of the automatic summary. */
   sellerDescription: string | null;
+  /** Only the state is known, inferred from the phone's area code. */
+  ufFromDdd: boolean;
   /** The seller's licensed photos, in order (claimed listings only). */
   photos: ListingPhoto[];
 }
@@ -259,11 +261,12 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
         source_username: string | null;
         possibly_unavailable: boolean;
         seller_description: string | null;
+        uf_from_ddd: boolean;
       })[]
     >`
       select ${CARD_COLUMNS(tx)}, l.engine_id, l.trim_id, l.color, l.options, l.summary_ptbr,
         l.last_seen_at, l.expires_at, l.sold_at, l.contact_ig_username, l.short_id, l.has_phone,
-        l.seller_description,
+        l.seller_description, l.uf_from_ddd,
         s.display_name as seller_name, src.permalink as source_permalink, src.ig_username as source_username,
         (l.status = 'active' and l.origin = 'instagram'
           and l.first_seen_at < now() - make_interval(days => ${staleDays})
@@ -298,6 +301,7 @@ export async function getListingBySlug(slug: string): Promise<ListingDetail | nu
     return {
       ...toCard(row),
       sellerDescription: row.seller_description,
+      ufFromDdd: row.uf_from_ddd,
       photos,
       engineId: row.engine_id,
       trimId: row.trim_id,
