@@ -1,7 +1,8 @@
 /**
  * Cron entry point: GET or POST /api/cron/<job> with
  * `Authorization: Bearer <CRON_SECRET>` (the header Vercel Cron sends).
- * `?dry_run=1` runs without keeping any write. Each job is idempotent and
+ * `?dry_run=1` runs without keeping any write; `?retry_errors=1` (process-posts)
+ * first puts posts whose extraction failed back in the queue. Each job is idempotent and
  * holds a lease lock, so overlapping triggers are harmless.
  */
 import { timingSafeEqual } from "node:crypto";
@@ -29,9 +30,15 @@ async function handle(request: Request, ctx: RouteContext<"/api/cron/[job]">) {
   const { job } = await ctx.params;
   if (!isJobName(job)) return Response.json({ error: "Job desconhecido." }, { status: 404 });
 
-  const dryRun = new URL(request.url).searchParams.get("dry_run") === "1";
+  const query = new URL(request.url).searchParams;
+  const dryRun = query.get("dry_run") === "1";
+  const retryErrors = query.get("retry_errors") === "1";
   // Leave room under maxDuration: sources not reached stay due for the next call.
-  const run = await runNamedJob(db(), job, createJobDeps(env), { dryRun, maxSeconds: 240 });
+  const run = await runNamedJob(db(), job, createJobDeps(env), {
+    dryRun,
+    retryErrors,
+    maxSeconds: 240,
+  });
   return Response.json(run, { status: run.status === "failed" ? 500 : 200 });
 }
 

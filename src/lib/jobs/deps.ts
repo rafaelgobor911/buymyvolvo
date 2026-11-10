@@ -19,6 +19,8 @@ export interface JobOptions {
   only?: string[];
   /** Max raw_posts per process-posts run. */
   limit?: number;
+  /** process-posts: first put posts whose extraction failed back in the queue. */
+  retryErrors?: boolean;
   /**
    * Time budget for collection jobs: after it, no new source is started (at
    * least one always runs) and the rest stay due for the next trigger.

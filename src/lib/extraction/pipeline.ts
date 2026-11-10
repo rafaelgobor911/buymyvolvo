@@ -44,6 +44,33 @@ export interface PipelineStats {
   outcomes: Record<PipelineOutcome, number>;
   usage: TokenUsage;
   costUsd: number;
+  /** Distinct extraction errors (first few), for the job alert. */
+  errorMessages: string[];
+}
+
+/** An error message safe to show (no API keys), short. */
+export const publicErrorMessage = (message: string) =>
+  message
+    .replace(/sk-ant-[\w-]+/g, "sk-ant-…")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 300);
+
+/**
+ * Puts posts whose extraction failed (missing or invalid API key, outage)
+ * back in the queue, once the cause is fixed. Only recent ones, still on
+ * Instagram. Returns how many.
+ */
+export async function requeueFailedRawPosts(
+  sql: postgres.Sql,
+  options: { days?: number } = {},
+): Promise<number> {
+  const rows = await sql`
+    update public.raw_posts set processing_status = 'pending', error = null
+    where processing_status = 'error' and gone_at is null
+      and fetched_at > now() - make_interval(days => ${options.days ?? 14})
+    returning id`;
+  return rows.length;
 }
 
 interface RawPostRow {
@@ -160,7 +187,7 @@ export async function processRawPost(
   post: RawPostRow,
   deps: PipelineDeps,
   threshold: number,
-): Promise<{ outcome: PipelineOutcome; usage: TokenUsage; model?: string }> {
+): Promise<{ outcome: PipelineOutcome; usage: TokenUsage; model?: string; error?: string }> {
   const now = deps.now?.() ?? new Date();
   const caption = post.caption ?? "";
   const username = post.ig_username?.toLowerCase() ?? null;
@@ -199,7 +226,7 @@ export async function processRawPost(
       undefined,
       message.slice(0, 500),
     );
-    return { outcome: "error", usage };
+    return { outcome: "error", usage, error: message };
   }
 
   const n = normalizeExtraction(result.output, {
@@ -306,11 +333,18 @@ export async function processPendingRawPosts(
     },
     usage: emptyUsage(),
     costUsd: 0,
+    errorMessages: [],
   };
   for (const post of posts) {
-    const { outcome, usage, model } = await processRawPost(sql, post, deps, threshold);
+    const { outcome, usage, model, error } = await processRawPost(sql, post, deps, threshold);
     stats.processed++;
     stats.outcomes[outcome]++;
+    if (error) {
+      const text = publicErrorMessage(error);
+      if (stats.errorMessages.length < 3 && !stats.errorMessages.includes(text)) {
+        stats.errorMessages.push(text);
+      }
+    }
     stats.usage = addUsage(stats.usage, usage);
     stats.costUsd += (model && estimateCostUsd(model, usage)) || 0;
   }

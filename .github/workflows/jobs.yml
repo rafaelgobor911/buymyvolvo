@@ -35,6 +35,10 @@ on:
         description: "Ensaio (não grava nada)"
         type: boolean
         default: false
+      retry_errors:
+        description: "process-posts: reprocessar os posts que deram erro na extração"
+        type: boolean
+        default: false
 
 concurrency:
   group: scheduled-jobs
@@ -68,6 +72,7 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           JOBS: ${{ steps.plan.outputs.jobs }}
           DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          RETRY_ERRORS: ${{ inputs.retry_errors && '1' || '0' }}
         run: |
           # A pasted secret often carries a line break or spaces at the ends.
           secret=$(printf '%s' "$CRON_SECRET" | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
@@ -78,7 +83,12 @@ jobs:
           failed=""
           for job in $JOBS; do
             url="$SITE_URL/api/cron/$job"
-            [ "$DRY_RUN" = "1" ] && url="$url?dry_run=1"
+            params=""
+            if [ "$DRY_RUN" = "1" ]; then params="dry_run=1"; fi
+            if [ "$RETRY_ERRORS" = "1" ] && [ "$job" = "process-posts" ]; then
+              params="${params:+$params&}retry_errors=1"
+            fi
+            if [ -n "$params" ]; then url="$url?$params"; fi
             echo "::group::$job"
             code=$(curl -sS -X POST -m 295 -o response.json -w '%{http_code}' \
               -H "Authorization: Bearer $secret" "$url" || echo "000")

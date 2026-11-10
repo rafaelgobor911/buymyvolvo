@@ -56,6 +56,7 @@ describe("pasted values with spaces or line breaks", () => {
         HASH_SALT: "a".repeat(48),
         CRON_SECRET: `${"b".repeat(48)}\n`,
         ADMIN_EMAILS: "dono@example.com",
+        ANTHROPIC_API_KEY: "sk-ant-test",
       }),
     ).toEqual(["DATABASE_URL: remova as aspas do começo e do fim do valor."]);
   });

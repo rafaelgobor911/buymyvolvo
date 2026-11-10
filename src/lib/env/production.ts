@@ -18,7 +18,14 @@ export function productionProblems(env: Record<string, string | undefined>): str
   for (const key of ["ADMIN_TEST_LOGIN_EMAIL", "SELLER_TEST_LOGIN_EMAIL"]) {
     if (set(key)) problems.push(`${key} must not be set in production.`);
   }
-  for (const key of ["DATABASE_URL", "HASH_SALT", "CRON_SECRET", "ADMIN_EMAILS"]) {
+  for (const key of [
+    "DATABASE_URL",
+    "HASH_SALT",
+    "CRON_SECRET",
+    "ADMIN_EMAILS",
+    // Without it, every post that reaches extraction fails (process-posts).
+    "ANTHROPIC_API_KEY",
+  ]) {
     if (!set(key)) problems.push(`${key} is required in production.`);
   }
   const dbProblem = set("DATABASE_URL") ? databaseUrlProblem(env.DATABASE_URL!) : null;

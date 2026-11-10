@@ -6,6 +6,7 @@
 import {
   prefilterOrigin,
   processPendingRawPosts,
+  requeueFailedRawPosts,
   reprocessEditedCaptions,
 } from "@/lib/extraction/pipeline";
 import { addUsage } from "@/lib/extraction/cost";
@@ -44,11 +45,22 @@ async function processPosts(
         and (rp.reprocessed_at is null or rp.reprocessed_at < rp.caption_changed_at)
         and rp.processing_status = 'extracted' and rp.gone_at is null
         and l.status in ('active', 'pending_review') and not l.is_claimed`;
+    const [failed] = await ctx.sql<{ n: number }[]>`
+      select count(*)::int as n from public.raw_posts
+      where processing_status = 'error' and gone_at is null
+        and fetched_at > now() - interval '14 days'`;
     return {
-      stats: { pending: pending.length, wouldExtract: toExtract, editedCaptions: edited?.n ?? 0 },
+      stats: {
+        pending: pending.length,
+        wouldExtract: toExtract,
+        editedCaptions: edited?.n ?? 0,
+        failedRetryable: failed?.n ?? 0,
+      },
     };
   }
   const pipelineDeps = { extract: deps.extract(), now: () => ctx.now };
+  // Like the pipeline itself, this writes directly (process-posts never runs as a dry run here).
+  const requeued = options.retryErrors ? await requeueFailedRawPosts(ctx.sql) : 0;
   const result = await processPendingRawPosts(ctx.sql, pipelineDeps, { limit });
   // Captions edited after extraction: price and km follow the post (history in audit_log).
   const edits = await reprocessEditedCaptions(ctx.sql, pipelineDeps, {
@@ -56,10 +68,17 @@ async function processPosts(
   });
   const u = addUsage(result.usage, edits.usage);
   const worked = result.processed + edits.checked;
+  const alerts = result.outcomes.error
+    ? [
+        `${result.outcomes.error} post(s) com erro na extração (ficam fora do site até reprocessar): ${result.errorMessages.join(" | ")}`,
+      ]
+    : [];
   return {
     status: worked ? "succeeded" : "skipped",
+    alerts,
     stats: {
       processed: result.processed,
+      ...(options.retryErrors ? { requeued } : {}),
       ...result.outcomes,
       ...(edits.checked
         ? {

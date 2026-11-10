@@ -3,7 +3,11 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { emptyUsage } from "@/lib/extraction/cost";
 import { type ExtractInput, ExtractionError, type ExtractResult } from "@/lib/extraction/extract";
-import { processPendingRawPosts, reprocessEditedCaptions } from "@/lib/extraction/pipeline";
+import {
+  processPendingRawPosts,
+  reprocessEditedCaptions,
+  requeueFailedRawPosts,
+} from "@/lib/extraction/pipeline";
 import type { Extraction } from "@/lib/extraction/schema";
 
 const url = process.env.TEST_DATABASE_URL;
@@ -63,6 +67,15 @@ const ANSWERS: Record<string, Extraction | "error"> = {
     price_text: "R$ 145.000",
     fuel: "gasolina",
     phones: ["(41) 90000-0103"],
+  },
+  "[k]": {
+    ...base,
+    model: "XC90",
+    year_fab: 2021,
+    year_model: 2021,
+    price: 300000,
+    price_text: "R$ 300.000",
+    phones: ["(41) 90000-0105"],
   },
   // The seller edited the caption of [a]: new price and km.
   "[r]": { ...base, price: 229900, price_text: "R$ 229.900", km: 42000, km_text: "42.000 km" },
@@ -259,5 +272,26 @@ describe.skipIf(!url)("extraction pipeline (database)", () => {
     });
     // The same edit is not processed twice.
     expect((await reprocessEditedCaptions(sql, { extract, now: () => NOW })).checked).toBe(0);
+  });
+
+  it("a failed extraction shows its message (no API key) and can go back to the queue", async () => {
+    await addPost("test-k", "[k] Vendo Volvo XC90 T8 2021, R$ 300.000. (41) 90000-0105");
+    const failing = vi.fn(async (): Promise<ExtractResult> => {
+      throw new Error('401 {"error": "invalid x-api-key sk-ant-api03-NOT-A-REAL-KEY"}');
+    });
+    const failed = await processPendingRawPosts(sql, { extract: failing, now: () => NOW });
+    expect(failed.outcomes.error).toBe(1);
+    expect(failed.errorMessages).toEqual(['401 {"error": "invalid x-api-key sk-ant-…"}']);
+    expect(await statusOf("test-k")).toBe("error");
+
+    // The key is fixed: test-k (and test-d, which failed in the first test) go back.
+    expect(await requeueFailedRawPosts(sql)).toBe(2);
+    expect(await statusOf("test-k")).toBe("pending");
+    const retried = await processPendingRawPosts(sql, { extract, now: () => NOW });
+    expect(retried.processed).toBe(2);
+    expect(await statusOf("test-k")).toBe("extracted");
+    expect((await listingOf("test-k"))?.status).toBe("active");
+    // test-d still fails with the stub: back to "error", never published.
+    expect(await statusOf("test-d")).toBe("error");
   });
 });

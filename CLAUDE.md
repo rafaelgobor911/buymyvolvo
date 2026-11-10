@@ -107,7 +107,7 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 
 ## Extração (Fase 2)
 
-- Ordem do pipeline (`src/lib/extraction/pipeline.ts`): blocklist → pré-filtro (regex, sem IA) → Claude → normalização e coerência → blocklist do telefone → deduplicação → publica (`confidence ≥ publish_confidence_threshold` e campos mínimos) ou manda para moderação. Cada `raw_post` sai de `pending` uma única vez.
+- Ordem do pipeline (`src/lib/extraction/pipeline.ts`): blocklist → pré-filtro (regex, sem IA) → Claude → normalização e coerência → blocklist do telefone → deduplicação → publica (`confidence ≥ publish_confidence_threshold` e campos mínimos) ou manda para moderação. Cada `raw_post` sai de `pending` uma única vez; a exceção é o reprocessamento explícito dos que deram **erro** na extração (`requeueFailedRawPosts`: `?retry_errors=1` na rota, `--retry-errors` no CLI ou a opção do workflow), depois de corrigir a causa. O alerta do `process-posts` mostra as mensagens de erro (sem chaves).
 - A normalização é a fonte da verdade: re-lê preço/km dos trechos originais (`price_text`, `km_text`), casa a taxonomia, valida telefone (E.164, DDD válido) e **reduz a confiança** em combinações impossíveis ou não vendidas no Brasil.
 - O resumo precisa ser em palavras próprias: se repetir 8 palavras seguidas da legenda, a confiança cai e o anúncio vai para moderação.
 - O resumo é público (página e meta description) e o telefone não: frases que só dizem como contatar saem; telefone, @ ou link no resumo mandam para moderação; preço no resumo reduz a confiança.

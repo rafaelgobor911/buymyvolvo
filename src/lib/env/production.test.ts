@@ -9,6 +9,7 @@ const good = {
   HASH_SALT: "a".repeat(48),
   CRON_SECRET: "b".repeat(48),
   ADMIN_EMAILS: "dono@example.com",
+  ANTHROPIC_API_KEY: "sk-ant-test",
 };
 
 describe("productionProblems", () => {
