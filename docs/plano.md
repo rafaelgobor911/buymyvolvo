@@ -323,3 +323,24 @@ Decidido em 09/11/2026: nome **Buy My Volvo** e domínio **buymyvolvo.com.br**; 
   - Search Console (enviar o sitemap).
 - **Testes de fumaça** no site publicado, incluindo o WhatsApp num celular real e o login por link.
 - **Plano da Vercel:** os termos limitam o Hobby a uso não comercial. Ao monetizar (anúncios, planos ou comissão), passar para o Pro.
+
+### 7b (no ar desde 09–10/11/2026)
+
+- **Infraestrutura:**
+  - Vercel (Hobby, `iad1`, mesma região do Supabase em `us-east-1`) com o domínio `buymyvolvo.com.br`. O DNS fica na Hostinger e o `www` aponta para o mesmo site, com canonical no domínio sem `www`.
+  - Supabase com as 14 migrations aplicadas pelo workflow e login com Google funcionando.
+  - GitHub Actions chamando os jobs de hora em hora.
+- **Primeira coleta:** 7 lojas e 19 hashtags. No dia seguinte já eram 30 anúncios ativos e 1 vendido, detectado automaticamente pela legenda.
+- **Problemas do lançamento e o que mudou:**
+  - Segredos colados com quebra de linha, `CRON_SECRET` criado em Environments e URL do banco malformada: agora os valores são aparados, a URL do banco é validada com mensagem clara e o workflow diz onde criar o segredo (`a810f94`).
+  - A Meta bloqueou o app por "movimentação suspeita" na conta do Facebook ("API access blocked"). Resolvido pelo dono do produto com a verificação da conta; está no `RUNBOOK.md`.
+  - A chave antiga da Anthropic fazia a extração falhar sem mensagem visível. Agora o job mostra o erro, os posts com erro podem ser reprocessados e o build de produção exige `ANTHROPIC_API_KEY` (`76eec4f`).
+- **Local dos anúncios (decidido em 10/11):** quando o post não diz onde está o carro, vale o **local padrão da loja** (definido em Fontes) e, na falta dele, o **estado pelo DDD** do telefone, mostrado como estimativa (`5cc6cd4`). Na migração, 12 anúncios ganharam o estado pelo DDD.
+
+**Pendências da 7b:**
+
+- **Google Analytics** (`NEXT_PUBLIC_GA_MEASUREMENT_ID` + Redeploy) e **Search Console** (registro TXT na Hostinger + sitemap).
+- Redirecionar o `www` na Vercel (opcional).
+- Local padrão das lojas sem cidade na bio (webcarsbrasil, nattamotors, consultingcars, safetycarmotors).
+- Teste no celular: clique no WhatsApp de um anúncio real e o lead em `/admin/leads`.
+- SMTP próprio para o login dos vendedores por link (pode ser depois do lançamento).
