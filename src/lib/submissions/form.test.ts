@@ -24,6 +24,8 @@ const valid = {
   nome: "Maria Exemplo",
   whatsapp: "(41) 99999-0000",
   email: "",
+  cpf: "987.654.321-00",
+  cnpj: "",
   termos: "on",
 };
 
@@ -62,6 +64,8 @@ describe("parsePublicListingForm", () => {
         name: "Maria Exemplo",
         phone: "+5541999990000",
         email: null,
+        cpf: "98765432100",
+        cnpj: null,
       },
     });
   });
@@ -129,5 +133,23 @@ describe("parsePublicListingForm", () => {
     ]) {
       expect(parsePublicListingForm({ ...valid, descricao }, NOW)).toMatchObject({ ok: false });
     }
+  });
+
+  it("checks the CPF (always) and the CNPJ (shops, when given) by their digits", () => {
+    expect(parsePublicListingForm({ ...valid, cpf: "987.654.321-01" }, NOW)).toMatchObject({
+      ok: false,
+      errors: { cpf: "CPF inválido: confira os números." },
+    });
+    expect(
+      parsePublicListingForm({ ...valid, tipo: "loja", cnpj: "11.222.333/0001-82" }, NOW),
+    ).toMatchObject({ ok: false, errors: { cnpj: "CNPJ inválido: confira os números e letras." } });
+    expect(
+      parsePublicListingForm({ ...valid, tipo: "loja", cnpj: "12.ABC.345/01DE-35" }, NOW),
+    ).toMatchObject({ ok: true, listing: { cnpj: "12ABC34501DE35" } });
+    // A CNPJ typed by a private seller is ignored.
+    expect(parsePublicListingForm({ ...valid, cnpj: "11.222.333/0001-81" }, NOW)).toMatchObject({
+      ok: true,
+      listing: { cnpj: null },
+    });
   });
 });

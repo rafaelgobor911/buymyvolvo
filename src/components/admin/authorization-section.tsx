@@ -12,6 +12,7 @@ import {
 } from "@/lib/authorization/messages";
 import { db } from "@/lib/db/client";
 import { requireKeys, serverEnv } from "@/lib/env/server";
+import { formatCnpj, formatCpf } from "@/lib/identity/document";
 import { instagramUrl, isFictitiousPhone, whatsappUrl } from "@/lib/leads/contact";
 import { site } from "@/lib/site";
 import { getEngine, getModel, getTrim } from "@/lib/taxonomy";
@@ -88,6 +89,8 @@ export async function AuthorizationSection({
                     type: outreach.seller.type,
                     phone: outreach.seller.phone,
                     email: outreach.seller.email,
+                    cpf: outreach.seller.cpf ? formatCpf(outreach.seller.cpf) : null,
+                    cnpj: outreach.seller.cnpj ? formatCnpj(outreach.seller.cnpj) : null,
                   }
                 : null,
               commission: formatCommission(outreach.commissionCents),

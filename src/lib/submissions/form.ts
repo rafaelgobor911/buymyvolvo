@@ -5,6 +5,7 @@
  */
 import { parseBRNumber } from "@/lib/admin/listing-form";
 import { extractPhones, normalizePhoneBR } from "@/lib/extraction/normalize";
+import { parseCnpj, parseCpf } from "@/lib/identity/document";
 import { UFS } from "@/lib/search/places";
 import {
   enginesForSelect,
@@ -83,6 +84,9 @@ export interface PublicListing {
   name: string;
   phone: string;
   email: string | null;
+  /** CPF of the seller (for shops, of the person responsible). */
+  cpf: string;
+  cnpj: string | null;
 }
 
 export type PublicFormField = keyof PublicListing | "terms";
@@ -168,6 +172,12 @@ export function parsePublicListingForm(
   if (!phone) errors.phone = "Informe um WhatsApp válido, com DDD.";
   const email = text(input, "email")?.toLowerCase() ?? null;
   if (email && !EMAIL.test(email)) errors.email = "E-mail inválido.";
+  const cpf = parseCpf(input.cpf);
+  if (!cpf) errors.cpf = "CPF inválido: confira os números.";
+  const cnpjRaw = text(input, "cnpj", 20);
+  const cnpj = sellerType === "loja" && cnpjRaw ? parseCnpj(cnpjRaw) : null;
+  if (sellerType === "loja" && cnpjRaw && !cnpj)
+    errors.cnpj = "CNPJ inválido: confira os números e letras.";
   if (input.termos !== "on") errors.terms = "Para anunciar, aceite os Termos do Anunciante.";
 
   if (Object.keys(errors).length) return { ok: false, errors };
@@ -197,6 +207,8 @@ export function parsePublicListingForm(
       name: name!,
       phone: phone!,
       email,
+      cpf: cpf!,
+      cnpj,
     },
   };
 }

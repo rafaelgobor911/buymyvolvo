@@ -7,6 +7,7 @@ import { startTransition, useActionState, useEffect, useMemo, useState } from "r
 
 import { type PublicFormState, submitListingAction } from "@/app/anunciar/actions";
 import { Field, FormMessage, textareaClass } from "@/components/admin/form-bits";
+import { DocumentInput } from "@/components/document-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
@@ -407,6 +408,24 @@ export function PublicListingForm({
               aria-invalid={error("phone") ? true : undefined}
             />
           </Field>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <DocumentInput
+            id="p-cpf"
+            name="cpf"
+            kind="cpf"
+            label="Seu CPF"
+            hint="Se for loja, o CPF do responsável. Só para identificar quem anuncia."
+            required
+            serverError={error("cpf")}
+          />
+          <DocumentInput
+            id="p-cnpj"
+            name="cnpj"
+            kind="cnpj"
+            label="CNPJ da loja (opcional)"
+            serverError={error("cnpj")}
+          />
         </div>
         <Field
           id="p-email"

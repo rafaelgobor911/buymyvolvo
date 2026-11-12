@@ -11,6 +11,7 @@ import type postgres from "postgres";
 
 import { SELLER_TERMS_VERSION } from "@/content/seller-terms";
 import { normalizePhoneBR } from "@/lib/extraction/normalize";
+import { parseCnpj, parseCpf } from "@/lib/identity/document";
 
 import {
   inviteCode,
@@ -46,6 +47,8 @@ export interface Outreach {
     type: string;
     phone: string | null;
     email: string | null;
+    cpf: string | null;
+    cnpj: string | null;
   } | null;
 }
 
@@ -72,11 +75,13 @@ export async function getOutreach(sql: Sql, listingId: string): Promise<Outreach
       seller_type: string | null;
       phone_e164: string | null;
       email: string | null;
+      cpf: string | null;
+      cnpj: string | null;
     }[]
   >`
     select o.status, o.invited_at, o.invited_by, o.responded_at, o.decline_reason,
       o.commission_cents, o.terms_version, s.id as seller_id, s.display_name,
-      s.type as seller_type, s.phone_e164, s.email
+      s.type as seller_type, s.phone_e164, s.email, s.cpf, s.cnpj
     from public.listing_outreach o
     left join public.sellers s on s.id = o.seller_id
     where o.listing_id = ${listingId}`;
@@ -107,6 +112,8 @@ export async function getOutreach(sql: Sql, listingId: string): Promise<Outreach
           type: row.seller_type!,
           phone: row.phone_e164,
           email: row.email,
+          cpf: row.cpf,
+          cnpj: row.cnpj,
         }
       : null,
   };
@@ -408,23 +415,34 @@ export interface AcceptForm {
   type: string;
   phone: string;
   email: string;
+  cpf: string;
+  cnpj: string;
   terms: boolean;
   /** Ids of the seller's other listings also authorized (from the page's list). */
   alsoIds: string[];
 }
 
 export type AcceptErrors = Partial<
-  Record<"name" | "type" | "phone" | "email" | "terms" | "form", string>
+  Record<"name" | "type" | "phone" | "email" | "cpf" | "cnpj" | "terms" | "form", string>
 >;
 
 export type AcceptResult = { ok: true; authorized: number } | { ok: false; errors: AcceptErrors };
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function parseAcceptForm(
-  form: AcceptForm,
-):
-  | { ok: true; name: string; type: "loja" | "particular"; phone: string; email: string | null }
+export const CPF_ERROR = "CPF inválido: confira os números.";
+export const CNPJ_ERROR = "CNPJ inválido: confira os números e letras.";
+
+export function parseAcceptForm(form: AcceptForm):
+  | {
+      ok: true;
+      name: string;
+      type: "loja" | "particular";
+      phone: string;
+      email: string | null;
+      cpf: string;
+      cnpj: string | null;
+    }
   | { ok: false; errors: AcceptErrors } {
   const errors: AcceptErrors = {};
   const name = form.name.trim().replace(/\s+/g, " ");
@@ -435,34 +453,48 @@ export function parseAcceptForm(
   if (!phone) errors.phone = "Informe um WhatsApp válido, com DDD.";
   const email = form.email.trim().toLowerCase();
   if (email && (email.length > 120 || !EMAIL.test(email))) errors.email = "E-mail inválido.";
+  const cpf = parseCpf(form.cpf);
+  if (!cpf) errors.cpf = CPF_ERROR;
+  const cnpj = type === "loja" && form.cnpj.trim() ? parseCnpj(form.cnpj) : null;
+  if (type === "loja" && form.cnpj.trim() && !cnpj) errors.cnpj = CNPJ_ERROR;
   if (!form.terms) errors.terms = "Para autorizar, aceite os Termos do Anunciante.";
   if (Object.keys(errors).length) return { ok: false, errors };
-  return { ok: true, name, type: type!, phone: phone!, email: email || null };
+  return { ok: true, name, type: type!, phone: phone!, email: email || null, cpf: cpf!, cnpj };
 }
 
 /**
- * The seller who authorizes (invite page or public form), found by the
- * WhatsApp number or created. `via` is set only when the contact was proven
- * (the invite went to the number published in the listing); the public form
- * does not prove it, and the admin confirms by WhatsApp before approving.
+ * The seller who authorizes (invite page or public form): found by the CPF,
+ * then by the WhatsApp number (when that seller has no other CPF), or
+ * created. `via` is set only when the contact was proven (the invite went to
+ * the number published in the listing); the public form does not prove it,
+ * and the admin confirms by WhatsApp before approving.
  */
-export async function upsertSellerByPhone(
+export async function upsertSeller(
   tx: Tx,
   input: {
     name: string;
     type: "loja" | "particular";
     phone: string;
     email: string | null;
+    cpf: string;
+    cnpj: string | null;
     via: "invite_link" | null;
     now: Date;
   },
 ): Promise<string> {
-  const [existing] = await tx<{ id: string }[]>`
-    select id from public.sellers where phone_e164 = ${input.phone}
-    order by created_at limit 1 for update`;
+  const [byCpf] = await tx<{ id: string }[]>`
+    select id from public.sellers where cpf = ${input.cpf} for update`;
+  const [byPhone] = byCpf
+    ? [byCpf]
+    : await tx<{ id: string }[]>`
+        select id from public.sellers where phone_e164 = ${input.phone} and cpf is null
+        order by created_at limit 1 for update`;
+  const existing = byCpf ?? byPhone;
   if (existing) {
     await tx`
       update public.sellers set
+        cpf = ${input.cpf}, cnpj = coalesce(${input.cnpj}, cnpj),
+        phone_e164 = coalesce(phone_e164, ${input.phone}),
         email = coalesce(email, ${input.email}),
         verified_via = coalesce(verified_via, ${input.via}),
         verified_at = case when ${input.via}::text is null then verified_at
@@ -473,11 +505,11 @@ export async function upsertSellerByPhone(
   }
   const [created] = await tx<{ id: string }[]>`
     insert into public.sellers (
-      display_name, type, phone_e164, email, verified_via, verified_at,
+      display_name, type, phone_e164, email, cpf, cnpj, verified_via, verified_at,
       terms_version_accepted, terms_accepted_at
     ) values (
-      ${input.name}, ${input.type}, ${input.phone}, ${input.email}, ${input.via},
-      ${input.via ? input.now : null}, ${SELLER_TERMS_VERSION}, ${input.now}
+      ${input.name}, ${input.type}, ${input.phone}, ${input.email}, ${input.cpf}, ${input.cnpj},
+      ${input.via}, ${input.via ? input.now : null}, ${SELLER_TERMS_VERSION}, ${input.now}
     ) returning id`;
   return created!.id;
 }
@@ -521,7 +553,7 @@ export async function acceptInvite(
     const eligible = new Set((await sameSellerListings(tx, resolved.listing)).map((l) => l.id));
     const ids = [resolved.listing.id, ...input.form.alsoIds.filter((id) => eligible.has(id))];
 
-    const sellerId = await upsertSellerByPhone(tx, {
+    const sellerId = await upsertSeller(tx, {
       ...parsed,
       via: "invite_link",
       now: input.now,

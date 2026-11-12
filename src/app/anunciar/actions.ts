@@ -35,6 +35,8 @@ const FIELDS = [
   "nome",
   "whatsapp",
   "email",
+  "cpf",
+  "cnpj",
   "termos",
 ] as const;
 

@@ -5,6 +5,7 @@ import { startTransition, useActionState, useState } from "react";
 
 import { acceptInviteAction, declineInviteAction } from "@/app/autorizar/[codigo]/actions";
 import { Field, FormMessage } from "@/components/admin/form-bits";
+import { DocumentInput } from "@/components/document-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IDLE } from "@/lib/form-state";
@@ -111,6 +112,24 @@ export function AuthorizeForm({
           aria-invalid={error("phone") ? true : undefined}
         />
       </Field>
+
+      <DocumentInput
+        id="az-cpf"
+        name="cpf"
+        kind="cpf"
+        label="Seu CPF"
+        hint="Se for loja, o CPF do responsável. Serve só para identificar quem autoriza; não aparece no anúncio."
+        required
+        serverError={error("cpf")}
+      />
+
+      <DocumentInput
+        id="az-cnpj"
+        name="cnpj"
+        kind="cnpj"
+        label="CNPJ da loja (opcional)"
+        serverError={error("cnpj")}
+      />
 
       <Field id="az-email" label="E-mail (opcional)" error={error("email")}>
         <Input

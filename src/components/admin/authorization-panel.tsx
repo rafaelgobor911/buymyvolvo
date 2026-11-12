@@ -32,7 +32,15 @@ export interface AuthorizationPanelProps {
   } | null;
   authorized: {
     at: string;
-    seller: { name: string; type: string; phone: string | null; email: string | null } | null;
+    seller: {
+      name: string;
+      type: string;
+      phone: string | null;
+      email: string | null;
+      /** Formatted, admin only. */
+      cpf: string | null;
+      cnpj: string | null;
+    } | null;
     commission: string | null;
   } | null;
   declined: { at: string; reason: string | null } | null;
@@ -164,6 +172,18 @@ export function AuthorizationPanel(props: AuthorizationPanelProps) {
                 <>
                   <dt className="text-muted-foreground">E-mail</dt>
                   <dd>{authorized.seller.email}</dd>
+                </>
+              )}
+              {authorized.seller.cpf && (
+                <>
+                  <dt className="text-muted-foreground">CPF</dt>
+                  <dd className="font-mono">{authorized.seller.cpf}</dd>
+                </>
+              )}
+              {authorized.seller.cnpj && (
+                <>
+                  <dt className="text-muted-foreground">CNPJ</dt>
+                  <dd className="font-mono">{authorized.seller.cnpj}</dd>
                 </>
               )}
               {authorized.commission && (

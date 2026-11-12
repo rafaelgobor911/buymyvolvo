@@ -28,6 +28,8 @@ export async function acceptInviteAction(_prev: FormState, form: FormData): Prom
       type: str(form, "tipo"),
       phone: str(form, "whatsapp"),
       email: str(form, "email"),
+      cpf: str(form, "cpf"),
+      cnpj: str(form, "cnpj"),
       terms: str(form, "termos") === "on",
       alsoIds: form.getAll("outros").filter((v): v is string => typeof v === "string"),
     },

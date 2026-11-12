@@ -83,7 +83,7 @@ export const TERMS_OF_USE: LegalDocument = {
 
 export const PRIVACY_POLICY: LegalDocument = {
   title: "Política de Privacidade",
-  version: "2026-11-18-rascunho",
+  version: "2026-11-19-rascunho",
   draftNotice: DRAFT_NOTICE,
   sections: [
     {
@@ -105,8 +105,8 @@ export const PRIVACY_POLICY: LegalDocument = {
       paragraphs: [
         "De anúncios publicados no Instagram, guardamos o @ da conta, o telefone e a cidade que o próprio anúncio publicou, os dados do carro e o link para o post. A legenda é lida por um serviço de inteligência artificial (Anthropic) para organizar esses dados e escrever um resumo. Usamos o contato publicado para pedir a autorização do vendedor; sem ela, o anúncio não é publicado. Base legal: [legítimo interesse, a validar com o advogado].",
         "Anúncios que o vendedor nos manda ou que a nossa equipe copia à mão de outro site para pedir a autorização dele: guardamos o texto, o contato e o link do anúncio, só para a moderação e o convite. O texto também é lido pelo serviço de inteligência artificial e nunca é publicado.",
-        'Quem cadastra o anúncio no formulário "Anuncie seu Volvo" informa os dados do carro, a cidade, nome, tipo (loja ou particular), WhatsApp e, se quiser, e-mail, e pode enviar fotos (gravadas sem metadados, como a localização). Para limitar abusos, guardamos uma assinatura irreversível (hash com chave secreta) do IP de quem enviou.',
-        "Quem autoriza a divulgação informa nome, tipo (loja ou particular), WhatsApp e, se quiser, e-mail. Guardamos esses dados, a versão e a data do aceite dos Termos do Anunciante, a comissão aceita e a licença das fotos, somente para a intermediação e para a cobrança da comissão quando devida.",
+        'Quem cadastra o anúncio no formulário "Anuncie seu Volvo" informa os dados do carro, a cidade, nome, tipo (loja ou particular), WhatsApp, CPF (e o CNPJ, se for loja) e, se quiser, e-mail, e pode enviar fotos (gravadas sem metadados, como a localização). Para limitar abusos, guardamos uma assinatura irreversível (hash com chave secreta) do IP de quem enviou.',
+        "Quem autoriza a divulgação informa nome, tipo (loja ou particular), WhatsApp, CPF (e o CNPJ, se for loja) e, se quiser, e-mail. O CPF e o CNPJ servem só para identificar quem anuncia e para o contrato de intermediação, e nunca aparecem no site. Guardamos esses dados, a versão e a data do aceite dos Termos do Anunciante, a comissão aceita e a licença das fotos, somente para a intermediação e para a cobrança da comissão quando devida.",
         "O nome, o telefone e o perfil do vendedor não aparecem no site: os compradores falam com o [NOME_DO_SITE].",
         "Quem pede a remoção de um anúncio pode informar um contato (opcional). Para impedir que o mesmo anúncio volte a ser importado, guardamos o telefone, o @ e os posts do anúncio removido numa lista de bloqueio.",
         "Quem entra na área do vendedor fornece e-mail e nome (pelo login com Google), o nome de exibição, o tipo (loja ou particular) e, se quiser, um telefone. Guardamos também a versão e a data do aceite dos Termos do Anunciante e da licença das fotos. Fotos enviadas são gravadas sem metadados (como localização GPS e dados da câmera).",

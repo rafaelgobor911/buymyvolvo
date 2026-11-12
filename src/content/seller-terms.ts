@@ -6,7 +6,7 @@
  * Versão de 16/11/2026: modelo intermediado (Fase 8a). O vendedor aceita estes
  * termos na página de autorização (/autorizar/...) ou ao reivindicar o anúncio.
  */
-export const SELLER_TERMS_VERSION = "2026-11-16-rascunho";
+export const SELLER_TERMS_VERSION = "2026-11-19-rascunho";
 
 export const SELLER_TERMS = {
   title: "Termos do Anunciante",
@@ -24,6 +24,7 @@ export const SELLER_TERMS = {
       heading: "2. Autorização do anúncio",
       paragraphs: [
         "Um anúncio só aparece no site depois que o vendedor autoriza a divulgação e a intermediação. Ao autorizar, você declara ser o anunciante ou ter poderes para representá-lo e que as informações do anúncio são verdadeiras.",
+        "Para autorizar ou cadastrar um anúncio, você informa o seu CPF (no caso de loja, o CPF do responsável e, se quiser, o CNPJ da loja), usado só para identificar quem anuncia e para o contrato de intermediação.",
         "A autorização não tem exclusividade: você pode continuar anunciando e vendendo o carro por outros meios.",
       ],
     },

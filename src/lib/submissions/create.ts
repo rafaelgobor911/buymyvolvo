@@ -10,7 +10,7 @@
 import type postgres from "postgres";
 
 import { SELLER_TERMS_VERSION } from "@/content/seller-terms";
-import { commissionCents, recordSellerTerms, upsertSellerByPhone } from "@/lib/authorization/data";
+import { commissionCents, recordSellerTerms, upsertSeller } from "@/lib/authorization/data";
 import { dedupeKey } from "@/lib/extraction/dedupe";
 import type { NormalizedListing } from "@/lib/extraction/normalize";
 import { findExistingListing, isBlocked, shortId } from "@/lib/extraction/pipeline";
@@ -99,11 +99,13 @@ export async function createPublicListing(
       similar = row?.short_id ?? null;
     }
 
-    const sellerId = await upsertSellerByPhone(tx, {
+    const sellerId = await upsertSeller(tx, {
       name: l.name,
       type: l.sellerType,
       phone: l.phone,
       email: l.email,
+      cpf: l.cpf,
+      cnpj: l.cnpj,
       via: null,
       now,
     });
