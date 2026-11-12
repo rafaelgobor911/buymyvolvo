@@ -53,6 +53,13 @@ test.describe("Anuncie seu Volvo", () => {
     await seller.getByLabel("Particular").check();
     await seller.getByLabel("Seu nome ou o nome da loja").fill("Vendedor Teste Formulário");
     await seller.getByLabel("Seu WhatsApp").fill(PHONE);
+    // The CPF is checked as soon as the field is left (and again on the server).
+    await seller.getByLabel("Seu CPF").fill("564.738.291-65");
+    await seller.getByLabel("Seu CPF").blur();
+    await expect(seller.getByText("CPF inválido: confira os números.")).toBeVisible();
+    await seller.getByLabel("Seu CPF").fill("564.738.291-64");
+    await seller.getByLabel("Seu CPF").blur();
+    await expect(seller.getByText("CPF inválido: confira os números.")).toHaveCount(0);
     await seller.getByRole("checkbox", { name: /Li e aceito os Termos do Anunciante/ }).check();
     await seller.getByRole("button", { name: "Enviar anúncio" }).click();
     // A phone in the public description is refused (buyers talk to the site).

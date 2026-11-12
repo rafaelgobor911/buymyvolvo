@@ -49,6 +49,7 @@ test.describe("Autorização do vendedor", () => {
     await expect(seller.getByText("Sem exclusividade:")).toBeVisible();
     await seller.getByLabel("Seu nome ou o nome da loja").fill("Loja Teste E2E");
     await seller.getByLabel("Seu WhatsApp").fill("(48) 90000-0966");
+    await seller.getByLabel("Seu CPF").fill("192.837.465-46");
     await seller.getByRole("button", { name: "Autorizar a divulgação" }).click();
     await expect(seller.getByText("Para autorizar, aceite os Termos do Anunciante.")).toBeVisible();
     await seller.getByRole("checkbox", { name: /Li e aceito os Termos do Anunciante/ }).check();

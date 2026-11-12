@@ -29,6 +29,7 @@ const parsed = parsePublicListingForm(
     tipo: "particular",
     nome: "Pessoa Teste Formulário",
     whatsapp: "(47) 90000-0911",
+    cpf: "135.792.468-28",
     termos: "on",
   },
   NOW,
@@ -88,9 +89,9 @@ describe.skipIf(!url)("public listing form (database)", () => {
       seller: { name: "Pessoa Teste Formulário", type: "particular", phone: "+5547900000911" },
     });
     // The form does not prove the phone: the seller is not marked as verified.
-    const [seller] = await sql<{ verified_via: string | null }[]>`
-      select verified_via from sellers where phone_e164 = '+5547900000911'`;
-    expect(seller?.verified_via).toBeNull();
+    const [seller] = await sql<{ verified_via: string | null; cpf: string }[]>`
+      select verified_via, cpf from sellers where phone_e164 = '+5547900000911'`;
+    expect(seller).toEqual({ verified_via: null, cpf: "13579246828" });
     const terms = await sql<{ terms: string }[]>`
       select terms from terms_acceptances where seller_id = ${outreach.seller!.id} order by terms`;
     expect(terms.map((t) => t.terms)).toEqual(["photo_license", "seller_terms"]);
@@ -145,6 +146,26 @@ describe.skipIf(!url)("public listing form (database)", () => {
     await sql`update listings set status = 'rejected', rejected_at = now() where id = ${result.listingId}`;
     expect(await submittedListingForPhotos(sql, result.listingId)).toBeNull();
     expect(await submittedListingForPhotos(sql, "not-a-uuid")).toBeNull();
+  });
+
+  it("the CPF identifies the seller, even from another WhatsApp", async () => {
+    const before = await sql<{ id: string }[]>`select id from sellers where cpf = '13579246828'`;
+    const result = await createPublicListing(sql, {
+      listing: {
+        ...LISTING,
+        phone: "+5547900000914",
+        modelId: "s60",
+        engineId: "t5",
+        trimId: null,
+      },
+      ipHash: "ip-f",
+      now: NOW,
+    });
+    if (!result.ok) throw new Error(result.error);
+    created.push(result.listingId);
+    const [row] = await sql<{ seller_id: string; contact_phone_e164: string }[]>`
+      select seller_id, contact_phone_e164 from listings where id = ${result.listingId}`;
+    expect(row).toEqual({ seller_id: before[0]!.id, contact_phone_e164: "+5547900000914" });
   });
 
   it("limits listings per device, refuses blocked phones and flags a likely duplicate", async () => {

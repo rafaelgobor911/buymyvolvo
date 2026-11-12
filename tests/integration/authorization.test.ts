@@ -24,6 +24,8 @@ const form = (extra: Partial<Parameters<typeof acceptInvite>[1]["form"]> = {}) =
   type: "loja",
   phone: "(41) 90000-0801",
   email: "loja.autorizacao@example.com",
+  cpf: "987.654.321-00",
+  cnpj: "11.222.333/0001-81",
   terms: true,
   alsoIds: [] as string[],
   ...extra,
@@ -157,9 +159,12 @@ describe.skipIf(!url)("seller authorization (database)", () => {
       key: KEY,
       code,
       now: NOW,
-      form: form({ phone: "123", terms: false }),
+      form: form({ phone: "123", cpf: "123.456.789-00", terms: false }),
     });
-    expect(invalid).toMatchObject({ ok: false, errors: { phone: expect.any(String) } });
+    expect(invalid).toMatchObject({
+      ok: false,
+      errors: { phone: expect.any(String), cpf: "CPF inválido: confira os números." },
+    });
 
     const result = await acceptInvite(sql, {
       key: KEY,
@@ -170,14 +175,23 @@ describe.skipIf(!url)("seller authorization (database)", () => {
     expect(result).toEqual({ ok: true, authorized: 2 });
 
     const [seller] = await sql<
-      { id: string; display_name: string; verified_via: string; terms_version_accepted: string }[]
+      {
+        id: string;
+        display_name: string;
+        verified_via: string;
+        terms_version_accepted: string;
+        cpf: string;
+        cnpj: string;
+      }[]
     >`
-      select id, display_name, verified_via, terms_version_accepted from sellers
+      select id, display_name, verified_via, terms_version_accepted, cpf, cnpj from sellers
       where phone_e164 = ${SELLER_PHONE}`;
     expect(seller).toMatchObject({
       display_name: "Loja Teste Autorização",
       verified_via: "invite_link",
       terms_version_accepted: SELLER_TERMS_VERSION,
+      cpf: "98765432100",
+      cnpj: "11222333000181",
     });
     const terms = await sql<{ terms: string }[]>`
       select terms from terms_acceptances where seller_id = ${seller!.id} order by terms`;
@@ -224,11 +238,17 @@ describe.skipIf(!url)("seller authorization (database)", () => {
       key: KEY,
       code: await codeFor("az0003"),
       now: NOW,
-      form: form({ name: "Outro nome", phone: "(41) 90000-0802", email: "" }),
+      form: form({
+        name: "Outro nome",
+        phone: "(41) 90000-0802",
+        email: "",
+        cpf: "246.813.579-28",
+      }),
     });
     expect(result).toEqual({ ok: true, authorized: 1 });
-    const sellers = await sql`select id from sellers where phone_e164 = '+5541900000802'`;
-    expect(sellers).toHaveLength(1);
+    const sellers = await sql<{ cpf: string; cnpj: string | null }[]>`
+      select cpf, cnpj from sellers where phone_e164 = '+5541900000802'`;
+    expect(sellers).toEqual([{ cpf: "24681357928", cnpj: "11222333000181" }]);
   });
 
   it("a seller who declines: the listing is rejected, on the page or through the admin", async () => {

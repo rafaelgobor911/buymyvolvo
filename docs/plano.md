@@ -410,5 +410,6 @@ Nada de scraping de Marketplace, OLX ou Webmotors. Plano aprovado em 12/11/2026:
 - **Contra abuso:** campo armadilha, 3 anúncios por aparelho por dia (`public_listings_per_day`), blocklist e aviso de anúncio parecido. Fechado enquanto a comissão não estiver definida.
 - **Banco** (`20261118120000_public_listings.sql`): `listing_submissions` (hash do IP, privada) e a configuração do limite.
 - Privacidade (rascunho) cita o formulário e as fotos.
+- **CPF do anunciante (pedido do dono do produto, 12/11):** obrigatório no formulário e na página do convite (de loja, o do responsável), com o CNPJ opcional para loja. Os dois são conferidos pelos dígitos verificadores, no navegador e no servidor (aceita o CNPJ alfanumérico de 2026). Ficam privados (`sellers.cpf`, um vendedor por CPF; migration `20261119120000_seller_documents.sql`) e aparecem só no painel do admin. Termos do Anunciante e Privacidade citam o CPF (nova versão dos termos, `2026-11-19-rascunho`).
 
-**Pendências da 9b:** em produção, as fotos precisam da `SUPABASE_SERVICE_ROLE_KEY` na Vercel (sem ela, o formulário funciona sem fotos e avisa); o vendedor do formulário não ganha login (se quiser editar depois, usa "Reivindicar").
+**Pendências da 9b:** em produção, as fotos precisam da `SUPABASE_SERVICE_ROLE_KEY` na Vercel (sem ela, o formulário funciona sem fotos e avisa); o vendedor do formulário não ganha login (se quiser editar depois, usa "Reivindicar"); a reivindicação com login (Fase 6) ainda não pede CPF.
