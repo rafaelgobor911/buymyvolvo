@@ -43,8 +43,8 @@ async function PreviewView({ params }: { params: Promise<{ ref: string }> }) {
       <div className="flex flex-col gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">Prévia do contato</h1>
         <p className="text-pretty text-muted-foreground">
-          Este anúncio de {preview.title} é fictício. Com um anúncio real, o clique abre o WhatsApp
-          do vendedor com esta mensagem já escrita:
+          Este contato é de demonstração ({preview.title}). Com um anúncio real, o clique abre o
+          WhatsApp do {site.name} com esta mensagem já escrita:
         </p>
       </div>
 
@@ -61,8 +61,8 @@ async function PreviewView({ params }: { params: Promise<{ ref: string }> }) {
       </figure>
 
       <p className="text-sm text-pretty text-muted-foreground">
-        O código mostra ao vendedor que a conversa veio do {site.name}. Não guardamos nenhum dado
-        seu neste clique.
+        O código identifica o anúncio e o contato na conversa com a nossa equipe. Não guardamos
+        nenhum dado seu neste clique.
       </p>
 
       <Link

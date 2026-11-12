@@ -33,8 +33,8 @@ const STEPS = [
   },
   {
     icon: MessageCircle,
-    title: "Fale com o vendedor",
-    text: "Um toque abre o WhatsApp do anunciante com a mensagem pronta. A negociação é direto com ele.",
+    title: "Fale com a gente",
+    text: "Um toque abre o nosso WhatsApp com a mensagem pronta. Confirmamos os detalhes e fazemos a ponte com o vendedor.",
   },
 ] as const;
 

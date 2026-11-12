@@ -2,6 +2,7 @@ import "server-only";
 
 import { asAnon, db, type Tx } from "@/lib/db/client";
 import { PAGE_SIZE, type SearchFilters } from "@/lib/search/filters";
+import { readBmvNumbers } from "@/lib/authorization/messages";
 import { photoUrl } from "@/lib/photos/storage";
 import type { Fuel, SellerType, Transmission } from "@/lib/taxonomy";
 
@@ -384,4 +385,14 @@ export async function searchStats(f: SearchFilters): Promise<SearchStats> {
       yearMax: row?.year_max ?? null,
     };
   });
+}
+
+/**
+ * Whether the contact button can work: Buy My Volvo's WhatsApp number is set
+ * (Configurações). Only a yes/no reaches the page, never the number.
+ */
+export async function contactAvailable(): Promise<boolean> {
+  const [row] = await db()<{ value: unknown }[]>`
+    select value from public.app_settings where key = 'bmv_whatsapp_numbers'`;
+  return readBmvNumbers(row?.value).length > 0;
 }

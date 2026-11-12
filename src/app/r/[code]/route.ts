@@ -1,7 +1,7 @@
 /**
  * Contact click: GET /r/<listing code> records a lead and redirects (302) to
- * WhatsApp with the pre-filled message, or to Instagram when the post has no
- * phone. The phone only ever appears in this redirect, never in page HTML.
+ * Buy My Volvo's WhatsApp with the pre-filled message (intermediated model,
+ * Phase 8a). The seller's phone is never used here.
  *
  * Not a click (no lead, no phone): prefetches get 204; bots and link previews
  * go to the listing page. No cookies; IP and user agent are kept only as

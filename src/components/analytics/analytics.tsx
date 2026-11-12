@@ -14,7 +14,13 @@ import {
   saveConsent,
   subscribeConsent,
 } from "@/lib/analytics/consent";
-import { applyConsent, type EventParams, type GoogleTagConfig, track } from "@/lib/analytics/gtag";
+import {
+  applyConsent,
+  type EventParams,
+  type GoogleTagConfig,
+  isUntrackedPath,
+  track,
+} from "@/lib/analytics/gtag";
 
 const serverSnapshot = () => undefined;
 
@@ -28,20 +34,26 @@ function useConsent(version: string) {
  * Consent banner + Google tag. Mounted only when a tag is configured
  * (NEXT_PUBLIC_GA_MEASUREMENT_ID or NEXT_PUBLIC_GOOGLE_ADS_ID). Clicks on
  * elements with data-track="<event>" (and JSON in data-track-params) become
- * events; nothing is sent without consent.
+ * events; nothing is sent without consent. Pages whose address carries a
+ * credential (the seller's invite link) load nothing and show no banner.
  */
 export function Analytics({ config }: { config: GoogleTagConfig }) {
   const version = consentVersionKey({ ads: !!config.adsId });
   const { raw, choice } = useConsent(version);
   const [open, setOpen] = useState(false);
+  // Read once on the client (no usePathname: it would block prerendering of every
+  // page). The invite link is opened directly from WhatsApp, so the first page is enough.
+  const [untracked] = useState(
+    () => typeof window !== "undefined" && isUntrackedPath(window.location.pathname),
+  );
 
   useEffect(() => onConsentOpen(() => setOpen(true)), []);
 
   useEffect(() => {
-    if (choice) applyConsent(choice, config);
+    if (choice && !untracked) applyConsent(choice, config);
     // raw is the stable identity of the choice.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [raw]);
+  }, [raw, untracked]);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -59,7 +71,7 @@ export function Analytics({ config }: { config: GoogleTagConfig }) {
     return () => document.removeEventListener("click", onClick, true);
   }, []);
 
-  if (choice === undefined || (choice && !open)) return null;
+  if (untracked || choice === undefined || (choice && !open)) return null;
   return (
     <ConsentBanner
       key={raw ?? "new"}

@@ -53,18 +53,13 @@ async function ClaimView({ params }: { params: Promise<{ slug: string }> }) {
     );
   }
   const here = `/anuncio/${listing.slug}/reivindicar`;
-  const instagram = listing.instagramUsername ?? listing.sourceUsername;
 
   const card = (
     <div className="rounded-xl border border-border bg-card p-4">
       <p className="font-medium">
         Volvo {listingTitle(listing)} {formatYears(listing.yearFab, listing.yearModel)}
       </p>
-      <p className="text-sm text-muted-foreground">
-        {[formatPlace(listing.city, listing.uf), instagram && `@${instagram}`]
-          .filter(Boolean)
-          .join(" · ")}
-      </p>
+      <p className="text-sm text-muted-foreground">{formatPlace(listing.city, listing.uf)}</p>
     </div>
   );
 
@@ -147,8 +142,8 @@ async function ClaimView({ params }: { params: Promise<{ slug: string }> }) {
           <p className="font-mono text-2xl font-semibold tracking-wider">{state.claim.code}</p>
           <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm">
             <li>
-              Abra o Instagram{instagram ? ` @${instagram}` : " que publicou o anúncio"} e mande o
-              código por mensagem (Direct) para <strong>@{site.instagramHandle}</strong>.
+              Abra o Instagram que publicou o anúncio e mande o código por mensagem (Direct) para{" "}
+              <strong>@{site.instagramHandle}</strong>.
             </li>
             <li>
               Sem Instagram? Nossa equipe pode pedir o código pelo WhatsApp que está no anúncio.

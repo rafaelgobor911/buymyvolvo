@@ -41,7 +41,10 @@ export function SiteFooter() {
           </ul>
         </nav>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p>{site.name} reúne anúncios de terceiros e não participa da negociação.</p>
+          <p>
+            {site.name} intermedeia a venda de Volvo seminovos de lojas e particulares. Não recebe
+            pagamento pelos carros.
+          </p>
           <p>{site.brandDisclaimer}</p>
         </div>
       </div>

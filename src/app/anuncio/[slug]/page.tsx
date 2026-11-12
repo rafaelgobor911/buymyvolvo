@@ -1,4 +1,4 @@
-import { BadgeCheck, ExternalLink, Info, MessageCircle } from "lucide-react";
+import { BadgeCheck, Info, MessageCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -27,7 +27,12 @@ import {
 import { leadParams, type ListingForAnalytics, viewItemParams } from "@/lib/analytics/items";
 import { db } from "@/lib/db/client";
 import { isBot, isPrefetch } from "@/lib/leads/request";
-import { getListingBySlug, getSimilarListings, type ListingDetail } from "@/lib/listings/queries";
+import {
+  contactAvailable,
+  getListingBySlug,
+  getSimilarListings,
+  type ListingDetail,
+} from "@/lib/listings/queries";
 import { recordView } from "@/lib/listings/views";
 import { breadcrumbJsonLd, carJsonLd } from "@/lib/seo/json-ld";
 import { landingPath, LANDING_ROOT } from "@/lib/seo/landing";
@@ -98,7 +103,10 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
     }
   }
   const now = new Date();
-  const similar = await getSimilarListings(listing.modelId, listing.id, 3);
+  const [similar, canContact] = await Promise.all([
+    getSimilarListings(listing.modelId, listing.id, 3),
+    listing.status === "active" ? contactAvailable() : false,
+  ]);
   const title = listingTitle(listing);
   const model = getModel(listing.modelId);
   const baseModelId = model?.parentId ?? listing.modelId;
@@ -136,9 +144,8 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
               images: listing.photos.map((p) =>
                 p.url.startsWith("/") ? absoluteUrl(p.url) : p.url,
               ),
-              seller: listing.sellerName
-                ? { name: listing.sellerName, type: listing.sellerType }
-                : null,
+              // Intermediated: the seller is not shown (Phase 8a).
+              seller: null,
               available: true,
             }),
             breadcrumbJsonLd([
@@ -187,14 +194,11 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
                 <p className="text-pretty text-muted-foreground">{listing.summary}</p>
               )
             )}
-            {!listing.sellerDescription &&
-              listing.summary &&
-              listing.origin === "instagram" &&
-              !listing.isClaimed && (
-                <p className="text-xs text-muted-foreground">
-                  Resumo automático do post; confira no original.
-                </p>
-              )}
+            {!listing.sellerDescription && listing.summary && (
+              <p className="text-xs text-muted-foreground">
+                Resumo escrito pelo {site.name} a partir do anúncio do vendedor.
+              </p>
+            )}
             {listing.options.length > 0 && (
               <ul className="flex flex-wrap gap-2 pt-1" aria-label="Destaques">
                 {listing.options.map((option) => (
@@ -248,9 +252,6 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
                   Vendedor verificado
                 </Badge>
               )}
-              <Badge variant="outline">
-                {listing.origin === "instagram" ? "Via Instagram" : "Cadastro direto"}
-              </Badge>
               {listing.alerts.includes("repasse") && <RepasseBadge />}
             </div>
             <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
@@ -267,11 +268,15 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
 
           <ListingAlerts alerts={listing.alerts} />
 
-          <ContactActions listing={listing} />
+          <ContactActions listing={listing} available={canContact} />
 
           <p className="flex gap-2 rounded-xl bg-muted/60 p-4 text-sm text-muted-foreground">
             <Info className="mt-0.5 size-4 shrink-0" aria-hidden />
-            <span>Anúncio de terceiro. O {site.name} não participa da negociação.</span>
+            <span>
+              Anúncio intermediado pelo {site.name}. O carro é de um vendedor parceiro (loja ou
+              particular): nossa equipe atende você e faz a ponte com ele. O {site.name} não recebe
+              pagamento pelo carro.
+            </span>
           </p>
 
           <p className="text-sm text-muted-foreground">
@@ -310,7 +315,7 @@ function StatusNotice({ listing }: { listing: ListingDetail }) {
     listing.status === "sold"
       ? "Este carro foi marcado como vendido."
       : listing.status === "active"
-        ? "Este anúncio veio de uma hashtag do Instagram há algumas semanas e pode não estar mais disponível. Confira o post original antes de entrar em contato."
+        ? "Este anúncio foi publicado há algumas semanas e pode não estar mais disponível. Confirme com a nossa equipe pelo WhatsApp."
         : "Este anúncio expirou e pode não estar mais disponível.";
   return (
     <p role="status" className="rounded-xl border border-border bg-secondary px-4 py-3 text-sm">
@@ -326,48 +331,18 @@ function StatusNotice({ listing }: { listing: ListingDetail }) {
 }
 
 /**
- * Unclaimed listings: official Instagram embed / link with author credit (never our copy of the photos).
- * Claimed listings: the seller's licensed photos (Phase 6). Fixtures have neither.
+ * Photos licensed by the seller (claimed listings, Phase 6; imported from the
+ * authorized post, Phase 8b). Without photos, the model plate.
  */
 function MediaBlock({ listing }: { listing: ListingDetail }) {
-  if (listing.isClaimed) {
-    if (listing.photos.length > 0) {
-      return <ListingGallery photos={listing.photos} title={`Volvo ${listingTitle(listing)}`} />;
-    }
-    return (
-      <figure className="overflow-hidden rounded-2xl border border-border">
-        <ModelPlate modelName={listing.modelName} className="aspect-[16/9]" />
-        <figcaption className="px-4 py-3 text-sm text-muted-foreground">
-          O vendedor ainda não enviou fotos.
-        </figcaption>
-      </figure>
-    );
+  if (listing.photos.length > 0) {
+    return <ListingGallery photos={listing.photos} title={`Volvo ${listingTitle(listing)}`} />;
   }
   return (
     <figure className="overflow-hidden rounded-2xl border border-border">
       <ModelPlate modelName={listing.modelName} className="aspect-[16/9]" />
-      <figcaption className="flex flex-col gap-1 px-4 py-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        {listing.sourcePermalink ? (
-          <>
-            <span>
-              Fotos e texto completo no post original
-              {listing.sourceUsername ? ` de @${listing.sourceUsername}` : ""}.
-            </span>
-            <a
-              href={listing.sourcePermalink}
-              target="_blank"
-              rel="noopener nofollow"
-              className="inline-flex items-center gap-1 font-medium text-primary"
-            >
-              Ver no Instagram <ExternalLink className="size-3.5" aria-hidden />
-            </a>
-          </>
-        ) : (
-          <span>
-            Prévia: aqui aparece o post original do Instagram (incorporação oficial), com crédito ao
-            autor.
-          </span>
-        )}
+      <figcaption className="px-4 py-3 text-sm text-muted-foreground">
+        Fotos em preparação. Peça fotos e vídeos do carro pelo WhatsApp.
       </figcaption>
     </figure>
   );
@@ -390,12 +365,11 @@ function FactsTable({ listing, now }: { listing: ListingDetail; now: Date }) {
     ],
     [
       "Vendedor",
-      listing.sellerName ??
-        (listing.sellerType === "loja"
-          ? "Loja"
-          : listing.sellerType === "particular"
-            ? "Particular"
-            : null),
+      listing.sellerType === "loja"
+        ? "Loja"
+        : listing.sellerType === "particular"
+          ? "Particular"
+          : null,
     ],
     ["Publicado", formatRelativeDays(listing.firstSeenAt, now)],
   ];
@@ -418,11 +392,6 @@ function FactsTable({ listing, now }: { listing: ListingDetail; now: Date }) {
   );
 }
 
-/**
- * Contact button: /r/<code> records the lead and redirects to WhatsApp (or to
- * Instagram when the post has no phone). The phone never reaches the HTML.
- * A plain <a> (not next/link) so nothing prefetches the click.
- */
 const forAnalytics = (listing: ListingDetail): ListingForAnalytics => ({
   shortId: listing.shortId,
   title: `Volvo ${listingTitle(listing)}`,
@@ -434,14 +403,13 @@ const forAnalytics = (listing: ListingDetail): ListingForAnalytics => ({
   priceCents: listing.priceCents,
 });
 
-function ContactActions({ listing }: { listing: ListingDetail }) {
-  if (listing.status !== "active") return null;
-  const hasInstagram = !!(
-    listing.instagramUsername ||
-    listing.sourceUsername ||
-    listing.sourcePermalink
-  );
-  if (!listing.hasPhone && !hasInstagram) return null;
+/**
+ * Contact button: /r/<code> records the lead and redirects to Buy My Volvo's
+ * WhatsApp (the seller's phone is never used). A plain <a> (not next/link) so
+ * nothing prefetches the click.
+ */
+function ContactActions({ listing, available }: { listing: ListingDetail; available: boolean }) {
+  if (listing.status !== "active" || !available) return null;
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col gap-2 border-t border-border bg-background/95 p-4 backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:p-0">
       <a
@@ -449,28 +417,14 @@ function ContactActions({ listing }: { listing: ListingDetail }) {
         rel="nofollow"
         aria-describedby="contato-nota"
         data-track="generate_lead"
-        data-track-params={JSON.stringify(
-          leadParams(forAnalytics(listing), listing.hasPhone ? "whatsapp" : "instagram"),
-        )}
+        data-track-params={JSON.stringify(leadParams(forAnalytics(listing), "whatsapp"))}
         className={cn(buttonVariants(), "h-12 w-full rounded-xl text-base")}
       >
         <MessageCircle aria-hidden />
-        {listing.hasPhone
-          ? "Falar com o vendedor no WhatsApp"
-          : "Falar com o vendedor no Instagram"}
+        Tenho interesse: falar no WhatsApp
       </a>
-      {listing.hasPhone && listing.sourcePermalink && (
-        <a
-          href={listing.sourcePermalink}
-          target="_blank"
-          rel="noopener nofollow"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border text-sm font-medium hover:bg-secondary"
-        >
-          Ver no Instagram <ExternalLink className="size-4" aria-hidden />
-        </a>
-      )}
       <p id="contato-nota" className="text-center text-xs text-muted-foreground lg:text-left">
-        Não guardamos dados seus neste clique.
+        Você fala com a equipe do {site.name}. Não guardamos dados seus neste clique.
       </p>
     </div>
   );

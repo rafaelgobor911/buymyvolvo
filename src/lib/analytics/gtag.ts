@@ -26,6 +26,13 @@ const configured = new Set<string>();
 /** Events fired before the visitor decided; sent only if they then allow it. */
 let pending: Array<[string, EventParams]> = [];
 
+/**
+ * Addresses that work as a credential (the seller's invite link): the Google
+ * tag never loads there, so the address is never sent to Google.
+ */
+export const isUntrackedPath = (pathname: string | null) =>
+  !!pathname && pathname.startsWith("/autorizar/");
+
 const allowsAny = (c: ConsentChoice | null) => !!c && (c.analytics || c.ads);
 
 /** Sets up the tag for this choice: loads gtag.js the first time something is allowed. */
