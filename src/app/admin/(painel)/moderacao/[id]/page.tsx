@@ -23,6 +23,9 @@ const OK_MESSAGES: Record<string, string> = {
   aprovado: "Anterior aprovado e publicado.",
   rejeitado: "Anterior rejeitado.",
   recusado: "Recusa do vendedor registrada; o anterior foi rejeitado.",
+  criado: "Anúncio criado a partir do texto. Confira os dados e crie o convite ao vendedor.",
+  criado_revisar:
+    "Anúncio criado a partir do texto. A leitura ficou incompleta: revise os dados antes de convidar o vendedor.",
 };
 
 export default function ModerationItemPage(props: PageProps<"/admin/moderacao/[id]">) {

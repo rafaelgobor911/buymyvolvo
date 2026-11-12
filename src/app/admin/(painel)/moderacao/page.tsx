@@ -65,14 +65,22 @@ async function QueueView({
   return (
     <div className="flex flex-col gap-5">
       <PageTitle title={`Moderação (${total})`}>
-        {queue[0] && (
+        <div className="flex flex-wrap gap-2">
           <Link
-            href={`/admin/moderacao/${queue[0].id}`}
-            className={cn(buttonVariants(), "h-10 rounded-xl px-4")}
+            href="/admin/anuncios/novo"
+            className={cn(buttonVariants({ variant: "outline" }), "h-10 rounded-xl px-4")}
           >
-            Começar pelo mais antigo
+            Novo anúncio a partir de texto
           </Link>
-        )}
+          {queue[0] && (
+            <Link
+              href={`/admin/moderacao/${queue[0].id}`}
+              className={cn(buttonVariants(), "h-10 rounded-xl px-4")}
+            >
+              Começar pelo mais antigo
+            </Link>
+          )}
+        </div>
       </PageTitle>
       {typeof ok === "string" && OK_MESSAGES[ok] && (
         <p

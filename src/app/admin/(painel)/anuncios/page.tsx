@@ -4,7 +4,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { AdminSkeleton, PageTitle, StatusBadge } from "@/components/admin/bits";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { requireAdmin } from "@/lib/admin/auth";
@@ -17,6 +17,7 @@ import {
 } from "@/lib/admin/listings";
 import { db } from "@/lib/db/client";
 import { formatPlace, formatPrice } from "@/lib/listings/format";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Anúncios" };
 
@@ -57,7 +58,11 @@ async function ListingsView({
 
   return (
     <div className="flex flex-col gap-5">
-      <PageTitle title="Anúncios" />
+      <PageTitle title="Anúncios">
+        <Link href="/admin/anuncios/novo" className={cn(buttonVariants(), "h-10 rounded-xl px-4")}>
+          Novo anúncio a partir de texto
+        </Link>
+      </PageTitle>
       <form action="/admin/anuncios" className="flex flex-wrap items-end gap-2" role="search">
         <div className="flex min-w-48 flex-1 flex-col gap-1.5">
           <label htmlFor="a-q" className="text-sm font-medium">
