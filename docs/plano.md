@@ -357,7 +357,7 @@ Decisões do dono do produto (12/11/2026):
 - **Fotos:** começar pelas fotos do post do Instagram; com marca d'água, pedir as originais ao lojista (Fase 8b).
 - **CNPJ:** ainda não existe, mas os textos assumem que existirá (controlador "[a definir]").
 
-### 8a (aprovada em 12/11/2026)
+### 8a (aprovada e no ar em 12/11/2026)
 
 - **Banco** (`20261116120000_seller_authorization.sql`): `listings.authorized_at` (obrigatório para `active`, e a política pública só mostra autorizados), `listing_outreach` (convite, resposta, vendedor, termos e comissão aceita; privada), `leads.routed_to`, `sellers.verified_via = 'invite_link'`, configurações `bmv_whatsapp_numbers`, `seller_commission_brl` e `authorization_invite_template`, e a mensagem padrão do comprador trocada ("Tenho interesse no Volvo…"). A migration devolve os anúncios `active` à moderação (com `audit_log`).
 - **Pipeline:** nunca publica; o desfecho `published` virou `ready` (dados bons, pronto para convidar).
@@ -366,11 +366,10 @@ Decisões do dono do produto (12/11/2026):
 - **Anúncio público:** sem nome, telefone, @, post ou selo "Via Instagram" do vendedor; aviso "Anúncio intermediado pelo Buy My Volvo… não recebe pagamento pelo carro"; botão "Tenho interesse: falar no WhatsApp" para o número do site; fotos (quando houver) ou "Fotos em preparação". JSON-LD sem vendedor.
 - **Textos:** Termos do Anunciante v2, Termos de Uso e Privacidade (rascunhos), rodapé, home e prévia do contato.
 
-**Antes do merge (produção):**
+**Entrada em produção (12/11/2026):**
 
-1. Aplicar a migration pelo `db-migrate.yml` a partir do branch `phase-8a` (os ~30 anúncios no ar saem do site na hora, até a autorização).
-2. Em Configurações: o **WhatsApp do Buy My Volvo** e a **comissão**.
-3. Merge e deploy.
+- Migration aplicada pelo `db-migrate.yml` a partir do `phase-8a` às 15:25 UTC; os 62 anúncios que estavam no ar voltaram à moderação. Merge na `main` e deploy logo em seguida (nenhum job rodou entre os dois passos). Testes de fumaça: busca vazia, sitemap sem anúncios, página do convite `noindex` e sem Google tag, Termos do Anunciante v2, `process-posts` com o desfecho novo (`ready`).
+- **Falta (dono do produto):** em Configurações, o **WhatsApp do Buy My Volvo** e a **comissão**; depois, convidar os vendedores pela Moderação.
 
 **Pendências e perguntas da 8a:**
 

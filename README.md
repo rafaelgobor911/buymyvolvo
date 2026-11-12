@@ -16,6 +16,8 @@ Buscador de anúncios de Volvo à venda no Brasil ([buymyvolvo.com.br](https://b
 | 5    | Admin e moderação                           | ✅ aprovada            |
 | 6    | Vendedor                                    | ✅ aprovada            |
 | 7    | Produção                                    | ✅ no ar em 10/11/2026 |
+| 8a   | Intermediação: autorização do vendedor      | ✅ no ar em 12/11/2026 |
+| 8b   | Fotos do post e CRM das negociações         | próxima                |
 
 ## Stack
 
