@@ -101,5 +101,9 @@ test.describe("Acessibilidade: banner e áreas logadas", () => {
       page.getByRole("heading", { name: "Autorize a divulgação do seu Volvo" }),
     ).toBeVisible();
     expect(await violations(page)).toEqual([]);
+    // The public form, open now that the commission is set.
+    await page.goto("/anunciar", { waitUntil: "networkidle" });
+    await expect(page.getByRole("button", { name: "Enviar anúncio" })).toBeVisible();
+    expect(await violations(page)).toEqual([]);
   });
 });

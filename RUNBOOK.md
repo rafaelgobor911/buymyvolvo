@@ -133,9 +133,10 @@ Nenhum anúncio vai ao ar sem a autorização do vendedor. Antes de tudo, em **C
 
 1. **Moderação → A contatar:** revise os dados do anúncio e clique em **Criar convite**. Anúncio que chegou por fora (WhatsApp, OLX, Webmotors, Marketplace): **Anúncios → Novo anúncio a partir de texto**, cole o texto e ele entra aqui.
 2. **Copiar mensagem** (ou **Abrir no WhatsApp do vendedor** / **Abrir o Direct do Instagram**) e envie. O link vale 30 dias; **Gerar novo link** invalida o anterior.
-3. O vendedor abre o link, lê as condições e autoriza (pode autorizar de uma vez os outros carros dele que estão na fila). O anúncio vai para **Autorizados**, com nome, WhatsApp e a comissão aceita.
-4. **Aprovar e publicar** (atalho A). O comprador que clica no anúncio cai no WhatsApp do Buy My Volvo com o código `VX-…` na mensagem.
-5. Se o vendedor disser que não quer, use **O vendedor não quer: registrar recusa** (o anúncio é rejeitado; uma repostagem volta para a fila com o aviso).
+3. Anúncio que chegou pelo formulário **Anuncie seu Volvo** já entra em **Autorizados**: confirme com o vendedor pelo WhatsApp (o número digitado não é comprovado), confira as fotos (dá para excluir) e siga para o passo 4.
+4. O vendedor abre o link, lê as condições e autoriza (pode autorizar de uma vez os outros carros dele que estão na fila). O anúncio vai para **Autorizados**, com nome, WhatsApp e a comissão aceita.
+5. **Aprovar e publicar** (atalho A). O comprador que clica no anúncio cai no WhatsApp do Buy My Volvo com o código `VX-…` na mensagem.
+6. Se o vendedor disser que não quer, use **O vendedor não quer: registrar recusa** (o anúncio é rejeitado; uma repostagem volta para a fila com o aviso).
 
 ---
 

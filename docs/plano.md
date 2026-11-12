@@ -401,3 +401,14 @@ Nada de scraping de Marketplace, OLX ou Webmotors. Plano aprovado em 12/11/2026:
 - Privacidade (rascunho) passa a citar os anúncios colados.
 
 **Pendências da 9a:** anúncios do admin não expiram sozinhos (o admin marca vendido ou expirado).
+
+### 9b (entregue no branch `phase-9b`, esperando aprovação)
+
+- **Página `/anunciar`** ("Anuncie seu Volvo", no cabeçalho, no rodapé e no sitemap): condições em linguagem simples (as mesmas da página do convite, com as fotos enviadas no lugar das do post) e o formulário: carro (motores e versões filtrados por modelo, só os vendidos no Brasil), local, até 15 fotos, dados do vendedor e o aceite dos Termos do Anunciante.
+- **Entra em moderação já autorizado** (aba "Autorizados"), com a comissão registrada. O WhatsApp não é comprovado: o admin confirma com o vendedor antes de aprovar. A descrição pública recusa telefone, e-mail, @ e links.
+- **Fotos:** enviadas uma a uma depois do cadastro, com um token assinado de 2 horas; mesmo processamento da Fase 6. O admin vê as fotos na moderação e pode excluir.
+- **Contra abuso:** campo armadilha, 3 anúncios por aparelho por dia (`public_listings_per_day`), blocklist e aviso de anúncio parecido. Fechado enquanto a comissão não estiver definida.
+- **Banco** (`20261118120000_public_listings.sql`): `listing_submissions` (hash do IP, privada) e a configuração do limite.
+- Privacidade (rascunho) cita o formulário e as fotos.
+
+**Pendências da 9b:** em produção, as fotos precisam da `SUPABASE_SERVICE_ROLE_KEY` na Vercel (sem ela, o formulário funciona sem fotos e avisa); o vendedor do formulário não ganha login (se quiser editar depois, usa "Reivindicar").

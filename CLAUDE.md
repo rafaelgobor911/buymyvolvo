@@ -49,7 +49,7 @@ A especificação completa está em `docs/PROMPT.md`. O plano revisado e as deci
 
 ```
 src/
-  app/                   rotas: / , /busca , /volvo (+ /[modelo]/[versão|uf]/[uf]), /anuncio/[slug] (+ /remover, /reivindicar), /r/[código], /a/[código], /admin, /vendedor (+ /anuncios/[id]), /termos, /privacidade, /termos-do-anunciante, /auth/callback, /fotos/[...] (só local), /api/cron/[job], sitemap.xml, robots.txt
+  app/                   rotas: / , /busca , /volvo (+ /[modelo]/[versão|uf]/[uf]), /anuncio/[slug] (+ /remover, /reivindicar), /anunciar (+ /enviado, /fotos), /autorizar/[código], /r/[código], /a/[código], /admin, /vendedor (+ /anuncios/[id]), /termos, /privacidade, /termos-do-anunciante, /auth/callback, /fotos/[...] (só local), /api/cron/[job], sitemap.xml, robots.txt
   components/            componentes do site; ui/ = shadcn; search/ = busca e filtros; admin/ = telas do admin; analytics/ = banner de cookies e eventos
   content/               textos editoriais (checklists por modelo, buscas populares, textos das páginas de modelo) e jurídicos (legal.ts, seller-terms.ts)
   lib/
@@ -64,6 +64,7 @@ src/
     leads/               código do lead, mensagem (message.ts), links (contact.ts), hash/robôs (request.ts), recordClick (record.ts)
     admin/               acesso (auth, access), formulário, anúncios, anúncio colado (manual.ts), configurações e painel inicial do admin
     authorization/       convite assinado, mensagens e números do WhatsApp, autorização do vendedor (Fase 8a)
+    submissions/         formulário público "Anuncie" (opções, validação, criação, token das fotos)
     sellers/             acesso e sessão do vendedor, perfil, termos, reivindicação e painel
     removals/            pedido de remoção sem login
     photos/              fotos do vendedor: processamento (sharp), armazenamento (Supabase ou local) e banco
@@ -204,6 +205,10 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 - **Anúncio a partir de texto colado (9a)** (`/admin/anuncios/novo`, `lib/admin/manual.ts`): o admin cola o texto que o vendedor mandou ou que **copiou à mão** de um anúncio dele em outro site (WhatsApp, OLX, Webmotors, Marketplace…), com a origem, o link (opcional, só para consulta) e o WhatsApp (opcional, vale mais que o do texto). A mesma extração e normalização dos posts lê o texto; bloqueio e deduplicação valem igual ("criar mesmo assim" para outro carro; anúncio `removed` nunca volta). Cria um anúncio `origin = 'admin'` em moderação ("A contatar"), que segue o fluxo de autorização da 8a.
 - O texto fica em `manual_sources` (privada, como a legenda; nunca publicado). **Nada é buscado automaticamente** em outros sites: nem scraping, nem leitura do link.
 - Anúncios do admin não expiram sozinhos (não há post para reler): o admin marca vendido/expirado.
+- **Formulário público "Anuncie seu Volvo" (9b)** (`/anunciar`, `lib/submissions/`): o vendedor preenche o carro (modelo e, por modelo, só motores e versões vendidos no Brasil), o local, as fotos e os dados dele, vê a comissão e aceita os Termos do Anunciante. O anúncio entra em moderação **já autorizado** (`origin = 'direct'`, `authorized_at`, `listing_outreach` autorizado com a comissão; aba "Autorizados"). O WhatsApp digitado não é comprovado (`verified_via` nulo): o admin confirma com o vendedor antes de aprovar.
+- Descrição do formulário é pública (`seller_description`): telefone, e-mail, @ ou link nela são recusados (o comprador fala com o site). Fechado enquanto a comissão não estiver definida.
+- **Fotos do formulário:** o navegador manda uma por pedido para `POST /anunciar/fotos` com um token assinado (HMAC com `HASH_SALT`, 2 h, `lib/submissions/photo-token.ts`), só para anúncio do formulário ainda em moderação; mesmo processamento da Fase 6 (sharp, sem metadados, até 15). A licença é a seção 5 dos Termos do Anunciante. O admin vê as fotos na moderação e pode excluí-las.
+- Contra abuso: campo armadilha, limite por aparelho (`public_listings_per_day`, hash do IP em `listing_submissions`) e blocklist; anúncio parecido com um existente entra com a nota em `review_note`.
 
 ## Variáveis de ambiente
 

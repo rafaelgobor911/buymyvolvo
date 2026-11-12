@@ -11,7 +11,14 @@ import postgres from "postgres";
 const E2E_SELLER = "vendedor.teste@example.com";
 /** The seller who authorizes a demo listing in authorization.spec.ts. */
 const E2E_AUTHORIZING_PHONE = "+5548900000966";
+/** The seller who sends a listing through the public form in public-listing.spec.ts. */
+const E2E_FORM_PHONE = "+5548900000988";
 const E2E_CLEANUP = `
+  delete from public.listings where seller_id in
+    (select id from public.sellers where phone_e164 = '${E2E_FORM_PHONE}');
+  delete from public.terms_acceptances
+    where seller_id in (select id from public.sellers where phone_e164 = '${E2E_FORM_PHONE}');
+  delete from public.sellers where phone_e164 = '${E2E_FORM_PHONE}';
   delete from public.terms_acceptances
     where seller_id in (select id from public.sellers where phone_e164 = '${E2E_AUTHORIZING_PHONE}');
   update public.listings set seller_id = null
