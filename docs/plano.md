@@ -413,3 +413,7 @@ Nada de scraping de Marketplace, OLX ou Webmotors. Plano aprovado em 12/11/2026:
 - **CPF do anunciante (pedido do dono do produto, 12/11):** obrigatório no formulário e na página do convite (de loja, o do responsável), com o CNPJ opcional para loja. Os dois são conferidos pelos dígitos verificadores, no navegador e no servidor (aceita o CNPJ alfanumérico de 2026). Ficam privados (`sellers.cpf`, um vendedor por CPF; migration `20261119120000_seller_documents.sql`) e aparecem só no painel do admin. Termos do Anunciante e Privacidade citam o CPF (nova versão dos termos, `2026-11-19-rascunho`).
 
 **Pendências da 9b:** em produção, as fotos precisam da `SUPABASE_SERVICE_ROLE_KEY` na Vercel (sem ela, o formulário funciona sem fotos e avisa); o vendedor do formulário não ganha login (se quiser editar depois, usa "Reivindicar"); a reivindicação com login (Fase 6) ainda não pede CPF.
+
+### 9c (entregue no branch `phase-9c`, esperando aprovação)
+
+Pesquisa em [`docs/fontes.md`](fontes.md). Conclusão: os portais (OLX, Webmotors, iCarros, Marketplace) não oferecem leitura de anúncios de terceiros, e a Webmotors veda raspagem; o caminho é o **estoque da própria loja, com autorização** (link de feed ou o Buy My Volvo como canal nos sistemas de gestão), e o Mercado Livre só com a conta do próprio vendedor (OAuth). Próximo passo depende de uma loja piloto para o feed.

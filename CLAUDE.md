@@ -84,7 +84,7 @@ tests/
   integration/           Vitest contra TEST_DATABASE_URL (RLS, buscas de aceitação)
   unit/                  Vitest sem banco
   e2e/                   Playwright (desktop + mobile)
-docs/                    PROMPT.md, plano.md, meta-setup.md, login-google.md, login-email.md
+docs/                    PROMPT.md, plano.md, meta-setup.md, login-google.md, login-email.md, fontes.md (outras fontes de anúncios)
 RUNBOOK.md               colocar no ar, rotina e incidentes
 .github/workflows/       ci.yml, jobs.yml (agendamento), db-migrate.yml (manual)
 ```
