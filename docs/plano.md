@@ -357,7 +357,7 @@ Decisões do dono do produto (12/11/2026):
 - **Fotos:** começar pelas fotos do post do Instagram; com marca d'água, pedir as originais ao lojista (Fase 8b).
 - **CNPJ:** ainda não existe, mas os textos assumem que existirá (controlador "[a definir]").
 
-### 8a (entregue no branch `phase-8a`, esperando aprovação)
+### 8a (aprovada em 12/11/2026)
 
 - **Banco** (`20261116120000_seller_authorization.sql`): `listings.authorized_at` (obrigatório para `active`, e a política pública só mostra autorizados), `listing_outreach` (convite, resposta, vendedor, termos e comissão aceita; privada), `leads.routed_to`, `sellers.verified_via = 'invite_link'`, configurações `bmv_whatsapp_numbers`, `seller_commission_brl` e `authorization_invite_template`, e a mensagem padrão do comprador trocada ("Tenho interesse no Volvo…"). A migration devolve os anúncios `active` à moderação (com `audit_log`).
 - **Pipeline:** nunca publica; o desfecho `published` virou `ready` (dados bons, pronto para convidar).
@@ -375,7 +375,7 @@ Decisões do dono do produto (12/11/2026):
 **Pendências e perguntas da 8a:**
 
 - Valor da comissão e forma/prazo de pagamento (Termos do Anunciante, item 3).
-- Autorização "para os próximos anúncios" da mesma loja (hoje cada carro novo pede um convite; o link já permite autorizar de uma vez todos os anúncios do vendedor que estão na fila).
+- ~~Autorização "para os próximos anúncios" da mesma loja~~ **Decidido (12/11):** uma autorização por carro; cada carro novo pede o seu convite. (Na página do convite, o vendedor ainda pode marcar outros carros dele que já estão na fila; cada um fica com a sua autorização registrada.)
 - Um vendedor que autorizou pelo link e depois reivindica com login do Google ganha um segundo cadastro (ligar os dois fica para a 8b).
 - Revisão jurídica dos três textos (corretagem, arts. 722–729 do Código Civil; responsabilidade como intermediador).
 
