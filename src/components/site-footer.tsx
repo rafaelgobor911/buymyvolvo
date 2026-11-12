@@ -7,6 +7,7 @@ import { site } from "@/lib/site";
 
 const LINKS = [
   { href: "/volvo", label: "Modelos" },
+  { href: "/anunciar", label: "Anuncie seu Volvo" },
   { href: "/termos", label: "Termos de Uso" },
   { href: "/privacidade", label: "Privacidade" },
   { href: "/termos-do-anunciante", label: "Termos do Anunciante" },

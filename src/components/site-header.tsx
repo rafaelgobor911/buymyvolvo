@@ -15,6 +15,12 @@ export function SiteHeader() {
           {site.name}
         </Link>
         <div className="flex items-center gap-1">
+          <Link
+            href="/anunciar"
+            className="rounded-lg px-3 py-1.5 text-sm font-medium text-foreground hover:bg-secondary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+          >
+            Anuncie seu Volvo
+          </Link>
           <ThemeToggle />
         </div>
       </div>
