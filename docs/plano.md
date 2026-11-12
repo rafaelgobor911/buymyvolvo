@@ -393,7 +393,7 @@ Nada de scraping de Marketplace, OLX ou Webmotors. Plano aprovado em 12/11/2026:
 - **9b:** formulário público "Anuncie no Buy My Volvo", com a autorização (termos e comissão) e o **envio de fotos** (licença concedida no próprio formulário; mesmo processamento da Fase 6).
 - **9c:** pesquisa, sem código: API do Mercado Livre, feeds de estoque das lojas, o que OLX e Webmotors permitem (`docs/fontes.md`).
 
-### 9a (entregue no branch `phase-9a`, esperando aprovação)
+### 9a (aprovada e no ar em 12/11/2026; migration aplicada às 18:52 UTC)
 
 - **Banco** (`20261117120000_manual_listings.sql`): `listings.origin` aceita `admin`; tabela `manual_sources` (texto, origem, link, quem colou, extração e tokens), privada.
 - **Admin:** "Novo anúncio a partir de texto" em Anúncios e na Moderação. A extração lê o texto; bloqueio e deduplicação como nos posts (aviso de anúncio parecido com "criar mesmo assim"). O anúncio entra em "A contatar" e o painel "Texto colado" substitui o "Post original".
