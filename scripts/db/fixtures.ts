@@ -54,6 +54,11 @@ export interface FixtureListing {
    * (`{telefone}` becomes the listing's DDD 20 phone) and why it was held.
    */
   post?: FixturePost;
+  /**
+   * Listings in moderation: where the conversation with the seller stands
+   * (Phase 8a). Absent = still to contact; 'authorized' can be approved.
+   */
+  outreach?: "invited" | "authorized";
 }
 
 export interface FixturePost {
@@ -79,7 +84,10 @@ type Row = [
   options: string[],
   daysAgo: number,
   extra?: Partial<
-    Pick<FixtureListing, "versionText" | "status" | "seller" | "origin" | "redFlags" | "post">
+    Pick<
+      FixtureListing,
+      "versionText" | "status" | "seller" | "origin" | "redFlags" | "post" | "outreach"
+    >
   >,
 ];
 
@@ -155,7 +163,7 @@ const ROWS: Row[] = [
   ["ex30", "twin-motor", "ultra", 2024, 2025, 5_000, 239_000, "Curitiba", "PR", "particular", "cinza", A, "eletrico", [], 3, { versionText: "Twin Motor Performance" }],
   ["ex90", "twin-motor", "ultra", 2025, 2025, 3_000, 650_000, "São Paulo", "SP", "loja", "preto", A, "eletrico", ["7 lugares"], 2],
   // Not publicly searchable: must never show up in results
-  ["xc60", "t8", "polestar-engineered", 2020, 2021, 30_000, 295_000, "São Paulo", "SP", "loja", "branco", A, "hibrido_plugin", [], 1, { status: "pending_review", post: {
+  ["xc60", "t8", "polestar-engineered", 2020, 2021, 30_000, 295_000, "São Paulo", "SP", "loja", "branco", A, "hibrido_plugin", [], 1, { status: "pending_review", outreach: "invited", post: {
     caption: "XC60 T8 Polestar Engineered 2020/2021 🔥 Apenas 30 mil km, revisões na concessionária, teto panorâmico e som Bowers & Wilkins. R$ 295.000. Aceitamos troca e financiamos. Loja em São Paulo/SP. WhatsApp {telefone}",
     confidence: 0.7,
     issues: [{ code: "summary_copied", message: "O resumo repete trechos da legenda." }],
@@ -163,7 +171,7 @@ const ROWS: Row[] = [
   ["s60", "t5", "r-design", 2019, 2020, 39_000, 175_000, "Campinas", "SP", "particular", "branco", A, "gasolina", [], 4, { status: "removed" }],
   ["v40", "t4", "r-design", 2016, 2017, 58_000, 99_000, "São Paulo", "SP", "particular", "cinza", A, "gasolina", [], 12, { status: "sold" }],
   ["xc90", "t8", "inscription", 2020, 2020, 50_000, 320_000, "São Paulo", "SP", "particular", "preto", A, "hibrido_plugin", [], 45, { status: "expired" }],
-  ["xc40", "twin-motor", null, 2021, 2021, 40_000, 175_000, "Porto Alegre", "RS", "particular", "branco", A, "eletrico", [], 2, { status: "pending_review", post: {
+  ["xc40", "twin-motor", null, 2021, 2021, 40_000, 175_000, "Porto Alegre", "RS", "particular", "branco", A, "eletrico", [], 2, { status: "pending_review", outreach: "authorized", post: {
     caption: "Vendo meu XC40 Recharge Twin 2021, branco, 40 mil km, bateria na garantia e carregador de parede junto. 175 mil. Porto Alegre. {telefone}",
     confidence: 0.8,
     issues: [],
@@ -172,6 +180,12 @@ const ROWS: Row[] = [
     caption: "REPASSE ⚠️ XC60 T5 Dynamic 2014 prata, 102.000 km, precisa de pneus. 70k pra vender logo. Somente pix de sinal pra reservar. Goiânia {telefone}",
     confidence: 0.45,
     issues: [{ code: "repasse_com_sinal", message: "Repasse ou ágio com pedido de sinal: padrão comum de golpe, revisar antes de publicar." }],
+  } }],
+  // Seller authorization end to end (Phase 8a): the e2e invites, authorizes and approves it.
+  ["v60", "t5", "momentum", 2017, 2018, 58_000, 119_000, "Florianópolis", "SC", "loja", "prata", A, "gasolina", [], 1, { status: "pending_review", outreach: "invited", post: {
+    caption: "V60 T5 Momentum 2017/2018 prata, 58 mil km, revisado, pneus novos. R$ 119.000. Loja em Florianópolis/SC. {telefone}",
+    confidence: 0.92,
+    issues: [],
   } }],
 ];
 

@@ -234,7 +234,7 @@ export function generateSeedSql(): string {
     "  id, slug, status, origin, model_id, engine_id, trim_id, version_text, year_fab, year_model, km,",
     "  price_cents, city, uf, color, transmission, fuel, options, summary_ptbr, seller_type, seller_id,",
     "  contact_phone_e164, confidence, red_flags, is_claimed, first_seen_at, last_seen_at, sold_at,",
-    "  removed_at",
+    "  removed_at, authorized_at",
     ") values",
   ];
 
@@ -273,6 +273,8 @@ export function generateSeedSql(): string {
       seen,
       status === "sold" ? "now()" : "null",
       status === "removed" ? "now()" : "null",
+      // Public listings were authorized by their (fictitious) seller (Phase 8a).
+      status !== "pending_review" || l.outreach === "authorized" ? seen : "null",
     ].join(", ")})`;
   });
 
@@ -289,6 +291,7 @@ export function generateSeedSql(): string {
     "  red_flags = excluded.red_flags,",
     "  is_claimed = excluded.is_claimed, first_seen_at = excluded.first_seen_at,",
     "  last_seen_at = excluded.last_seen_at, sold_at = excluded.sold_at, removed_at = excluded.removed_at,",
+    "  authorized_at = excluded.authorized_at,",
     "  rejected_at = null, review_note = null, sold_via_site = null, seller_description = null;",
     "",
   );
@@ -336,6 +339,34 @@ export function generateSeedSql(): string {
       "",
     );
   }
+  // Where the conversation with each seller in moderation stands (Phase 8a).
+  // Re-seeding drops what the admin or the e2e did around the demo listings.
+  out.push(
+    "delete from public.listing_outreach where listing_id::text like '00000000-0000-4000-8000-%';",
+  );
+  const outreach = FIXTURE_LISTINGS.flatMap((l, i) => (l.outreach ? [{ l, i }] : []));
+  if (outreach.length) {
+    out.push(
+      "insert into public.listing_outreach (listing_id, status, invited_at, invited_by, responded_at, terms_version, commission_cents)",
+      "values",
+      outreach
+        .map(({ l, i }) =>
+          l.outreach === "authorized"
+            ? `  (${lit(fixtureListingId(i))}, 'authorized', now() - interval '2 days', 'system:seed', now() - interval '${l.daysAgo} days', 'demo', 100)`
+            : `  (${lit(fixtureListingId(i))}, 'invited', now() - interval '1 day', 'system:seed', null, null, null)`,
+        )
+        .join(",\n") + ";",
+    );
+  }
+  // Buyers write to a fictitious Buy My Volvo number (DDD 20): clicks show the
+  // preview page. The commission stays undefined (0) unless a test sets it.
+  out.push(
+    "insert into public.app_settings (key, value, description) values",
+    "  ('bmv_whatsapp_numbers', to_jsonb('+5520900000000'::text), 'WhatsApp do Buy My Volvo (fictício no seed)')",
+    "on conflict (key) do update set value = excluded.value;",
+    "update public.app_settings set value = '0' where key = 'seller_commission_brl';",
+    "",
+  );
   // A removal request waiting for the admin (fictitious seller and contact). Re-seeding
   // puts it back to pending and drops the blocklist entries its confirmation created.
   const removedIndex = FIXTURE_LISTINGS.findIndex((l) => l.status === "removed");
