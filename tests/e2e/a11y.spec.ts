@@ -72,6 +72,7 @@ test.describe("Acessibilidade: banner e áreas logadas", () => {
       "/admin/leads",
       "/admin/fontes",
       "/admin/configuracoes",
+      "/admin/anuncios/novo",
       // A listing whose seller was invited (authorization panel with the message).
       "/admin/moderacao/00000000-0000-4000-8000-000000000060",
     ]) {

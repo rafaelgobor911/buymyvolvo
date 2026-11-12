@@ -378,7 +378,26 @@ Decisões do dono do produto (12/11/2026):
 - Um vendedor que autorizou pelo link e depois reivindica com login do Google ganha um segundo cadastro (ligar os dois fica para a 8b).
 - Revisão jurídica dos três textos (corretagem, arts. 722–729 do Código Civil; responsabilidade como intermediador).
 
-### 8b (próxima)
+### 8b (adiada para o fim, decisão de 12/11)
+
+A parte "comercial" fica para depois da Fase 9:
 
 - Importar as fotos do post autorizado (Business Discovery; hashtag precisa do @ ou das fotos do vendedor), com recorte e desfoque de placa.
 - CRM das negociações: comprador e vendedor por código de contato, etapas, resultado e comissão.
+
+## Fase 9: fontes legítimas
+
+Nada de scraping de Marketplace, OLX ou Webmotors. Plano aprovado em 12/11/2026:
+
+- **9a:** anúncio a partir de texto colado no admin.
+- **9b:** formulário público "Anuncie no Buy My Volvo", com a autorização (termos e comissão) e o **envio de fotos** (licença concedida no próprio formulário; mesmo processamento da Fase 6).
+- **9c:** pesquisa, sem código: API do Mercado Livre, feeds de estoque das lojas, o que OLX e Webmotors permitem (`docs/fontes.md`).
+
+### 9a (entregue no branch `phase-9a`, esperando aprovação)
+
+- **Banco** (`20261117120000_manual_listings.sql`): `listings.origin` aceita `admin`; tabela `manual_sources` (texto, origem, link, quem colou, extração e tokens), privada.
+- **Admin:** "Novo anúncio a partir de texto" em Anúncios e na Moderação. A extração lê o texto; bloqueio e deduplicação como nos posts (aviso de anúncio parecido com "criar mesmo assim"). O anúncio entra em "A contatar" e o painel "Texto colado" substitui o "Post original".
+- **Testado com a extração real** num texto fictício (XC90 T8 Inscription 2021/2022): todos os campos certos, confiança 0,95, aviso de duplicata na segunda vez.
+- Privacidade (rascunho) passa a citar os anúncios colados.
+
+**Pendências da 9a:** anúncios do admin não expiram sozinhos (o admin marca vendido ou expirado).

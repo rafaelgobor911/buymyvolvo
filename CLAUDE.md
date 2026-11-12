@@ -62,7 +62,8 @@ src/
     instagram/           cliente da Graph API (graph.ts), recursos (api.ts) e Instagram fictício (fixtures.ts)
     jobs/                executor (trava + job_runs + dry-run), coleta, manutenção e registro dos jobs
     leads/               código do lead, mensagem (message.ts), links (contact.ts), hash/robôs (request.ts), recordClick (record.ts)
-    admin/               acesso (auth, access), formulário, anúncios, configurações e painel inicial do admin
+    admin/               acesso (auth, access), formulário, anúncios, anúncio colado (manual.ts), configurações e painel inicial do admin
+    authorization/       convite assinado, mensagens e números do WhatsApp, autorização do vendedor (Fase 8a)
     sellers/             acesso e sessão do vendedor, perfil, termos, reivindicação e painel
     removals/            pedido de remoção sem login
     photos/              fotos do vendedor: processamento (sharp), armazenamento (Supabase ou local) e banco
@@ -197,6 +198,12 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 - **Comissão:** `app_settings.seller_commission_brl` (reais inteiros); 0 = não definida, e aí convite e página do convite ficam bloqueados (o vendedor precisa ver o valor). Valor de negócio: **não invente**, o dono do produto define em Configurações.
 - **Contato pelo WhatsApp do site:** `/r` grava o lead e redireciona para `app_settings.bmv_whatsapp_numbers` (um número compartilhado pelos sócios em aparelhos conectados, ou vários com revezamento: `leads.routed_to`; clique repetido mantém o número). Sem número configurado, o botão some e `/r` volta ao anúncio. O seed usa um número fictício (DDD 20) e o clique mostra `/r/previa`.
 - Termos do Anunciante v2 (`content/seller-terms.ts`, versão `2026-11-16-rascunho`), Termos de Uso e Privacidade descrevem a intermediação. Rascunhos para o advogado.
+
+## Fontes legítimas (Fase 9)
+
+- **Anúncio a partir de texto colado (9a)** (`/admin/anuncios/novo`, `lib/admin/manual.ts`): o admin cola o texto que o vendedor mandou ou que **copiou à mão** de um anúncio dele em outro site (WhatsApp, OLX, Webmotors, Marketplace…), com a origem, o link (opcional, só para consulta) e o WhatsApp (opcional, vale mais que o do texto). A mesma extração e normalização dos posts lê o texto; bloqueio e deduplicação valem igual ("criar mesmo assim" para outro carro; anúncio `removed` nunca volta). Cria um anúncio `origin = 'admin'` em moderação ("A contatar"), que segue o fluxo de autorização da 8a.
+- O texto fica em `manual_sources` (privada, como a legenda; nunca publicado). **Nada é buscado automaticamente** em outros sites: nem scraping, nem leitura do link.
+- Anúncios do admin não expiram sozinhos (não há post para reler): o admin marca vendido/expirado.
 
 ## Variáveis de ambiente
 

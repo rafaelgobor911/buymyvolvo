@@ -131,7 +131,7 @@ Todo dia, a cada hora, aos 17 minutos (UTC):
 
 Nenhum anúncio vai ao ar sem a autorização do vendedor. Antes de tudo, em **Configurações → Intermediação**: o **WhatsApp do Buy My Volvo** (sem ele o botão de contato não aparece) e a **comissão fixa** (sem ela não dá para convidar).
 
-1. **Moderação → A contatar:** revise os dados do anúncio e clique em **Criar convite**.
+1. **Moderação → A contatar:** revise os dados do anúncio e clique em **Criar convite**. Anúncio que chegou por fora (WhatsApp, OLX, Webmotors, Marketplace): **Anúncios → Novo anúncio a partir de texto**, cole o texto e ele entra aqui.
 2. **Copiar mensagem** (ou **Abrir no WhatsApp do vendedor** / **Abrir o Direct do Instagram**) e envie. O link vale 30 dias; **Gerar novo link** invalida o anterior.
 3. O vendedor abre o link, lê as condições e autoriza (pode autorizar de uma vez os outros carros dele que estão na fila). O anúncio vai para **Autorizados**, com nome, WhatsApp e a comissão aceita.
 4. **Aprovar e publicar** (atalho A). O comprador que clica no anúncio cai no WhatsApp do Buy My Volvo com o código `VX-…` na mensagem.
