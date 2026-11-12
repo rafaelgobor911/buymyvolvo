@@ -122,3 +122,25 @@ export async function coverPhotos(sql: Sql, listingIds: string[]): Promise<Map<s
     where listing_id = any(${listingIds}) order by listing_id, position, created_at`;
   return new Map(rows.map((r) => [r.listing_id, r.storage_path]));
 }
+
+/**
+ * The admin removes a photo (moderation of photos sent by the seller).
+ * Returns the storage path, so the caller removes the files.
+ */
+export async function adminDeletePhoto(
+  sql: Sql,
+  input: { photoId: string; actor: string },
+): Promise<string | null> {
+  if (!/^[0-9a-f-]{36}$/.test(input.photoId)) return null;
+  return sql.begin(async (tx) => {
+    const [row] = await tx<{ listing_id: string; storage_path: string }[]>`
+      delete from public.listing_photos where id = ${input.photoId}
+      returning listing_id, storage_path`;
+    if (!row) return null;
+    await tx`
+      insert into public.audit_log (actor, action, entity, entity_id, changes)
+      values (${input.actor}, 'photo.delete', 'listing', ${row.listing_id},
+        ${tx.json({ photo: { from: input.photoId, to: null } })})`;
+    return row.storage_path;
+  });
+}

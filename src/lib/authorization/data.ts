@@ -441,6 +441,57 @@ export function parseAcceptForm(
 }
 
 /**
+ * The seller who authorizes (invite page or public form), found by the
+ * WhatsApp number or created. `via` is set only when the contact was proven
+ * (the invite went to the number published in the listing); the public form
+ * does not prove it, and the admin confirms by WhatsApp before approving.
+ */
+export async function upsertSellerByPhone(
+  tx: Tx,
+  input: {
+    name: string;
+    type: "loja" | "particular";
+    phone: string;
+    email: string | null;
+    via: "invite_link" | null;
+    now: Date;
+  },
+): Promise<string> {
+  const [existing] = await tx<{ id: string }[]>`
+    select id from public.sellers where phone_e164 = ${input.phone}
+    order by created_at limit 1 for update`;
+  if (existing) {
+    await tx`
+      update public.sellers set
+        email = coalesce(email, ${input.email}),
+        verified_via = coalesce(verified_via, ${input.via}),
+        verified_at = case when ${input.via}::text is null then verified_at
+          else coalesce(verified_at, ${input.now}) end,
+        terms_version_accepted = ${SELLER_TERMS_VERSION}, terms_accepted_at = ${input.now}
+      where id = ${existing.id}`;
+    return existing.id;
+  }
+  const [created] = await tx<{ id: string }[]>`
+    insert into public.sellers (
+      display_name, type, phone_e164, email, verified_via, verified_at,
+      terms_version_accepted, terms_accepted_at
+    ) values (
+      ${input.name}, ${input.type}, ${input.phone}, ${input.email}, ${input.via},
+      ${input.via ? input.now : null}, ${SELLER_TERMS_VERSION}, ${input.now}
+    ) returning id`;
+  return created!.id;
+}
+
+/** The Termos do Anunciante and the photo license (section 5), accepted now. */
+export async function recordSellerTerms(tx: Tx, sellerId: string, now: Date): Promise<void> {
+  await tx`
+    insert into public.terms_acceptances (seller_id, terms, version, accepted_at)
+    values (${sellerId}, 'seller_terms', ${SELLER_TERMS_VERSION}, ${now}),
+      (${sellerId}, 'photo_license', ${SELLER_TERMS_VERSION}, ${now})
+    on conflict (seller_id, terms, version) do nothing`;
+}
+
+/**
  * The seller authorizes on the invite page: the seller is created (or found by
  * the WhatsApp number), the terms and the photo license are recorded with the
  * commission shown, and the listings become publishable (the admin still
@@ -470,35 +521,12 @@ export async function acceptInvite(
     const eligible = new Set((await sameSellerListings(tx, resolved.listing)).map((l) => l.id));
     const ids = [resolved.listing.id, ...input.form.alsoIds.filter((id) => eligible.has(id))];
 
-    const [existing] = await tx<{ id: string; display_name: string }[]>`
-      select id, display_name from public.sellers where phone_e164 = ${parsed.phone}
-      order by created_at limit 1 for update`;
-    let sellerId: string;
-    if (existing) {
-      sellerId = existing.id;
-      await tx`
-        update public.sellers set
-          email = coalesce(email, ${parsed.email}),
-          verified_via = coalesce(verified_via, 'invite_link'),
-          verified_at = coalesce(verified_at, ${input.now}),
-          terms_version_accepted = ${SELLER_TERMS_VERSION}, terms_accepted_at = ${input.now}
-        where id = ${sellerId}`;
-    } else {
-      const [created] = await tx<{ id: string }[]>`
-        insert into public.sellers (
-          display_name, type, phone_e164, email, verified_via, verified_at,
-          terms_version_accepted, terms_accepted_at
-        ) values (
-          ${parsed.name}, ${parsed.type}, ${parsed.phone}, ${parsed.email}, 'invite_link',
-          ${input.now}, ${SELLER_TERMS_VERSION}, ${input.now}
-        ) returning id`;
-      sellerId = created!.id;
-    }
-    await tx`
-      insert into public.terms_acceptances (seller_id, terms, version, accepted_at)
-      values (${sellerId}, 'seller_terms', ${SELLER_TERMS_VERSION}, ${input.now}),
-        (${sellerId}, 'photo_license', ${SELLER_TERMS_VERSION}, ${input.now})
-      on conflict (seller_id, terms, version) do nothing`;
+    const sellerId = await upsertSellerByPhone(tx, {
+      ...parsed,
+      via: "invite_link",
+      now: input.now,
+    });
+    await recordSellerTerms(tx, sellerId, input.now);
 
     for (const id of ids) {
       await tx`
