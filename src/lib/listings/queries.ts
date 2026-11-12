@@ -27,7 +27,7 @@ export interface ListingCard {
   id: string;
   slug: string;
   status: ListingStatus;
-  origin: "instagram" | "direct";
+  origin: "instagram" | "direct" | "admin";
   modelId: string;
   modelName: string;
   engineName: string | null;
@@ -103,7 +103,7 @@ type CardRow = {
   id: string;
   slug: string;
   status: ListingStatus;
-  origin: "instagram" | "direct";
+  origin: "instagram" | "direct" | "admin";
   model_id: string;
   model_name: string;
   engine_name: string | null;

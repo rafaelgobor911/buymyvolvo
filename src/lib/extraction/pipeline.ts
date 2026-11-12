@@ -102,14 +102,14 @@ export function prefilterOrigin(
 
 const DEFAULT_THRESHOLD = 0.85;
 
-async function publishThreshold(sql: Sql): Promise<number> {
+export async function publishThreshold(sql: Sql): Promise<number> {
   const [row] = await sql<{ value: unknown }[]>`
     select value from public.app_settings where key = 'publish_confidence_threshold'`;
   const n = Number(row?.value);
   return Number.isFinite(n) && n > 0 && n <= 1 ? n : DEFAULT_THRESHOLD;
 }
 
-async function isBlocked(sql: Sql, kind: string, value: string | null): Promise<boolean> {
+export async function isBlocked(sql: Sql, kind: string, value: string | null): Promise<boolean> {
   if (!value) return false;
   const [row] = await sql<{ blocked: boolean }[]>`
     select exists (select 1 from public.blocklist where kind = ${kind} and value = ${value}) as blocked`;
@@ -135,9 +135,11 @@ async function finish(
     where id = ${id} and processing_status = 'pending'`;
 }
 
-const shortId = () => randomBytes(4).readUInt32BE(0).toString(36).padStart(6, "0").slice(-6);
+/** The slug's random last part (`short_id`), e.g. "4245s2". */
+export const shortId = () => randomBytes(4).readUInt32BE(0).toString(36).padStart(6, "0").slice(-6);
 
-async function findExistingListing(
+/** An existing listing of the same car: same dedupe key, or same model/year/contact and text. */
+export async function findExistingListing(
   sql: Sql,
   n: NormalizedListing,
   key: string | null,
@@ -159,10 +161,12 @@ async function findExistingListing(
       caption: string | null;
     }[]
   >`
-    select l.id, l.status, l.km, l.contact_phone_e164, l.contact_ig_username, rp.caption
+    select l.id, l.status, l.km, l.contact_phone_e164, l.contact_ig_username,
+      coalesce(rp.caption, ms.text) as caption
     from public.listings l
     left join public.listing_sources ls on ls.listing_id = l.id and ls.is_primary
     left join public.raw_posts rp on rp.id = ls.raw_post_id
+    left join public.manual_sources ms on ms.listing_id = l.id
     where l.model_id = ${n.modelId} and l.year_model = ${n.yearModel}
       and (l.contact_phone_e164 = ${n.contactPhone ?? ""} or l.contact_ig_username = ${n.contactIgUsername ?? ""})
     order by l.created_at

@@ -13,6 +13,7 @@ import { getEngine, getModel, getTrim } from "@/lib/taxonomy";
 
 import { blockListingContacts } from "./blocklist";
 import { type ListingPatch, publishable } from "./listing-form";
+import type { ManualChannel } from "./manual-channels";
 
 type Sql = postgres.Sql;
 type Tx = postgres.TransactionSql;
@@ -55,7 +56,7 @@ export interface AdminListing extends ListingPatch {
   slug: string;
   shortId: string;
   status: AdminStatus;
-  origin: "instagram" | "direct";
+  origin: ListingOrigin;
   confidence: number | null;
   isClaimed: boolean;
   /** The seller authorized the intermediation (needed to publish). */
@@ -74,14 +75,25 @@ export interface AdminListing extends ListingPatch {
     sourceType: string | null;
     issues: ModerationIssue[];
   } | null;
+  /** Ad text pasted by the admin (origin 'admin', Phase 9a). Internal. */
+  manual: {
+    channel: ManualChannel;
+    sourceUrl: string | null;
+    text: string;
+    createdBy: string;
+    createdAt: Date;
+    issues: ModerationIssue[];
+  } | null;
 }
+
+export type ListingOrigin = "instagram" | "direct" | "admin";
 
 interface ListingRow {
   id: string;
   slug: string;
   short_id: string;
   status: AdminStatus;
-  origin: "instagram" | "direct";
+  origin: ListingOrigin;
   model_id: string;
   engine_id: string | null;
   trim_id: string | null;
@@ -153,12 +165,21 @@ export async function getAdminListing(sql: Sql, id: string): Promise<AdminListin
       source_handle: string | null;
       source_type: string | null;
       extraction_json: { normalized?: { issues?: ModerationIssue[] } } | null;
+      manual_channel: ManualChannel | null;
+      manual_url: string | null;
+      manual_text: string | null;
+      manual_by: string | null;
+      manual_at: Date | null;
+      manual_json: { normalized?: { issues?: ModerationIssue[] } } | null;
     })[]
   >`
     select ${LISTING_COLUMNS(sql)}, rp.id as post_id, rp.caption, rp.permalink,
       rp.ig_username as post_username, rp.posted_at, s.handle as source_handle,
-      s.type as source_type, rp.extraction_json
+      s.type as source_type, rp.extraction_json, ms.channel as manual_channel,
+      ms.source_url as manual_url, ms.text as manual_text, ms.created_by as manual_by,
+      ms.created_at as manual_at, ms.extraction_json as manual_json
     from public.listings l
+    left join public.manual_sources ms on ms.listing_id = l.id
     left join lateral (
       select ls.raw_post_id from public.listing_sources ls
       where ls.listing_id = l.id order by ls.is_primary desc, ls.created_at limit 1
@@ -191,6 +212,16 @@ export async function getAdminListing(sql: Sql, id: string): Promise<AdminListin
           source: row.source_handle,
           sourceType: row.source_type,
           issues: row.extraction_json?.normalized?.issues ?? [],
+        }
+      : null,
+    manual: row.manual_text
+      ? {
+          channel: row.manual_channel!,
+          sourceUrl: row.manual_url,
+          text: row.manual_text,
+          createdBy: row.manual_by!,
+          createdAt: row.manual_at!,
+          issues: row.manual_json?.normalized?.issues ?? [],
         }
       : null,
   };
@@ -250,9 +281,12 @@ const ROW_SELECT = (sql: Sql | Tx) => sql`
   select l.id, l.short_id, l.status, m.name as model_name, e.name as engine_name,
     t.name as trim_name, l.year_model, l.price_cents, l.city, l.uf, l.confidence, l.red_flags,
     l.created_at,
-    (select rp.extraction_json #>> '{normalized,issues,0,message}'
-       from public.listing_sources ls join public.raw_posts rp on rp.id = ls.raw_post_id
-       where ls.listing_id = l.id order by ls.is_primary desc limit 1) as first_issue,
+    coalesce(
+      (select rp.extraction_json #>> '{normalized,issues,0,message}'
+         from public.listing_sources ls join public.raw_posts rp on rp.id = ls.raw_post_id
+         where ls.listing_id = l.id order by ls.is_primary desc limit 1),
+      (select ms.extraction_json #>> '{normalized,issues,0,message}'
+         from public.manual_sources ms where ms.listing_id = l.id)) as first_issue,
     coalesce((select o.status from public.listing_outreach o where o.listing_id = l.id),
       'to_contact') as outreach
   from public.listings l
@@ -474,7 +508,7 @@ export async function saveListing(
       changes,
     });
     // What the extraction got wrong, while the listing was still the model's work.
-    if (inModeration && row.origin === "instagram") {
+    if (inModeration && (row.origin === "instagram" || row.origin === "admin")) {
       for (const [field, change] of Object.entries(fieldChanges)) {
         await tx`
           insert into public.extraction_corrections
