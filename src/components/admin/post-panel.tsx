@@ -31,11 +31,21 @@ export function PostPanel({ listing }: { listing: AdminListing }) {
   if (!post && listing.manual) return <ManualPanel manual={listing.manual} />;
   if (!post) {
     return (
-      <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">
-        {listing.origin === "direct"
-          ? "Anúncio cadastrado direto no site: não há post de origem."
-          : "Sem post de origem (anúncio de exemplo)."}
-      </p>
+      <div className="flex flex-col gap-3 rounded-xl border border-dashed border-border p-4 text-sm">
+        <p className="text-muted-foreground">
+          {listing.origin === "direct"
+            ? "Enviado pelo vendedor no formulário do site (Anuncie seu Volvo). O WhatsApp informado não foi confirmado: fale com o vendedor antes de aprovar."
+            : "Sem post de origem (anúncio de exemplo)."}
+        </p>
+        {listing.sellerDescription && (
+          <div className="flex flex-col gap-1">
+            <p className="text-xs font-medium text-muted-foreground">
+              Descrição do vendedor (pública, no lugar do resumo)
+            </p>
+            <p className="whitespace-pre-wrap">{listing.sellerDescription}</p>
+          </div>
+        )}
+      </div>
     );
   }
   const source =

@@ -9,6 +9,7 @@ import { AuthorizationSection } from "@/components/admin/authorization-section";
 import { AdminSkeleton, StatusBadge } from "@/components/admin/bits";
 import { ModerationShortcuts, RejectForm } from "@/components/admin/listing-actions";
 import { ListingEditForm } from "@/components/admin/listing-edit-form";
+import { ListingPhotosPanel } from "@/components/admin/listing-photos-panel";
 import { moderationReasons, PostPanel } from "@/components/admin/post-panel";
 import { requireAdmin } from "@/lib/admin/auth";
 import { formValues, listingFormOptions } from "@/lib/admin/form-options";
@@ -146,6 +147,7 @@ async function ItemView({
               </ul>
             </section>
           )}
+          <ListingPhotosPanel listingId={listing.id} />
           <PostPanel listing={listing} />
           {inQueue && (
             <section

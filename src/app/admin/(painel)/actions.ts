@@ -22,6 +22,8 @@ import {
 import { parseSettingsForm, readSettings, saveSettings, SETTINGS } from "@/lib/admin/settings";
 import { createInvite, recordDecline } from "@/lib/authorization/data";
 import { db } from "@/lib/db/client";
+import { adminDeletePhoto } from "@/lib/photos/data";
+import { photoStorage } from "@/lib/photos/storage";
 
 const str = (form: FormData, key: string) => {
   const value = form.get(key);
@@ -142,4 +144,20 @@ export async function recordDeclineAction(_prev: FormState, form: FormData): Pro
   if (str(form, "from") === "moderacao") await goToNext(id, "recusado");
   refresh();
   return { status: "saved", message: "Recusa registrada. O anúncio foi rejeitado." };
+}
+
+// --- Photos sent by sellers (Phase 9b) ------------------------------------------------
+
+export async function adminDeletePhotoAction(_prev: FormState, form: FormData): Promise<FormState> {
+  const admin = await requireAdmin();
+  const storagePath = await adminDeletePhoto(db(), {
+    photoId: str(form, "foto"),
+    actor: actorOf(admin),
+  });
+  if (!storagePath) return { status: "error", message: "Foto não encontrada." };
+  await photoStorage()
+    ?.remove([`${storagePath}-1600.webp`, `${storagePath}-640.webp`])
+    .catch(() => {});
+  refresh();
+  return { status: "saved", message: "Foto excluída." };
 }

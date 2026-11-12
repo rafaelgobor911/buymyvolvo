@@ -61,6 +61,8 @@ export interface AdminListing extends ListingPatch {
   isClaimed: boolean;
   /** The seller authorized the intermediation (needed to publish). */
   authorizedAt: Date | null;
+  /** Public description written by the seller (form or seller panel). */
+  sellerDescription: string | null;
   firstSeenAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -116,6 +118,7 @@ interface ListingRow {
   confidence: string | null;
   is_claimed: boolean;
   authorized_at: Date | null;
+  seller_description: string | null;
   first_seen_at: Date;
   created_at: Date;
   updated_at: Date;
@@ -148,8 +151,8 @@ const LISTING_COLUMNS = (sql: Sql | Tx) => sql`
   l.id, l.slug, l.short_id, l.status, l.origin, l.model_id, l.engine_id, l.trim_id, l.version_text,
   l.year_fab, l.year_model, l.km, l.price_cents, l.city, l.uf, l.color, l.transmission, l.fuel,
   l.seller_type, l.contact_phone_e164, l.contact_ig_username, l.summary_ptbr, l.red_flags,
-  l.options, l.confidence, l.is_claimed, l.authorized_at, l.first_seen_at, l.created_at,
-  l.updated_at, l.review_note`;
+  l.options, l.confidence, l.is_claimed, l.authorized_at, l.seller_description, l.first_seen_at,
+  l.created_at, l.updated_at, l.review_note`;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -198,6 +201,7 @@ export async function getAdminListing(sql: Sql, id: string): Promise<AdminListin
     confidence: row.confidence === null ? null : Number(row.confidence),
     isClaimed: row.is_claimed,
     authorizedAt: row.authorized_at,
+    sellerDescription: row.seller_description,
     firstSeenAt: row.first_seen_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,

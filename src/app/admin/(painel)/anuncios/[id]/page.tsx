@@ -9,6 +9,7 @@ import { AdminSkeleton, formatDateTime, StatusBadge } from "@/components/admin/b
 import { AuthorizationSection } from "@/components/admin/authorization-section";
 import { StatusForm } from "@/components/admin/listing-actions";
 import { ListingEditForm } from "@/components/admin/listing-edit-form";
+import { ListingPhotosPanel } from "@/components/admin/listing-photos-panel";
 import { PostPanel } from "@/components/admin/post-panel";
 import { requireAdmin } from "@/lib/admin/auth";
 import { formValues, listingFormOptions } from "@/lib/admin/form-options";
@@ -148,6 +149,7 @@ async function ListingView({ params }: { params: Promise<{ id: string }> }) {
             </p>
           </section>
           <AuthorizationSection listing={listing} from="anuncios" />
+          <ListingPhotosPanel listingId={listing.id} />
           <PostPanel listing={listing} />
           <section aria-labelledby="historico" className="flex flex-col gap-2">
             <h2 id="historico" className="font-semibold">
