@@ -402,7 +402,7 @@ Nada de scraping de Marketplace, OLX ou Webmotors. Plano aprovado em 12/11/2026:
 
 **Pendências da 9a:** anúncios do admin não expiram sozinhos (o admin marca vendido ou expirado).
 
-### 9b (entregue no branch `phase-9b`, esperando aprovação)
+### 9b (aprovada e no ar em 12/11/2026; migrations aplicadas às 19:39 UTC)
 
 - **Página `/anunciar`** ("Anuncie seu Volvo", no cabeçalho, no rodapé e no sitemap): condições em linguagem simples (as mesmas da página do convite, com as fotos enviadas no lugar das do post) e o formulário: carro (motores e versões filtrados por modelo, só os vendidos no Brasil), local, até 15 fotos, dados do vendedor e o aceite dos Termos do Anunciante.
 - **Entra em moderação já autorizado** (aba "Autorizados"), com a comissão registrada. O WhatsApp não é comprovado: o admin confirma com o vendedor antes de aprovar. A descrição pública recusa telefone, e-mail, @ e links.
