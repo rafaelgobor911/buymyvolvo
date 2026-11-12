@@ -29,10 +29,11 @@ describe.skipIf(!url)("admin operations (database)", () => {
   ) => {
     const [{ id }] = await sql<{ id: string }[]>`
       insert into listings (slug, status, origin, model_id, engine_id, year_model, price_cents,
-        contact_phone_e164, contact_ig_username, removed_at)
+        contact_phone_e164, contact_ig_username, removed_at, authorized_at)
       values (${`volvo-v60-t5-2017-teste-${suffix}`}, ${fields.status ?? "active"}, 'instagram',
         'v60', 't5', 2017, 11500000, ${fields.phone ?? null}, ${fields.ig ?? null},
-        ${fields.status === "removed" ? new Date() : null})
+        ${fields.status === "removed" ? new Date() : null},
+        ${fields.status === "pending_review" ? null : new Date()})
       returning id`;
     listings.push(id);
     return id;

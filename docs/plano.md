@@ -345,3 +345,41 @@ Decidido em 09/11/2026: nome **Buy My Volvo** e domínio **buymyvolvo.com.br**; 
 - Redirecionar o `www` na Vercel (opcional).
 - Local padrão das lojas sem cidade na bio (webcarsbrasil, nattamotors, consultingcars, safetycarmotors).
 - SMTP próprio para o login dos vendedores por link (pode ser depois do lançamento).
+
+## Fase 8: modelo intermediado (v2)
+
+Decisões do dono do produto (12/11/2026):
+
+- O Buy My Volvo **intermedeia** as vendas: todo anúncio passa pela moderação, o dono do produto pede a autorização do vendedor (com a comissão informada) e só então publica. Os anúncios que já estavam no ar voltam à moderação.
+- **Comissão:** sempre paga pelo vendedor, **valor fixo**, sem exclusividade. O valor ainda não foi definido (Configurações → "Comissão fixa do vendedor"; com 0, convites bloqueados).
+- **WhatsApp:** os contatos vão para o WhatsApp do Buy My Volvo. O ideal é cair nos dois sócios (um número de WhatsApp Business em aparelhos conectados); se não der, revezamento entre dois números.
+- **Dados:** guardar os dados de vendedor e comprador, deixando claro que servem só para a negociação.
+- **Fotos:** começar pelas fotos do post do Instagram; com marca d'água, pedir as originais ao lojista (Fase 8b).
+- **CNPJ:** ainda não existe, mas os textos assumem que existirá (controlador "[a definir]").
+
+### 8a (entregue no branch `phase-8a`, esperando aprovação)
+
+- **Banco** (`20261116120000_seller_authorization.sql`): `listings.authorized_at` (obrigatório para `active`, e a política pública só mostra autorizados), `listing_outreach` (convite, resposta, vendedor, termos e comissão aceita; privada), `leads.routed_to`, `sellers.verified_via = 'invite_link'`, configurações `bmv_whatsapp_numbers`, `seller_commission_brl` e `authorization_invite_template`, e a mensagem padrão do comprador trocada ("Tenho interesse no Volvo…"). A migration devolve os anúncios `active` à moderação (com `audit_log`).
+- **Pipeline:** nunca publica; o desfecho `published` virou `ready` (dados bons, pronto para convidar).
+- **Moderação:** abas por etapa (A contatar, Convite enviado, Autorizados), painel "Autorização do vendedor" (criar convite, copiar mensagem e link, abrir no WhatsApp do vendedor ou no Direct, gerar novo link, registrar recusa) e aprovação só com autorização. Alertas no início: WhatsApp do site e comissão não configurados, autorizados esperando aprovação.
+- **Página do convite** `/autorizar/<código>`: condições em linguagem simples, formulário do vendedor, outros anúncios do mesmo vendedor e recusa. Sem Google tag (o endereço é a credencial).
+- **Anúncio público:** sem nome, telefone, @, post ou selo "Via Instagram" do vendedor; aviso "Anúncio intermediado pelo Buy My Volvo… não recebe pagamento pelo carro"; botão "Tenho interesse: falar no WhatsApp" para o número do site; fotos (quando houver) ou "Fotos em preparação". JSON-LD sem vendedor.
+- **Textos:** Termos do Anunciante v2, Termos de Uso e Privacidade (rascunhos), rodapé, home e prévia do contato.
+
+**Antes do merge (produção):**
+
+1. Aplicar a migration pelo `db-migrate.yml` a partir do branch `phase-8a` (os ~30 anúncios no ar saem do site na hora, até a autorização).
+2. Em Configurações: o **WhatsApp do Buy My Volvo** e a **comissão**.
+3. Merge e deploy.
+
+**Pendências e perguntas da 8a:**
+
+- Valor da comissão e forma/prazo de pagamento (Termos do Anunciante, item 3).
+- Autorização "para os próximos anúncios" da mesma loja (hoje cada carro novo pede um convite; o link já permite autorizar de uma vez todos os anúncios do vendedor que estão na fila).
+- Um vendedor que autorizou pelo link e depois reivindica com login do Google ganha um segundo cadastro (ligar os dois fica para a 8b).
+- Revisão jurídica dos três textos (corretagem, arts. 722–729 do Código Civil; responsabilidade como intermediador).
+
+### 8b (próxima)
+
+- Importar as fotos do post autorizado (Business Discovery; hashtag precisa do @ ou das fotos do vendedor), com recorte e desfoque de placa.
+- CRM das negociações: comprador e vendedor por código de contato, etapas, resultado e comissão.

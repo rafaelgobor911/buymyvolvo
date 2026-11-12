@@ -149,7 +149,7 @@ describe.skipIf(!url)("extraction pipeline (database)", () => {
     await sql.end();
   });
 
-  it("publishes, moderates, merges, blocks and records each post once", async () => {
+  it("moderates (never publishes), merges, blocks and records each post once", async () => {
     await addPost(
       "test-a",
       "[a] Vendo XC60 T8 Inscription 19/20, 41.000 km, R$ 239.900. (41) 90000-0101",
@@ -175,7 +175,7 @@ describe.skipIf(!url)("extraction pipeline (database)", () => {
 
     expect(stats.processed).toBe(8);
     expect(stats.outcomes).toMatchObject({
-      published: 1,
+      ready: 1,
       merged: 1,
       moderation: 1,
       error: 1,
@@ -187,8 +187,9 @@ describe.skipIf(!url)("extraction pipeline (database)", () => {
     expect(extract).toHaveBeenCalledTimes(6);
     expect(stats.costUsd).toBeGreaterThan(0);
 
+    // Good data, but it waits for the seller's authorization (Phase 8a).
     const a = await listingOf("test-a");
-    expect(a?.status).toBe("active");
+    expect(a?.status).toBe("pending_review");
     expect(a?.dedupe_key).toMatch(/^[0-9a-f]{32}$/);
     expect((await listingOf("test-b"))?.id).toBe(a?.id);
 
@@ -290,7 +291,7 @@ describe.skipIf(!url)("extraction pipeline (database)", () => {
     const retried = await processPendingRawPosts(sql, { extract, now: () => NOW });
     expect(retried.processed).toBe(2);
     expect(await statusOf("test-k")).toBe("extracted");
-    expect((await listingOf("test-k"))?.status).toBe("active");
+    expect((await listingOf("test-k"))?.status).toBe("pending_review");
     // test-d still fails with the stub: back to "error", never published.
     expect(await statusOf("test-d")).toBe("error");
   });

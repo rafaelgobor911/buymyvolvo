@@ -9,7 +9,14 @@ import postgres from "postgres";
  * seed's own rows are touched (upserts by fixed ids).
  */
 const E2E_SELLER = "vendedor.teste@example.com";
+/** The seller who authorizes a demo listing in authorization.spec.ts. */
+const E2E_AUTHORIZING_PHONE = "+5548900000966";
 const E2E_CLEANUP = `
+  delete from public.terms_acceptances
+    where seller_id in (select id from public.sellers where phone_e164 = '${E2E_AUTHORIZING_PHONE}');
+  update public.listings set seller_id = null
+    where seller_id in (select id from public.sellers where phone_e164 = '${E2E_AUTHORIZING_PHONE}');
+  delete from public.sellers where phone_e164 = '${E2E_AUTHORIZING_PHONE}';
   delete from public.listing_photos where listing_id::text like '00000000-0000-4000-8000-%';
   delete from public.listing_claims
     where seller_id in (select id from public.sellers where email = '${E2E_SELLER}');

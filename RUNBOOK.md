@@ -122,10 +122,20 @@ Todo dia, a cada hora, aos 17 minutos (UTC):
 
 ### O que olhar
 
-- **Início do admin** (`/admin`): fila de moderação, remoções vencendo (48 h), alertas de jobs e do token.
+- **Início do admin** (`/admin`): fila de moderação (anúncios a contatar e autorizados esperando aprovação), remoções vencendo (48 h), alertas de jobs e do token.
 - **E-mail do GitHub:** um job que responde diferente de 200 faz o workflow falhar e o GitHub avisa por e-mail.
 - **Remoções:** o compromisso público é confirmar em até 48 h (`/admin/remocoes`).
 - **Custo de IA:** os últimos 30 dias aparecem em `/admin/jobs`.
+
+### Intermediação (desde a Fase 8a)
+
+Nenhum anúncio vai ao ar sem a autorização do vendedor. Antes de tudo, em **Configurações → Intermediação**: o **WhatsApp do Buy My Volvo** (sem ele o botão de contato não aparece) e a **comissão fixa** (sem ela não dá para convidar).
+
+1. **Moderação → A contatar:** revise os dados do anúncio e clique em **Criar convite**.
+2. **Copiar mensagem** (ou **Abrir no WhatsApp do vendedor** / **Abrir o Direct do Instagram**) e envie. O link vale 30 dias; **Gerar novo link** invalida o anterior.
+3. O vendedor abre o link, lê as condições e autoriza (pode autorizar de uma vez os outros carros dele que estão na fila). O anúncio vai para **Autorizados**, com nome, WhatsApp e a comissão aceita.
+4. **Aprovar e publicar** (atalho A). O comprador que clica no anúncio cai no WhatsApp do Buy My Volvo com o código `VX-…` na mensagem.
+5. Se o vendedor disser que não quer, use **O vendedor não quer: registrar recusa** (o anúncio é rejeitado; uma repostagem volta para a fila com o aviso).
 
 ---
 

@@ -2,7 +2,7 @@
 
 # CLAUDE.md: convenções do projeto
 
-Agregador e buscador de anúncios de **Volvo seminovos e usados no Brasil**. Fontes: posts do Instagram coletados **só pela API oficial da Meta** e anúncios cadastrados direto no site. Nome: **Buy My Volvo** (`NEXT_PUBLIC_SITE_NAME`), domínio **buymyvolvo.com.br**, com links cruzados para a comunidade Made by Sweden (madebysweden.com.br). Operação em produção: [`RUNBOOK.md`](RUNBOOK.md).
+Agregador e buscador de anúncios de **Volvo seminovos e usados no Brasil**, com **intermediação** desde a Fase 8a: o anúncio só vai ao ar com a autorização do vendedor, e o comprador fala com o WhatsApp do Buy My Volvo. Fontes: posts do Instagram coletados **só pela API oficial da Meta** e anúncios cadastrados direto no site. Nome: **Buy My Volvo** (`NEXT_PUBLIC_SITE_NAME`), domínio **buymyvolvo.com.br**, com links cruzados para a comunidade Made by Sweden (madebysweden.com.br). Operação em produção: [`RUNBOOK.md`](RUNBOOK.md).
 
 A especificação completa está em `docs/PROMPT.md`. O plano revisado e as decisões em aberto estão em `docs/plano.md`.
 
@@ -188,6 +188,16 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 - **Esqueletos de carregamento** têm pelo menos a altura da tela (`min-h-svh`): sem isso o rodapé aparece e pula quando a página chega (CLS no celular).
 - **Testes:** `tests/e2e/a11y.spec.ts` (axe, WCAG 2.1 AA, claro e escuro) e `tests/e2e/seo.spec.ts`. O Playwright usa um GA4 falso (`G-E2ETEST000`) e começa com os cookies já "recusados"; `analytics.spec.ts` testa o banner sem isso e nunca carrega o script real.
 
+## Intermediação (Fase 8a)
+
+- **Nada é publicado sem autorização:** o banco exige `listings.authorized_at` para `status = 'active'` (constraint `listings_active_requires_authorization`) e a política pública só mostra anúncios autorizados (vendidos e expirados também). O pipeline nunca publica: `ready` (dados bons, pronto para convidar) ou `moderation` (revisar dados). A migration da 8a devolveu à moderação os anúncios que estavam no ar.
+- **Moderação por etapas** (`listing_outreach`; sem linha = "A contatar"): A contatar → Convite enviado → Autorizado → aprovar. Recusa (no link ou registrada pelo admin) rejeita o anúncio; uma repostagem volta para a fila com o aviso. Aprovar exige `authorized_at` (`NEEDS_AUTHORIZATION`).
+- **Convite** (`lib/authorization/`): link `/autorizar/<short_id>.<assinatura>`, HMAC com `HASH_SALT` sobre o anúncio e o `invited_at` (nada secreto guardado; "Gerar novo link" invalida o anterior; vale 30 dias). O painel "Autorização do vendedor" mostra a mensagem (`authorization_invite_template`, com `{link}`) para copiar, abrir no WhatsApp do vendedor ou no Direct.
+- **Página do convite** (`/autorizar/[codigo]`, `noindex`, sem Google tag): resumo do anúncio, condições (comissão fixa, sem exclusividade, sem a marca/contato do vendedor, fotos do post, dados só para a negociação), formulário (nome, loja/particular, WhatsApp, e-mail opcional, aceite) e os outros anúncios do mesmo vendedor em moderação (mesmo telefone ou mesma conta de loja). O aceite cria ou reaproveita o vendedor pelo WhatsApp (`verified_via = 'invite_link'`), grava `seller_terms` + `photo_license` e a comissão aceita (`listing_outreach.commission_cents`), com `audit_log` (`public:authorization`).
+- **Comissão:** `app_settings.seller_commission_brl` (reais inteiros); 0 = não definida, e aí convite e página do convite ficam bloqueados (o vendedor precisa ver o valor). Valor de negócio: **não invente**, o dono do produto define em Configurações.
+- **Contato pelo WhatsApp do site:** `/r` grava o lead e redireciona para `app_settings.bmv_whatsapp_numbers` (um número compartilhado pelos sócios em aparelhos conectados, ou vários com revezamento: `leads.routed_to`; clique repetido mantém o número). Sem número configurado, o botão some e `/r` volta ao anúncio. O seed usa um número fictício (DDD 20) e o clique mostra `/r/previa`.
+- Termos do Anunciante v2 (`content/seller-terms.ts`, versão `2026-11-16-rascunho`), Termos de Uso e Privacidade descrevem a intermediação. Rascunhos para o advogado.
+
 ## Variáveis de ambiente
 
 - Segredos **só** em variáveis de ambiente. **Nunca** commite `.env*` (o `.gitignore` já bloqueia). Mantenha `.env.example` atualizado a cada variável nova.
@@ -197,10 +207,10 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 ## Regras inegociáveis (compliance)
 
 1. **Proibido scraping do Instagram.** Nada de navegador headless, login automatizado, bibliotecas não oficiais (instaloader, instagrapi etc.), proxies ou engenharia reversa. Somente a **API oficial da Meta** (Graph API em `graph.facebook.com`). Vale também "só para testar".
-2. **Imagens de terceiros:** fotos de anúncios **não reivindicados** nunca são copiadas para o nosso storage nem reprocessadas. Exiba pelo embed oficial do Instagram ou por um card com link para o post e crédito ao autor. Fotos no nosso storage só de vendedores que aceitaram os termos e concederam licença, ou que cadastraram direto.
-3. **Legenda original:** em anúncio não reivindicado, mostre dados estruturados + um resumo escrito com palavras próprias (IA). A legenda completa fica no embed ou no link.
-4. **LGPD:** guarde o mínimo do vendedor (telefone e @ publicados no próprio anúncio). Toda página de anúncio tem **"Este anúncio é seu? Remover | Reivindicar"**. Remoção processada em até 48h, com **blocklist** que impede reimportar. **Não colete dados pessoais do comprador** no clique do WhatsApp; IP e user agent só em **hash com salt** (`HASH_SALT`).
-5. **Transparência:** todo anúncio exibe "Anúncio de terceiro. O {site} não participa da negociação." e o bloco de dicas de segurança.
+2. **Imagens de terceiros:** nada vai ao ar sem a **autorização do vendedor** (Termos do Anunciante com a licença das fotos, `terms_acceptances`). Fotos no nosso storage só de anúncio autorizado ou reivindicado, com a licença aceita. Sem autorização, nenhuma foto é copiada nem reprocessada.
+3. **Legenda original:** a página mostra dados estruturados + um resumo escrito com palavras próprias (IA) ou a descrição do vendedor; nunca a legenda completa. A página pública não mostra o nome, o telefone, o @ nem o post do vendedor (modelo intermediado).
+4. **LGPD:** do vendedor, guarde o que o anúncio publicou e o que ele informou ao autorizar (nome, tipo, WhatsApp, e-mail opcional), só para a intermediação. Toda página de anúncio tem **"Este anúncio é seu? Remover | Reivindicar"**. Remoção processada em até 48h, com **blocklist** que impede reimportar. **O clique no botão de contato não coleta dado pessoal do comprador**: IP e user agent só em **hash com salt** (`HASH_SALT`). Dados que o comprador passar na conversa do WhatsApp servem só para a negociação (registro no CRM da Fase 8b).
+5. **Transparência:** todo anúncio exibe "Anúncio intermediado pelo {site}…", diz que o {site} não recebe pagamento pelo carro e mostra o bloco de dicas de segurança. A comissão é paga pelo vendedor e aparece na página de autorização antes do aceite.
 6. **Marca Volvo:** uso apenas descritivo. **Sem logotipo, sem "iron mark", sem elementos visuais oficiais.** O rodapé sempre mostra "Não afiliado à Volvo Car Corporation." (`site.brandDisclaimer`).
 7. **Segredos** só em env; `.env.example` sempre atualizado.
 8. Textos jurídicos (termos, privacidade, termos do anunciante) são **rascunhos marcados para revisão por advogado**.
@@ -208,7 +218,7 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 Também não faça:
 
 - Não invente dados de mercado (preço médio, FIPE) sem fonte; proponha a integração antes.
-- Não armazene dados pessoais do comprador.
+- Não armazene dados pessoais do comprador fora da negociação (nada no clique; o CRM da Fase 8b guarda só o necessário, com a finalidade escrita).
 - Não pule fases.
 
 ## Fatos da API da Meta (conferidos em nov/2026; detalhes em `docs/meta-setup.md`)

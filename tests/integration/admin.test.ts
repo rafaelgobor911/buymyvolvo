@@ -6,7 +6,9 @@ import { parseListingForm } from "@/lib/admin/listing-form";
 import {
   getAdminListing,
   listingHistory,
+  moderationCounts,
   moderationQueue,
+  NEEDS_AUTHORIZATION,
   nextInQueue,
   saveListing,
   searchAdminListings,
@@ -32,10 +34,10 @@ describe.skipIf(!url)("admin (database)", () => {
     const listing = async (suffix: string, status: string, createdAgo: string) => {
       const [{ id }] = await sql<{ id: string }[]>`
         insert into listings (slug, status, origin, model_id, engine_id, year_fab, year_model, km,
-          price_cents, city, uf, contact_phone_e164, confidence, created_at)
+          price_cents, city, uf, contact_phone_e164, confidence, created_at, authorized_at)
         values (${`volvo-xc40-t5-2019-teste-${suffix}`}, ${status}, 'instagram', 'xc40', 't5',
           2018, 2019, 52000, 14500000, 'Curitiba', 'PR', '+5541900000301', 0.6,
-          now() - ${createdAgo}::interval)
+          now() - ${createdAgo}::interval, ${status === "pending_review" ? null : new Date()})
         returning id`;
       return id;
     };
@@ -61,11 +63,21 @@ describe.skipIf(!url)("admin (database)", () => {
     await sql.end();
   });
 
-  it("lists the moderation queue oldest first, with the post and its issues", async () => {
+  it("lists the moderation queue oldest first (authorized ones first), with the post and its issues", async () => {
+    const toContact = await moderationQueue(sql, { outreach: "to_contact" });
+    expect(toContact.slice(0, 2).map((q) => q.id)).toEqual([pendingId, otherPendingId]);
+    expect(toContact[0]).toMatchObject({
+      title: "XC40 T5",
+      firstIssue: "Ano incoerente.",
+      outreach: "to_contact",
+    });
+    // Listings the seller already authorized (the seed has one) lead the full queue.
+    const authorized = await moderationQueue(sql, { outreach: "authorized" });
     const queue = await moderationQueue(sql);
-    expect(queue.slice(0, 2).map((q) => q.id)).toEqual([pendingId, otherPendingId]);
-    expect(queue[0]).toMatchObject({ title: "XC40 T5", firstIssue: "Ano incoerente." });
-    expect(await nextInQueue(sql, pendingId)).toBe(otherPendingId);
+    expect(queue.slice(0, authorized.length).every((q) => q.outreach === "authorized")).toBe(true);
+    expect(await nextInQueue(sql, pendingId)).toBe(authorized[0]?.id ?? otherPendingId);
+    const counts = await moderationCounts(sql);
+    expect(counts.to_contact).toBeGreaterThanOrEqual(2);
 
     const listing = await getAdminListing(sql, pendingId);
     expect(listing?.post).toMatchObject({
@@ -95,6 +107,11 @@ describe.skipIf(!url)("admin (database)", () => {
       current,
     );
     if (!parsed.ok) throw new Error(JSON.stringify(parsed.errors));
+    // Nothing goes public without the seller's authorization (Phase 8a).
+    expect(
+      await saveListing(sql, { id: pendingId, patch: parsed.patch, approve: true, ...ADMIN }),
+    ).toEqual({ ok: false, error: NEEDS_AUTHORIZATION });
+    await sql`update listings set authorized_at = now() where id = ${pendingId}`;
     const result = await saveListing(sql, {
       id: pendingId,
       patch: parsed.patch,
@@ -214,7 +231,10 @@ describe.skipIf(!url)("admin (database)", () => {
   it("the dashboard counts the queue; the audit trail is append-only and private", async () => {
     const dashboard = await loadDashboard(sql);
     expect(dashboard.pending).toBeGreaterThan(0);
-    expect(dashboard.alerts[0]).toMatchObject({ href: "/admin/moderacao" });
+    const hrefs = dashboard.alerts.map((a) => a.href);
+    expect(hrefs).toContain("/admin/moderacao?etapa=contatar");
+    // The seed's commission is not defined: inviting sellers is blocked until it is.
+    expect(dashboard.alerts.map((a) => a.text).join(" ")).toMatch(/comissão fixa/);
 
     await expect(sql`update audit_log set note = 'x'`).rejects.toThrow(/append-only/);
     await expect(sql`delete from audit_log`).rejects.toThrow(/append-only/);

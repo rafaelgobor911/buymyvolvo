@@ -26,9 +26,9 @@ describe.skipIf(!url)("sellers, claims and removals (database)", () => {
   const listing = async (suffix: string, phone = "+5541900000501") => {
     const [{ id }] = await sql<{ id: string }[]>`
       insert into listings (slug, status, origin, model_id, engine_id, year_model, price_cents,
-        contact_phone_e164)
+        contact_phone_e164, authorized_at)
       values (${`volvo-xc90-t8-2021-teste-${suffix}`}, 'active', 'instagram', 'xc90', 't8', 2021,
-        32000000, ${phone})
+        32000000, ${phone}, now())
       returning id`;
     listings.push(id);
     return id;

@@ -12,7 +12,7 @@ test.describe("Home", () => {
 
     await expect(page.getByRole("heading", { name: "Compre com segurança" })).toBeVisible();
     await expect(page.getByText("Não afiliado à Volvo Car Corporation.")).toBeVisible();
-    await expect(page.getByText(/não participa da negociação/)).toBeVisible();
+    await expect(page.getByText(/intermedeia a venda de Volvo seminovos/)).toBeVisible();
   });
 
   test("submits the search as a GET to /busca", async ({ page }) => {

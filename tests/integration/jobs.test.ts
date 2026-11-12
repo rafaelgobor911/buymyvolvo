@@ -77,6 +77,17 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
       where rp.ig_media_id = ${mediaId}`;
     return row;
   };
+  /**
+   * Nothing is published automatically since Phase 8a: stands in for the
+   * seller's authorization and the admin's approval of the fictitious listings.
+   */
+  const publishFixtureListings = () => sql`
+    update public.listings l set status = 'active', authorized_at = ${NOW}
+    where l.status = 'pending_review' and l.year_model is not null
+      and (l.price_cents is not null or l.contact_phone_e164 is not null)
+      and exists (
+        select 1 from public.listing_sources ls join public.raw_posts rp on rp.id = ls.raw_post_id
+        where ls.listing_id = l.id and rp.ig_media_id like 'fxm_%')`;
 
   beforeAll(async () => {
     sql = postgres(url!, { max: 1, onnotice: () => {} });
@@ -153,7 +164,10 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
     const result = await run("process-posts", { limit: 100 });
     expect(result.status).toBe("succeeded");
     expect(result.stats).toMatchObject({ processed: 33 });
-    expect(Number(result.stats.published)).toBeGreaterThanOrEqual(28);
+    // Ready for the seller's authorization; nothing went public on its own.
+    expect(Number(result.stats.ready)).toBeGreaterThanOrEqual(28);
+    expect(await listingOf("fxm_nordica_01")).toMatchObject({ status: "pending_review" });
+    await publishFixtureListings();
     // "VENDIDO" is dropped by the pre-filter; the store-hours post (curated shop,
     // so no Brazil check) reaches the extractor, which says it is not a listing.
     expect(Number(result.stats.prefiltered_out)).toBe(1);
@@ -218,6 +232,7 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
 
   it("flags an old hashtag-only listing as possibly unavailable on its page", async () => {
     await run("process-posts", { limit: 100 });
+    await publishFixtureListings();
     const slugOf = async (mediaId: string) => {
       const [row] = await sql<{ slug: string; id: string }[]>`
         select l.slug, l.id from public.listings l
@@ -238,6 +253,7 @@ describe.skipIf(!url)("collection jobs (fixtures)", () => {
 
   it("expires hashtag-only listings after the configured days, leaving shop listings alone", async () => {
     await run("process-posts", { limit: 100 });
+    await publishFixtureListings();
     expect((await listingOf("fxm_tag_01"))?.status).toBe("active");
     const later = new Date(NOW.getTime() + 31 * DAY);
     const result = await run("expire-listings", { now: later });

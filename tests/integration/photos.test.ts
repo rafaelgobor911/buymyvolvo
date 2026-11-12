@@ -45,9 +45,9 @@ describe.skipIf(!url)("seller photos and editing (database)", () => {
     otherSellerId = await profile("fotos.b@example.com");
     [{ id: listingId }] = await sql<{ id: string }[]>`
       insert into listings (slug, status, origin, model_id, engine_id, year_model, price_cents,
-        contact_phone_e164, seller_id, is_claimed)
+        contact_phone_e164, seller_id, is_claimed, authorized_at)
       values ('volvo-xc40-t5-2020-teste-ph001', 'active', 'instagram', 'xc40', 't5', 2020, 15000000,
-        '+5541900000601', ${sellerId}, true)
+        '+5541900000601', ${sellerId}, true, now())
       returning id`;
   });
 

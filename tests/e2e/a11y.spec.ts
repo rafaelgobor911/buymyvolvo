@@ -71,9 +71,34 @@ test.describe("Acessibilidade: banner e áreas logadas", () => {
       "/admin/anuncios",
       "/admin/leads",
       "/admin/fontes",
+      "/admin/configuracoes",
+      // A listing whose seller was invited (authorization panel with the message).
+      "/admin/moderacao/00000000-0000-4000-8000-000000000060",
     ]) {
       await page.goto(path, { waitUntil: "networkidle" });
       expect({ path, violations: await violations(page) }).toEqual({ path, violations: [] });
     }
+  });
+
+  test("autorização do vendedor (página do convite)", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "Needs the admin to read the invite link.");
+    test.slow(); // first compile of several pages in dev
+    await page.goto("/admin/entrar");
+    await page.getByRole("button", { name: "Entrar como admin de teste" }).click();
+    await expect(page.getByRole("heading", { name: "Início" })).toBeVisible();
+    // The page opens only with a commission set (the seed leaves it undefined).
+    await page.goto("/admin/configuracoes", { waitUntil: "networkidle" });
+    await page.getByLabel("Comissão fixa do vendedor (R$)").fill("1500");
+    await page.getByRole("button", { name: "Salvar configurações" }).click();
+    await expect(page.getByRole("status").filter({ hasText: /salva|Nada mudou/ })).toBeVisible();
+    await page.goto("/admin/moderacao/00000000-0000-4000-8000-000000000060");
+    const message = (await page.getByTestId("invite-message").textContent())!;
+    await page.goto(new URL(/https?:\/\/\S+\/autorizar\/\S+/.exec(message)![0]).pathname, {
+      waitUntil: "networkidle",
+    });
+    await expect(
+      page.getByRole("heading", { name: "Autorize a divulgação do seu Volvo" }),
+    ).toBeVisible();
+    expect(await violations(page)).toEqual([]);
   });
 });

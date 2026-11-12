@@ -20,13 +20,14 @@ test.describe("Busca e anúncio", () => {
     await expect(page).toHaveURL(/\/anuncio\/volvo-s60-t5-/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Volvo S60 T5");
     await expect(
-      page.getByText(/Anúncio de terceiro\. O .* não participa da negociação\./),
+      page.getByText(/Anúncio intermediado pelo .+ não recebe pagamento pelo carro\./),
     ).toBeVisible();
+    await expect(page.getByText("Ver no Instagram")).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Remover" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Reivindicar" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Compre com segurança" })).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Falar com o vendedor no WhatsApp" }),
+      page.getByRole("link", { name: "Tenho interesse: falar no WhatsApp" }),
     ).toHaveAttribute("href", /^\/r\/[a-z0-9]+$/);
   });
 

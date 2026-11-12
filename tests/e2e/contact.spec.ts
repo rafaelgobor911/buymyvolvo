@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-// A fictitious seed listing (DDD 20): its click shows the preview page instead
-// of opening a WhatsApp number that does not exist.
+// A fictitious seed listing (DDD 20) and Buy My Volvo's fictitious number in the
+// seed: the click shows the preview page instead of opening WhatsApp.
 const SLUG = "volvo-xc60-t5-dynamic-2014-goiania-go-d17";
 const CODE = "d17";
 
@@ -12,9 +12,11 @@ test.describe("Contato pelo WhatsApp", () => {
     expect(html).not.toContain("+5520");
     expect(html).not.toContain("wa.me");
 
-    const button = page.getByRole("link", { name: "Falar com o vendedor no WhatsApp" });
+    const button = page.getByRole("link", { name: "Tenho interesse: falar no WhatsApp" });
     await expect(button).toHaveAttribute("href", `/r/${CODE}`);
-    await expect(page.getByText("Não guardamos dados seus neste clique.")).toBeVisible();
+    await expect(
+      page.getByText(/Você fala com a equipe do .+\. Não guardamos dados seus neste clique\./),
+    ).toBeVisible();
     await button.click();
 
     await expect(page).toHaveURL(/\/r\/previa\/VX-[2-9A-Z]{5}$/);
@@ -22,7 +24,7 @@ test.describe("Contato pelo WhatsApp", () => {
     await expect(page.getByRole("heading", { name: "Prévia do contato" })).toBeVisible();
     await expect(page.getByRole("blockquote")).toHaveText(
       new RegExp(
-        `^Olá! Vi seu Volvo XC60 T5 Dynamic 2014 anunciado no .+ \\(https?://[^)]+/a/${CODE}\\)\\. Ainda está disponível\\? \\(ref\\. ${ref}\\)$`,
+        `^Olá! Tenho interesse no Volvo XC60 T5 Dynamic 2014 anunciado no .+ \\(https?://[^)]+/a/${CODE}\\)\\. Ainda está disponível\\? \\(ref\\. ${ref}\\)$`,
       ),
     );
 

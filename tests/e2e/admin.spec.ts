@@ -24,9 +24,10 @@ test.describe("Admin", () => {
 
   test("início mostra a fila e os alertas; a navegação leva à moderação", async ({ page }) => {
     await signIn(page);
-    await expect(page.getByText(/anúncio\(s\) esperando moderação/)).toBeVisible();
+    await expect(page.getByText(/anúncio\(s\) em moderação/)).toBeVisible();
     await page.getByRole("link", { name: "Moderação", exact: true }).click();
     await expect(page.getByRole("heading", { name: /^Moderação \(\d+\)$/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: /^Autorizados \(\d+\)$/ })).toBeVisible();
   });
 
   test("moderação mostra o post e o motivo; rejeitar pede o motivo", async ({ page }, info) => {
@@ -74,9 +75,9 @@ test.describe("Admin", () => {
   test("configurações validam a mensagem e mostram a prévia", async ({ page }) => {
     await signIn(page);
     await page.goto("/admin/configuracoes", { waitUntil: "networkidle" });
-    const template = page.getByLabel("Mensagem do WhatsApp");
+    const template = page.getByLabel("Mensagem do comprador no WhatsApp");
     await expect(
-      page.getByText(/Olá! Vi seu Volvo XC60 T8 Polestar Engineered 2024/),
+      page.getByText(/Olá! Tenho interesse no Volvo XC60 T8 Polestar Engineered 2024/),
     ).toBeVisible();
     await template.fill("Oi {nome}, vi seu {modelo}");
     await expect(page.getByText("Oi {nome}, vi seu XC60")).toBeVisible();
@@ -87,12 +88,20 @@ test.describe("Admin", () => {
     await expect(page.getByText(/Inclua \{ref\}/)).toBeVisible();
   });
 
-  test("no celular, a moderação mostra o post e o formulário", async ({ page }, info) => {
+  test("no celular, a moderação mostra a autorização, o post e o formulário", async ({
+    page,
+  }, info) => {
     test.skip(info.project.name !== "mobile", "Mobile layout check.");
     await signIn(page);
     await page.goto(`/admin/moderacao/${XC60_POLESTAR}`);
+    await expect(page.getByRole("heading", { name: "Autorização do vendedor" })).toBeVisible();
+    await expect(page.getByTestId("invite-message")).toContainText("/autorizar/d60.");
     await expect(page.getByRole("heading", { name: "Post original" })).toBeVisible();
-    await expect(page.getByRole("button", { name: /Aprovar e publicar/ })).toBeVisible();
+    // Invited, not authorized yet: nothing to approve.
+    await expect(page.getByRole("button", { name: /Aprovar e publicar/ })).toHaveCount(0);
+    await expect(
+      page.getByText("Aprovar fica disponível depois da autorização do vendedor."),
+    ).toBeVisible();
     await expect(page.getByLabel("Modelo", { exact: true })).toHaveValue("xc60");
   });
 });
