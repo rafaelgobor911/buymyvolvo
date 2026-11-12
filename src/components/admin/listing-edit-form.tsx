@@ -34,11 +34,14 @@ export function ListingEditForm({
   options,
   from,
   canApprove,
+  approveHint,
 }: {
   values: ListingPatch & { id: string };
   options: ListingFormOptions;
   from: "moderacao" | "anuncios";
   canApprove: boolean;
+  /** Why the listing cannot be approved yet (shown instead of the button). */
+  approveHint?: string;
 }) {
   const [state, formAction, pending] = useActionState(saveListingAction, IDLE);
   const error = (key: keyof ListingPatch) => state.errors?.[key];
@@ -253,6 +256,9 @@ export function ListingEditForm({
           Salvar
           <kbd className="ml-1 rounded border border-current/30 px-1 text-xs">S</kbd>
         </Button>
+        {!canApprove && approveHint && (
+          <p className="self-center text-sm text-muted-foreground">{approveHint}</p>
+        )}
       </div>
     </form>
   );

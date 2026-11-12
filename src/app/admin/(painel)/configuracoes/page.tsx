@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { AdminSkeleton, PageTitle } from "@/components/admin/bits";
 import { SettingsForm } from "@/components/admin/settings-form";
 import { requireAdmin } from "@/lib/admin/auth";
-import { readSettings, SETTINGS } from "@/lib/admin/settings";
+import { readSettings, SETTING_GROUPS, SETTINGS } from "@/lib/admin/settings";
 import { db } from "@/lib/db/client";
 import { site } from "@/lib/site";
 
@@ -32,11 +32,13 @@ async function SettingsView() {
           label: s.label,
           help: s.help,
           kind: s.kind,
+          group: s.group,
           min: s.min,
           max: s.max,
           step: s.step,
           value: values[s.key]!,
         }))}
+        groups={SETTING_GROUPS}
         siteName={site.name}
         siteUrl={site.url}
       />

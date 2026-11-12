@@ -6,6 +6,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { AdminSkeleton, formatDateTime, StatusBadge } from "@/components/admin/bits";
+import { AuthorizationSection } from "@/components/admin/authorization-section";
 import { StatusForm } from "@/components/admin/listing-actions";
 import { ListingEditForm } from "@/components/admin/listing-edit-form";
 import { PostPanel } from "@/components/admin/post-panel";
@@ -146,6 +147,7 @@ async function ListingView({ params }: { params: Promise<{ id: string }> }) {
               novo. &quot;Rejeitado&quot; volta para a moderação numa repostagem.
             </p>
           </section>
+          <AuthorizationSection listing={listing} from="anuncios" />
           <PostPanel listing={listing} />
           <section aria-labelledby="historico" className="flex flex-col gap-2">
             <h2 id="historico" className="font-semibold">

@@ -6,6 +6,7 @@
  */
 import type postgres from "postgres";
 
+import type { OutreachStatus } from "@/lib/authorization/data";
 import type { RedFlag } from "@/lib/extraction/schema";
 import { listingSlug } from "@/lib/listings/format";
 import { getEngine, getModel, getTrim } from "@/lib/taxonomy";
@@ -57,6 +58,8 @@ export interface AdminListing extends ListingPatch {
   origin: "instagram" | "direct";
   confidence: number | null;
   isClaimed: boolean;
+  /** The seller authorized the intermediation (needed to publish). */
+  authorizedAt: Date | null;
   firstSeenAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -100,6 +103,7 @@ interface ListingRow {
   options: string[] | null;
   confidence: string | null;
   is_claimed: boolean;
+  authorized_at: Date | null;
   first_seen_at: Date;
   created_at: Date;
   updated_at: Date;
@@ -132,8 +136,8 @@ const LISTING_COLUMNS = (sql: Sql | Tx) => sql`
   l.id, l.slug, l.short_id, l.status, l.origin, l.model_id, l.engine_id, l.trim_id, l.version_text,
   l.year_fab, l.year_model, l.km, l.price_cents, l.city, l.uf, l.color, l.transmission, l.fuel,
   l.seller_type, l.contact_phone_e164, l.contact_ig_username, l.summary_ptbr, l.red_flags,
-  l.options, l.confidence, l.is_claimed, l.first_seen_at, l.created_at, l.updated_at,
-  l.review_note`;
+  l.options, l.confidence, l.is_claimed, l.authorized_at, l.first_seen_at, l.created_at,
+  l.updated_at, l.review_note`;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -172,6 +176,7 @@ export async function getAdminListing(sql: Sql, id: string): Promise<AdminListin
     origin: row.origin,
     confidence: row.confidence === null ? null : Number(row.confidence),
     isClaimed: row.is_claimed,
+    authorizedAt: row.authorized_at,
     firstSeenAt: row.first_seen_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -204,6 +209,7 @@ export interface AdminListingRow {
   redFlags: string[];
   createdAt: Date;
   firstIssue: string | null;
+  outreach: OutreachStatus;
 }
 
 type RowWithNames = {
@@ -221,6 +227,7 @@ type RowWithNames = {
   red_flags: string[] | null;
   created_at: Date;
   first_issue: string | null;
+  outreach: OutreachStatus;
 };
 
 const toRow = (r: RowWithNames): AdminListingRow => ({
@@ -236,6 +243,7 @@ const toRow = (r: RowWithNames): AdminListingRow => ({
   redFlags: r.red_flags ?? [],
   createdAt: r.created_at,
   firstIssue: r.first_issue,
+  outreach: r.outreach,
 });
 
 const ROW_SELECT = (sql: Sql | Tx) => sql`
@@ -244,25 +252,55 @@ const ROW_SELECT = (sql: Sql | Tx) => sql`
     l.created_at,
     (select rp.extraction_json #>> '{normalized,issues,0,message}'
        from public.listing_sources ls join public.raw_posts rp on rp.id = ls.raw_post_id
-       where ls.listing_id = l.id order by ls.is_primary desc limit 1) as first_issue
+       where ls.listing_id = l.id order by ls.is_primary desc limit 1) as first_issue,
+    coalesce((select o.status from public.listing_outreach o where o.listing_id = l.id),
+      'to_contact') as outreach
   from public.listings l
   join public.vehicle_models m on m.id = l.model_id
   left join public.vehicle_engines e on e.id = l.engine_id
   left join public.vehicle_trims t on t.id = l.trim_id`;
 
-/** Listings waiting for a moderator, oldest first. */
-export async function moderationQueue(sql: Sql, limit = 100): Promise<AdminListingRow[]> {
+/**
+ * Listings waiting for a moderator, oldest first; optionally only one step of
+ * the conversation with the seller. Authorized ones (ready to publish) first.
+ */
+export async function moderationQueue(
+  sql: Sql,
+  options: { limit?: number; outreach?: OutreachStatus | null } = {},
+): Promise<AdminListingRow[]> {
   const rows = await sql<RowWithNames[]>`
-    ${ROW_SELECT(sql)} where l.status = 'pending_review'
-    order by l.created_at, l.id limit ${limit}`;
+    select * from (${ROW_SELECT(sql)} where l.status = 'pending_review') q
+    ${options.outreach ? sql`where q.outreach = ${options.outreach}` : sql``}
+    order by (q.outreach = 'authorized') desc, q.created_at, q.id
+    limit ${options.limit ?? 100}`;
   return rows.map(toRow);
+}
+
+/** How many listings in moderation are at each step of the seller authorization. */
+export async function moderationCounts(sql: Sql): Promise<Record<OutreachStatus, number>> {
+  const rows = await sql<{ outreach: OutreachStatus; n: number }[]>`
+    select coalesce(o.status, 'to_contact') as outreach, count(*)::int as n
+    from public.listings l
+    left join public.listing_outreach o on o.listing_id = l.id
+    where l.status = 'pending_review'
+    group by 1`;
+  const counts: Record<OutreachStatus, number> = {
+    to_contact: 0,
+    invited: 0,
+    authorized: 0,
+    declined: 0,
+  };
+  for (const r of rows) counts[r.outreach] = r.n;
+  return counts;
 }
 
 /** The next listing in the queue after a decision (oldest first, skipping `exceptId`). */
 export async function nextInQueue(sql: Sql, exceptId: string): Promise<string | null> {
   const [row] = await sql<{ id: string }[]>`
-    select id from public.listings where status = 'pending_review' and id <> ${exceptId}
-    order by created_at, id limit 1`;
+    select l.id from public.listings l
+    left join public.listing_outreach o on o.listing_id = l.id
+    where l.status = 'pending_review' and l.id <> ${exceptId}
+    order by (o.status = 'authorized') desc nulls last, l.created_at, l.id limit 1`;
   return row?.id ?? null;
 }
 
@@ -348,6 +386,9 @@ export function diffPatch(before: ListingPatch, after: ListingPatch) {
 
 export type SaveResult = { ok: true; changed: number } | { ok: false; error: string };
 
+export const NEEDS_AUTHORIZATION =
+  'Falta a autorização do vendedor: envie o convite em "Autorização do vendedor".';
+
 async function audit(
   tx: Tx,
   entry: { actor: string; action: string; id: string; changes: object; note?: string | null },
@@ -383,6 +424,9 @@ export async function saveListing(
     const { patch } = input;
     if (input.approve && !publishable(patch)) {
       return { ok: false, error: "Para publicar, informe o ano-modelo e o preço ou um contato." };
+    }
+    if (input.approve && !row.authorized_at) {
+      return { ok: false, error: NEEDS_AUTHORIZATION };
     }
     const changes: Record<string, { from: unknown; to: unknown }> = diffPatch(toPatch(row), patch);
     const fieldChanges = { ...changes };
@@ -471,6 +515,9 @@ export async function setListingStatus(
     if (row.status === input.status) return { ok: true, changed: 0 };
     if (input.status === "active" && !publishable(toPatch(row))) {
       return { ok: false, error: "Para publicar, informe o ano-modelo e o preço ou um contato." };
+    }
+    if (input.status === "active" && !row.authorized_at) {
+      return { ok: false, error: NEEDS_AUTHORIZATION };
     }
     await tx`
       update public.listings set

@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 
+import { DEFAULT_INVITE_TEMPLATE } from "@/lib/authorization/messages";
 import { DEFAULT_MESSAGE_TEMPLATE } from "@/lib/leads/message";
 
 import { parseSettingsForm } from "./settings";
 
 const valid = {
+  bmv_whatsapp_numbers: "",
+  seller_commission_brl: "0",
+  authorization_invite_template: DEFAULT_INVITE_TEMPLATE,
   whatsapp_message_template: DEFAULT_MESSAGE_TEMPLATE,
   publish_confidence_threshold: "0,85",
   lead_dedupe_hours: "24",
@@ -55,5 +59,32 @@ describe("parseSettingsForm", () => {
         "publish_confidence_threshold",
       ].sort(),
     );
+  });
+
+  it("normalizes the Buy My Volvo numbers and keeps a saved value as is", () => {
+    const typed = parseSettingsForm({
+      ...valid,
+      bmv_whatsapp_numbers: "(11) 98765-4321 e 11 91234-5678",
+    });
+    expect(typed.ok && typed.values.bmv_whatsapp_numbers).toBe("+5511987654321, +5511912345678");
+    const bad = parseSettingsForm({ ...valid, bmv_whatsapp_numbers: "+55 20 90000-0000" });
+    expect(!bad.ok && bad.errors.bmv_whatsapp_numbers).toMatch(/Número inválido/);
+    const saved = parseSettingsForm(
+      { ...valid, bmv_whatsapp_numbers: "+5520900000000" },
+      { bmv_whatsapp_numbers: "+5520900000000" },
+    );
+    expect(saved.ok && saved.values.bmv_whatsapp_numbers).toBe("+5520900000000");
+  });
+
+  it("requires {link} in the invite and a whole commission", () => {
+    const result = parseSettingsForm({
+      ...valid,
+      authorization_invite_template: "Olá! Autorize seu {modelo}",
+      seller_commission_brl: "99,5",
+    });
+    expect(!result.ok && result.errors).toMatchObject({
+      authorization_invite_template: expect.stringMatching(/\{link\}/),
+      seller_commission_brl: "Use um número inteiro.",
+    });
   });
 });

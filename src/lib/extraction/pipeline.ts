@@ -4,7 +4,8 @@
  * never imports the Next.js-only DB client.
  *
  * Order (PROMPT.md §7.5): blocklist → pre-filter → extraction → normalization
- * and coherence → blocklist (phone) → deduplication → publish or moderate.
+ * and coherence → blocklist (phone) → deduplication → moderation (every new
+ * listing waits for the seller's authorization since Phase 8a).
  * Idempotent: a raw_post leaves `pending` exactly once, and a post already
  * linked to a listing is never linked again.
  */
@@ -35,7 +36,8 @@ export type PipelineOutcome =
   | "prefiltered_out"
   | "not_listing"
   | "error"
-  | "published"
+  /** Good data, waiting for the seller's authorization (nothing is published automatically). */
+  | "ready"
   | "moderation"
   | "merged"
   | "skipped_removed";
@@ -272,7 +274,9 @@ export async function processRawPost(
       return "merged" as const;
     }
 
-    const publish = n.confidence >= threshold && hasMinimumFields(n);
+    // Intermediated model (Phase 8a): nothing goes public without the seller's
+    // authorization. Good data only means the admin can invite the seller now.
+    const ready = n.confidence >= threshold && hasMinimumFields(n);
     const place = fillLocation(
       { city: n.city, uf: n.uf },
       { sourceCity: post.default_city, sourceUf: post.default_uf, phone: n.contactPhone },
@@ -295,7 +299,7 @@ export async function processRawPost(
         contact_phone_e164, contact_ig_username, confidence, red_flags, first_seen_at,
         last_seen_at, dedupe_key, uf_from_ddd
       ) values (
-        ${slug}, ${publish ? "active" : "pending_review"}, 'instagram', ${n.modelId}, ${n.engineId},
+        ${slug}, 'pending_review', 'instagram', ${n.modelId}, ${n.engineId},
         ${n.trimId}, ${n.versionText}, ${n.yearFab}, ${n.yearModel}, ${n.km}, ${n.priceCents},
         ${place.city}, ${place.uf}, ${n.color}, ${n.transmission}, ${n.fuel}, ${n.options},
         ${n.summary || null}, ${n.sellerType}, ${n.contactPhone}, ${n.contactIgUsername},
@@ -304,7 +308,7 @@ export async function processRawPost(
     await tx`
       insert into public.listing_sources (listing_id, raw_post_id, is_primary)
       values (${listing!.id}, ${post.id}, true)`;
-    return publish ? ("published" as const) : ("moderation" as const);
+    return ready ? ("ready" as const) : ("moderation" as const);
   });
 
   await finish(sql, post.id, "extracted", { ...details, outcome }, result);
@@ -336,7 +340,7 @@ export async function processPendingRawPosts(
       prefiltered_out: 0,
       not_listing: 0,
       error: 0,
-      published: 0,
+      ready: 0,
       moderation: 0,
       merged: 0,
       skipped_removed: 0,

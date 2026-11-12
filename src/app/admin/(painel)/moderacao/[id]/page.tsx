@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { AuthorizationSection } from "@/components/admin/authorization-section";
 import { AdminSkeleton, StatusBadge } from "@/components/admin/bits";
 import { ModerationShortcuts, RejectForm } from "@/components/admin/listing-actions";
 import { ListingEditForm } from "@/components/admin/listing-edit-form";
@@ -21,6 +22,7 @@ export const metadata: Metadata = { title: "Moderação" };
 const OK_MESSAGES: Record<string, string> = {
   aprovado: "Anterior aprovado e publicado.",
   rejeitado: "Anterior rejeitado.",
+  recusado: "Recusa do vendedor registrada; o anterior foi rejeitado.",
 };
 
 export default function ModerationItemPage(props: PageProps<"/admin/moderacao/[id]">) {
@@ -121,6 +123,7 @@ async function ItemView({
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div className="flex flex-col gap-4">
+          <AuthorizationSection listing={listing} from="moderacao" />
           {reasons.length > 0 && (
             <section
               aria-labelledby="motivos"
@@ -131,7 +134,7 @@ async function ItemView({
                 className="flex items-center gap-2 font-semibold text-warning-foreground"
               >
                 <TriangleAlert className="size-4" aria-hidden />
-                Por que está na moderação
+                Revise os dados
               </h2>
               <ul className="flex list-disc flex-col gap-1 pl-5">
                 {reasons.map((r) => (
@@ -166,7 +169,12 @@ async function ItemView({
             values={formValues(listing)}
             options={listingFormOptions(listing)}
             from="moderacao"
-            canApprove={inQueue}
+            canApprove={inQueue && !!listing.authorizedAt}
+            approveHint={
+              inQueue && !listing.authorizedAt
+                ? "Aprovar fica disponível depois da autorização do vendedor."
+                : undefined
+            }
           />
           <p className="text-xs text-muted-foreground">
             Atalhos: A aprova · S salva · R vai para o motivo da rejeição · J próximo · K anterior ·

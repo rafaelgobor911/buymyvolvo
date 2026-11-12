@@ -19,7 +19,8 @@ import {
   saveListing,
   setListingStatus,
 } from "@/lib/admin/listings";
-import { parseSettingsForm, saveSettings, SETTINGS } from "@/lib/admin/settings";
+import { parseSettingsForm, readSettings, saveSettings, SETTINGS } from "@/lib/admin/settings";
+import { createInvite, recordDecline } from "@/lib/authorization/data";
 import { db } from "@/lib/db/client";
 
 const str = (form: FormData, key: string) => {
@@ -97,7 +98,7 @@ export async function setStatusAction(_prev: FormState, form: FormData): Promise
 export async function saveSettingsAction(_prev: FormState, form: FormData): Promise<FormState> {
   const admin = await requireAdmin();
   const input = Object.fromEntries(SETTINGS.map((s) => [s.key, str(form, s.key)]));
-  const parsed = parseSettingsForm(input);
+  const parsed = parseSettingsForm(input, await readSettings(db()));
   if (!parsed.ok) {
     return { status: "error", message: "Corrija os campos marcados.", errors: parsed.errors };
   }
@@ -107,4 +108,38 @@ export async function saveSettingsAction(_prev: FormState, form: FormData): Prom
     status: "saved",
     message: changed ? `${changed} configuração(ões) salva(s).` : "Nada mudou.",
   };
+}
+
+// --- Seller authorization (Phase 8a) ----------------------------------------------
+
+export async function createInviteAction(_prev: FormState, form: FormData): Promise<FormState> {
+  const admin = await requireAdmin();
+  const result = await createInvite(db(), {
+    listingId: str(form, "id"),
+    actor: actorOf(admin),
+    now: new Date(),
+  });
+  if (!result.ok) return { status: "error", message: result.error };
+  refresh();
+  return {
+    status: "saved",
+    message: str(form, "renew")
+      ? "Novo link gerado. O link anterior deixou de valer."
+      : "Convite criado. Copie a mensagem e envie ao vendedor.",
+  };
+}
+
+export async function recordDeclineAction(_prev: FormState, form: FormData): Promise<FormState> {
+  const admin = await requireAdmin();
+  const id = str(form, "id");
+  const result = await recordDecline(db(), {
+    listingId: id,
+    actor: actorOf(admin),
+    reason: str(form, "motivo"),
+    now: new Date(),
+  });
+  if (!result.ok) return { status: "error", message: result.error };
+  if (str(form, "from") === "moderacao") await goToNext(id, "recusado");
+  refresh();
+  return { status: "saved", message: "Recusa registrada. O anúncio foi rejeitado." };
 }

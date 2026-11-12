@@ -4,6 +4,8 @@
  */
 import type postgres from "postgres";
 
+import { readBmvNumbers } from "@/lib/authorization/messages";
+
 type Sql = postgres.Sql;
 
 export interface DashboardAlert {
@@ -34,11 +36,47 @@ export async function loadDashboard(sql: Sql): Promise<Dashboard> {
         where created_at > now() - interval '7 days') as clicks`;
 
   const alerts: DashboardAlert[] = [];
+
+  // Intermediated model (Phase 8a): what must be set before publishing anything.
+  const settings = await sql<{ key: string; value: unknown }[]>`
+    select key, value from public.app_settings
+    where key in ('bmv_whatsapp_numbers', 'seller_commission_brl')`;
+  const setting = (key: string) => settings.find((r) => r.key === key)?.value;
+  if (readBmvNumbers(setting("bmv_whatsapp_numbers")).length === 0) {
+    alerts.push({
+      tone: "error",
+      text: "Cadastre o WhatsApp do Buy My Volvo: sem ele, o botão de contato não aparece nos anúncios.",
+      href: "/admin/configuracoes",
+    });
+  }
+  if (!(Number(setting("seller_commission_brl")) > 0)) {
+    alerts.push({
+      tone: "warning",
+      text: "Defina a comissão fixa do vendedor: sem ela, não dá para convidar vendedores.",
+      href: "/admin/configuracoes",
+    });
+  }
+  const [steps] = await sql<{ authorized: number; to_contact: number }[]>`
+    select
+      count(*) filter (where o.status = 'authorized')::int as authorized,
+      count(*) filter (where o.status is null)::int as to_contact
+    from public.listings l
+    left join public.listing_outreach o on o.listing_id = l.id
+    where l.status = 'pending_review'`;
+  if (steps && steps.authorized > 0) {
+    alerts.push({
+      tone: "warning",
+      text: `${steps.authorized} anúncio(s) autorizado(s) pelo vendedor esperando a sua aprovação.`,
+      href: "/admin/moderacao?etapa=autorizados",
+    });
+  }
   if (counts!.pending > 0) {
     alerts.push({
       tone: "warning",
-      text: `${counts!.pending} anúncio(s) esperando moderação.`,
-      href: "/admin/moderacao",
+      text: `${counts!.pending} anúncio(s) em moderação${
+        steps?.to_contact ? `, ${steps.to_contact} com o vendedor ainda a contatar` : ""
+      }.`,
+      href: steps?.to_contact ? "/admin/moderacao?etapa=contatar" : "/admin/moderacao",
     });
   }
 
