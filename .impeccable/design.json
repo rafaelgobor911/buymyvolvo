@@ -394,6 +394,14 @@
       "plate": {
         "displayName": "Placa",
         "purpose": "Nome do modelo na placa sem foto, proporcional à largura da placa (até 6rem)."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Só o nome \"Buy My Volvo\" no cabeçalho, como texto (sem logotipo)."
+      },
+      "label-sm": {
+        "displayName": "Label pequeno",
+        "purpose": "Botões pequenos do admin e do painel do vendedor."
       }
     },
     "shadows": [

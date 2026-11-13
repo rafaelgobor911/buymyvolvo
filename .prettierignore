@@ -11,3 +11,6 @@ docs/PROMPT.md
 # Third-party agent skills (impeccable): kept as installed
 .claude/skills/
 .claude/agents/
+# Local critique snapshots and live-mode state written by the skill (not in git)
+.impeccable/critique/
+.impeccable/live/

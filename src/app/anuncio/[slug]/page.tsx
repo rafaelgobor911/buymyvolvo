@@ -181,7 +181,7 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:gap-12">
         <div className="flex min-w-0 flex-col gap-8">
-          <MediaBlock listing={listing} />
+          <MediaBlock listing={listing} canContact={canContact} />
 
           <section aria-labelledby="sobre" className="flex flex-col gap-3">
             <h2 id="sobre" className="text-xl font-semibold tracking-tight">
@@ -341,7 +341,7 @@ function StatusNotice({ listing }: { listing: ListingDetail }) {
  * Photos licensed by the seller (claimed listings, Phase 6; imported from the
  * authorized post, Phase 8b). Without photos, the model plate.
  */
-function MediaBlock({ listing }: { listing: ListingDetail }) {
+function MediaBlock({ listing, canContact }: { listing: ListingDetail; canContact: boolean }) {
   if (listing.photos.length > 0) {
     return <ListingGallery photos={listing.photos} title={`Volvo ${listingTitle(listing)}`} />;
   }
@@ -354,7 +354,10 @@ function MediaBlock({ listing }: { listing: ListingDetail }) {
         className="aspect-[16/9]"
       />
       <figcaption className="px-4 py-3 text-sm text-muted-foreground">
-        Fotos em preparação. Peça fotos e vídeos do carro pelo WhatsApp.
+        {/* Only point to WhatsApp when the contact button is there. */}
+        {canContact
+          ? "Fotos em preparação. Peça fotos e vídeos do carro pelo WhatsApp."
+          : "Fotos em preparação."}
       </figcaption>
     </figure>
   );
@@ -390,7 +393,7 @@ function FactsTable({ listing, now }: { listing: ListingDetail; now: Date }) {
       <h2 id="ficha" className="text-xl font-semibold tracking-tight">
         Ficha
       </h2>
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 rounded-2xl border border-border p-5 sm:grid-cols-3">
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 rounded-2xl border border-border bg-card p-5 sm:grid-cols-3">
         {facts
           .filter(([, value]) => value)
           .map(([label, value]) => (
@@ -435,7 +438,10 @@ function ContactActions({ listing, available }: { listing: ListingDetail; availa
         <MessageCircle aria-hidden />
         Tenho interesse: falar no WhatsApp
       </a>
-      <p id="contato-nota" className="text-center text-xs text-muted-foreground lg:text-left">
+      <p
+        id="contato-nota"
+        className="text-center text-xs text-balance text-muted-foreground lg:text-left"
+      >
         Você fala com a equipe do {site.name}. Não guardamos dados seus neste clique.
       </p>
     </div>

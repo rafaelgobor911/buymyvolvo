@@ -75,6 +75,17 @@ typography:
     fontSize: "0.75rem"
     fontWeight: 400
     lineHeight: 1.33
+  wordmark:
+    fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.95rem"
+    fontWeight: 600
+    lineHeight: 1.5
+    letterSpacing: "-0.025em"
+  label-sm:
+    fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.8rem"
+    fontWeight: 500
+    lineHeight: 1.5
   numeral:
     fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif"
     fontSize: "3rem"
@@ -266,6 +277,8 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 - **Body** (400, 1rem, 1.5): textos corridos, em colunas de até 36–48rem.
 - **Lead** (400, 1.125rem, 1.55): o subtítulo da home, em Pedra, com `text-pretty`.
 - **Label** (500, 0.875rem): botões, links de navegação, chips, rótulos de campos.
+- **Label pequeno** (500, 0.8rem): botões pequenos do admin e do painel do vendedor; nunca nas páginas públicas.
+- **Wordmark** (600, 0.95rem, -0.025em): só o nome "Buy My Volvo" no cabeçalho.
 - **Caption** (400, 0.75rem): notas abaixo do botão de contato, origem da descrição, selos.
 - **Numeral** (600, 2.25rem no celular e 3rem a partir de 640px, algarismos tabulares, -0.04em): os numerais dos passos de "Como funciona", em Azul Fiorde.
 - **Placa** (600, até 22% da largura da placa e no máximo 6rem, entrelinha 0.85, -0.04em): o nome do modelo na placa sem foto.
@@ -301,7 +314,7 @@ O sistema é plano. A profundidade vem de tons (Papel sobre Neve, faixa em Geada
 
 ## Shapes
 
-Retângulos de cantos suaves, aninhados do maior para o menor: cards, galerias, ficha técnica e painéis de dicas com 18px; controles grandes (busca, botão de contato) e avisos com 14px; botões e campos padrão com 10px; chips e selos em pílula. As imagens são recortadas em 16:10 nos cards e 16:9 na página do anúncio, sempre dentro do card com borda. A placa do modelo (sem foto) é tipográfica: superfície lisa em Gelo Azul, o nome do modelo grande em Azul Fiorde, sem desenho de carro, sem degradê e sem nenhum elemento da marca Volvo.
+Retângulos de cantos suaves, aninhados do maior para o menor: cards, galerias, ficha técnica e painéis de dicas com 18px; controles grandes (busca, botão de contato) e avisos com 14px; botões e campos padrão com 10px; chips e selos em pílula. As imagens são recortadas em 16:10 nos cards e em 4:3 na galeria da página do anúncio (a proporção das fotos de celular), sempre dentro do card com borda; sem foto, a placa da página do anúncio fica em 16:9. A placa do modelo (sem foto) é tipográfica: superfície lisa em Gelo Azul, o nome do modelo grande em Azul Fiorde, sem desenho de carro, sem degradê e sem nenhum elemento da marca Volvo.
 
 ### Named Rules
 
@@ -351,7 +364,7 @@ Firmes e diretos: um único botão principal por bloco, com texto que diz a aç�
 
 ### Navigation
 
-- **Cabeçalho:** fixo no topo, 56px, Neve a 80% com desfoque e Linha Fina a 70% embaixo. À esquerda, o nome "Buy My Volvo" como texto (0.95rem, semibold, espaçamento apertado), sem logotipo; à direita, o link "Anuncie seu Volvo" (Label, hover em Névoa) e o botão de tema, ambos com 44px de altura no celular. O rótulo do botão de tema só diz a ação ("Ativar tema escuro" ou "claro") depois que a página carrega.
+- **Cabeçalho:** fixo no topo, 56px, Neve a 80% com desfoque e Linha Fina a 70% embaixo. À esquerda, o nome "Buy My Volvo" como texto (papel Wordmark: 0.95rem, semibold, espaçamento apertado), sem logotipo; à direita, o link "Anuncie seu Volvo" (Label, hover em Névoa) e o botão de tema, ambos com 44px de altura no celular. O rótulo do botão de tema só diz a ação ("Ativar tema escuro" ou "claro") depois que a página carrega.
 - **Rodapé:** Linha Fina a 70% em cima, texto de 0.875rem em Pedra, links com sublinhado no hover (44px de altura no celular), a frase de intermediação e "Não afiliado à Volvo Car Corporation."
 - **Alvos de toque:** no celular, tudo o que se toca tem pelo menos 44px de altura: chips, ordenação, paginação, botões e links soltos (estes ganham área de toque sem mudar o espaço que ocupam). Links dentro de frases ficam como texto.
 - **Trilha de navegação:** 0.875rem em Pedra, com hover em Grafite.

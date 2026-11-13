@@ -23,7 +23,7 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 const STEPS = [
   {
     title: "Busque do seu jeito",
-    text: "Escreva como você fala: “s60 t5”, “xc40 elétrico até 200 mil”, “v40 r-design sp”.",
+    text: "Escreva como você fala: “s60 t5”, “xc40 elétrico até 200 mil”, “v40 r\u2011design sp”.",
   },
   {
     title: "Compare com calma",

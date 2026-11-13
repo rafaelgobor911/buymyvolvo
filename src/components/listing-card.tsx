@@ -50,7 +50,7 @@ export function ListingCard({
       )}
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-3">
-          <Heading className="leading-snug font-medium">
+          <Heading className="leading-snug font-medium text-balance">
             <Link
               href={`/anuncio/${listing.slug}`}
               className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:underline"
