@@ -42,6 +42,14 @@ As lojas publicam o estoque em vários portais a partir de um só sistema: Autoc
 - Tecnicamente, costuma ser o feed do item 1 ou uma API que o sistema chama.
 - Vale perguntar às lojas que vocês já acompanham qual sistema elas usam: se a maioria usa o mesmo, a conversa fica fácil de priorizar.
 
+### Revenda Mais (sistema da maioria das revendas, segundo o dono do produto)
+
+A pesquisa de 13/11 encontrou na central de ajuda do Revenda Mais um **"Integrador"**: a loja vai em **Menu → Conf Gerais → Integrações**, adiciona um integrador, escolhe o portal na lista e copia o **link XML do estoque** que o sistema gera para mandar ao portal. Segundo a ajuda do Karvi, o envio e a atualização dos carros acontecem de hora em hora; a Webmotors entra por API (login do Cockpit).
+
+- O portal precisa estar na lista do Revenda Mais. A empresa diz que integra "desde que o portal permita", em XML, TXT ou Web Service. Para o Buy My Volvo aparecer ali, é preciso pedir ao Revenda Mais (conversa comercial), a não ser que exista uma opção genérica de XML.
+- O guia "Integração de estoque (XML)" da ajuda parece tratar do caminho contrário (importar para o Revenda Mais o estoque de um link XML). Esta sessão não consegue abrir `ajuda.revendamais.com.br` (host fora da rede liberada), então o layout do XML ainda precisa ser conferido.
+- **Loja piloto:** a Matelli Motors topou a parceria (13/11).
+
 ## 3. Mercado Livre com a conta do vendedor
 
 A API do Mercado Livre funciona com OAuth: o vendedor entra com a conta dele e autoriza o aplicativo. Com isso, o Buy My Volvo pode ler **os anúncios daquele vendedor** e mantê-los sincronizados.
@@ -68,6 +76,7 @@ Para OLX, Webmotors, iCarros e Facebook Marketplace não há API de leitura, e a
 - Mercado Livre: [Items & Searches (documentação)](https://developers.mercadolivre.com.br/en_us/items-and-searches) e [Termos do programa de desenvolvedores (Argentina)](https://developers.mercadolibre.com.ar/es-ar-terminos-y-condiciones); [Termos de desenvolvedor do Mercado Pago (Brasil)](https://www.mercadopago.com.br/developers/pt/guides/resources/legal/terms-and-conditions).
 - Webmotors: [Segurança, termos e LGPD](https://www.webmotors.com.br/seguranca/); [Cockpit (Consumidor Moderno)](https://consumidormoderno.com.br/nova-plataforma-webmotors/); [Webmotors como hub de marketplaces (Neofeed)](https://neofeed.com.br/blog/home/webmotors-pega-carona-com-santander-e-car-sales-e-engata-expansao-internacional/).
 - OLX: [OLX compra a Altimus (AutoData)](https://www.autodata.com.br/news/2023/07/06/olx-anuncia-aquisicao-da-altimus/58588/).
+- Revenda Mais: [site](https://revendamais.com.br/), [central de ajuda: Integrador](https://ajuda.revendamais.com.br/hc/rmais-ajuda/pt_BR/categories/integrador), [Integração Karvi](https://ajuda.revendamais.com.br/hc/rmais-ajuda/articles/1755026296-integrador-_-adicionar-karvi-para-integracao-de-estoque), [Integração Webmotors](https://ajuda.revendamais.com.br/hc/rmais-ajuda/articles/1755179303-integrador-_-adicionar-webmotors-para-integracao-de-estoque), [Guia de integração de estoque (XML)](https://ajuda.revendamais.com.br/hc/rmais-ajuda/articles/1755108435-integrador-_-guia-para-integracao-de-estoque-xml).
 - Sistemas de gestão: [Autoconf integra site e portais (Economic News Brasil)](https://economicnewsbrasil.com.br/2022/01/04/nova-tecnologia-turbina-a-gestao-de-lojas-de-carros-usados-e-seminovos/); [Integrações com OLX, Mercado Livre e Webmotors (AutoSDR, material de fornecedor)](https://blog.autosdr.com.br/blog/integracoes-marketplace-olx-mercadolivre-webmotors).
 - iCarros: [Manual do Portal Revenda](https://www.icarros.com.br/media/mediaresource?id=1717).
 - Facebook Marketplace: [Mudança nos anúncios de veículos de empresas (Meta, 2023)](https://www.facebook.com/business/help/492940666175475); [Fim dos feeds de concessionárias (NetSource Media)](https://www.netsourcemedia.com/blog/changes-dealership-facebook-ads/).

@@ -414,6 +414,12 @@ Nada de scraping de Marketplace, OLX ou Webmotors. Plano aprovado em 12/11/2026:
 
 **Pendências da 9b:** em produção, as fotos precisam da `SUPABASE_SERVICE_ROLE_KEY` na Vercel (sem ela, o formulário funciona sem fotos e avisa); o vendedor do formulário não ganha login (se quiser editar depois, usa "Reivindicar"); a reivindicação com login (Fase 6) ainda não pede CPF.
 
-### 9c (entregue no branch `phase-9c`, esperando aprovação)
+### 9c (aprovada em 13/11/2026)
 
 Pesquisa em [`docs/fontes.md`](fontes.md). Conclusão: os portais (OLX, Webmotors, iCarros, Marketplace) não oferecem leitura de anúncios de terceiros, e a Webmotors veda raspagem; o caminho é o **estoque da própria loja, com autorização** (link de feed ou o Buy My Volvo como canal nos sistemas de gestão), e o Mercado Livre só com a conta do próprio vendedor (OAuth). Próximo passo depende de uma loja piloto para o feed.
+
+**Decisões de 13/11 (dono do produto):**
+
+- **Loja piloto:** a Matelli Motors topou a parceria. A maioria das revendas usa o **Revenda Mais**, que gera um link XML do estoque por portal parceiro (ver `docs/fontes.md`).
+- **Portais (OLX, Webmotors, iCarros, Marketplace):** não vale procurar, porque somos concorrentes e não há leitura automática. Anúncio de lá só à mão (Fase 9a).
+- **Backlog de aquisição:** campanhas pagas (Meta e Google Ads) para quem está vendendo ou procurando carro, levando para o "Anuncie seu Volvo". Antes, medir o envio do formulário como conversão.
