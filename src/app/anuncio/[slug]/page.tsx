@@ -339,8 +339,13 @@ function MediaBlock({ listing }: { listing: ListingDetail }) {
     return <ListingGallery photos={listing.photos} title={`Volvo ${listingTitle(listing)}`} />;
   }
   return (
-    <figure className="overflow-hidden rounded-2xl border border-border">
-      <ModelPlate modelName={listing.modelName} className="aspect-[16/9]" />
+    <figure className="overflow-hidden rounded-2xl border border-border bg-card">
+      <ModelPlate
+        modelId={listing.modelId}
+        modelName={listing.modelName}
+        yearModel={listing.yearModel}
+        className="aspect-[16/9]"
+      />
       <figcaption className="px-4 py-3 text-sm text-muted-foreground">
         Fotos em preparação. Peça fotos e vídeos do carro pelo WhatsApp.
       </figcaption>

@@ -6,15 +6,15 @@ colors:
   fjord-deep: "oklch(0.32 0.06 245)"
   on-fjord: "oklch(0.985 0.002 240)"
   focus-ring: "oklch(0.6 0.08 245)"
-  snow: "oklch(0.99 0.002 240)"
+  snow: "oklch(0.975 0.005 240)"
   paper: "oklch(1 0 0)"
   graphite: "oklch(0.21 0.012 255)"
   stone: "oklch(0.48 0.012 255)"
-  mist: "oklch(0.96 0.006 240)"
-  frost: "oklch(0.965 0.004 240)"
-  ice: "oklch(0.95 0.018 240)"
-  hairline: "oklch(0.905 0.006 240)"
-  field-stroke: "oklch(0.88 0.008 240)"
+  mist: "oklch(0.95 0.009 240)"
+  frost: "oklch(0.955 0.007 240)"
+  ice: "oklch(0.94 0.02 240)"
+  hairline: "oklch(0.895 0.008 240)"
+  field-stroke: "oklch(0.87 0.01 240)"
   amber: "oklch(0.7 0.15 70)"
   amber-soft: "oklch(0.97 0.035 85)"
   amber-ink: "oklch(0.42 0.09 60)"
@@ -75,12 +75,19 @@ typography:
     fontSize: "0.75rem"
     fontWeight: 400
     lineHeight: 1.33
-  eyebrow:
+  numeral:
     fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.75rem"
-    fontWeight: 500
-    lineHeight: 1.33
-    letterSpacing: "0.1em"
+    fontSize: "3rem"
+    fontWeight: 600
+    lineHeight: 1
+    letterSpacing: "-0.04em"
+    fontFeature: "tnum"
+  plate:
+    fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "min(22cqi, 6rem)"
+    fontWeight: 600
+    lineHeight: 0.85
+    letterSpacing: "-0.04em"
 rounded:
   sm: "6px"
   md: "8px"
@@ -100,6 +107,11 @@ spacing:
   "12": "48px"
   "16": "64px"
 components:
+  model-plate:
+    backgroundColor: "{colors.ice}"
+    textColor: "{colors.fjord-deep}"
+    typography: "{typography.plate}"
+    padding: "20px"
   button-primary:
     backgroundColor: "{colors.fjord-blue}"
     textColor: "{colors.on-fjord}"
@@ -179,7 +191,7 @@ components:
 
 O Buy My Volvo se apresenta como um bom manual do proprietário: preciso, honesto e didático. Cada anúncio é uma ficha clara (ano, km, preço, cidade), cada termo Volvo pode ser entendido por quem está chegando agora, e nada disputa atenção com o carro e os seus números. O clima é **sereno, entusiasta e didático**: a calma escandinava de neutros frios e muito respiro, com o entusiasmo de quem conhece a marca aparecendo nos detalhes (a placa tipográfica do modelo, os passos numerados, o selo de verificado em azul).
 
-A densidade é moderada: telas públicas com seções largas separadas por linhas finas, conteúdo num contêiner de 72rem e textos corridos em colunas estreitas. A profundidade vem de tons e linhas, não de sombras. Os componentes são **firmes e confiantes**: as ações principais têm 48px de altura, os cards têm contorno nítido e o preço é o número mais pesado da tela. A identidade nórdica está em refinamento (decisão de 13/11/2026): **mais marcada e mais presente**, sem trocar a base de neutros frios e azul.
+A densidade é moderada: telas públicas com seções largas separadas por linhas finas, conteúdo num contêiner de 72rem e textos corridos em colunas estreitas. A profundidade vem de tons e linhas, não de sombras: os cards em Papel ficam visivelmente acima do fundo em Neve, e a faixa didática da home fica em Geada. Os componentes são **firmes e confiantes**: as ações principais têm 48px de altura, os cards têm contorno nítido e o preço é o número mais pesado da tela. A identidade nórdica está em refinamento (decisão de 13/11/2026): **mais marcada e mais presente**, sem trocar a base de neutros frios e azul.
 
 O visual fica longe de três mundos: o **portal de classificados** (banners, selos piscando, tudo disputando atenção), o **feirão** (vermelho e amarelo, "IMPERDÍVEL", preço gigante, contagem regressiva) e a **startup genérica** (gradientes roxos, ilustrações 3D, brilho por todo lado).
 
@@ -188,6 +200,8 @@ O visual fica longe de três mundos: o **portal de classificados** (banners, sel
 - Neutros frios (matiz 240–255) com um único acento, o Azul Fiorde.
 - Uma família tipográfica (Geist), hierarquia por tamanho, peso (500/600) e espaçamento apertado.
 - Superfícies planas: bordas finas e painéis tonais; sombra só no que flutua.
+- Placa do modelo em Gelo Azul, com o nome em Azul Fiorde e uma linha de ficha: o rosto dos anúncios sem foto.
+- Passos numerados como num manual: numerais grandes em Azul Fiorde, sem ícones nem rótulos acima dos títulos.
 - Cantos suaves e aninhados: 18px nos cards, 14px nos controles grandes, pílula nos chips.
 - Ação principal grande e clara (48px), pensada para o polegar no celular.
 - Tema claro e escuro, ambos verificados para WCAG 2.1 AA.
@@ -198,19 +212,19 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 
 ### Primary
 
-- **Azul Fiorde** (`fjord-blue`): botões principais, links, o ícone de vendedor verificado, os rótulos "Passo 1, 2, 3", os marcadores das dicas de segurança e da lista do que conferir no modelo. No escuro vira o **Azul Fiorde Noturno** (`fjord-blue-night`), mais claro, com texto em `on-fjord-night`.
-- **Fiorde Profundo** (`fjord-deep`): texto sobre o fundo Gelo Azul (estado de destaque suave).
+- **Azul Fiorde** (`fjord-blue`): botões principais, links, o ícone de vendedor verificado, os numerais dos passos de "Como funciona", os marcadores das dicas de segurança e da lista do que conferir no modelo, e o nome do modelo na placa (a 35%). No escuro vira o **Azul Fiorde Noturno** (`fjord-blue-night`), mais claro, com texto em `on-fjord-night`.
+- **Fiorde Profundo** (`fjord-deep`): texto sobre o fundo Gelo Azul, como a linha de ficha da placa do modelo.
 - **Anel de Foco** (`focus-ring`): contorno de foco de teclado, sempre com 3px a 50% de opacidade.
 
 ### Neutral
 
-- **Neve Fria** (`snow`): fundo da página. No escuro, **Noite Polar** (`polar-night`).
+- **Neve Fria** (`snow`): fundo da página, um passo abaixo do Papel para os cards se destacarem. No escuro, **Noite Polar** (`polar-night`).
 - **Papel** (`paper`): superfície dos cards e menus. No escuro, **Superfície Polar** (`polar-surface`).
 - **Grafite Nórdico** (`graphite`): texto principal e títulos. No escuro, `polar-text`.
 - **Pedra** (`stone`): texto secundário, metadados (ano · km, cidade · tipo · data), legendas. No escuro, `polar-stone`.
 - **Névoa** (`mist`): fundo dos botões secundários e dos selos de destaque do anúncio.
-- **Geada** (`frost`): painéis tonais (dicas de segurança e avisos de intermediação, usados a 60%) e hover de botões outline e ghost.
-- **Gelo Azul** (`ice`): hover dos chips de busca e de modelo, o único neutro com um toque do acento.
+- **Geada** (`frost`): a faixa didática da home ("Como funciona" e dicas de segurança, de ponta a ponta), painéis tonais (avisos de intermediação e dicas de segurança da página do anúncio, a 60%) e hover de botões outline e ghost.
+- **Gelo Azul** (`ice`): superfície da placa do modelo e hover dos chips de busca e de modelo, o único neutro com um toque do acento.
 - **Linha Fina** (`hairline`): bordas de cards e divisórias de seção (a 70% nos divisores estruturais: cabeçalho, rodapé, seções da home).
 - **Contorno de Campo** (`field-stroke`): borda de inputs e selects, um passo mais escura que a Linha Fina.
 
@@ -221,7 +235,9 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 
 ### Named Rules
 
-**The Fjord Accent Rule.** O Azul Fiorde marca o que se clica, o que tem foco e o que indica confiança (verificado, passos, marcadores). Superfícies grandes nunca são azuis.
+**The Fjord Accent Rule.** O Azul Fiorde marca o que se clica, o que tem foco e o que indica confiança (verificado, passos, marcadores), e tinge o nome do modelo na placa. Superfícies grandes nunca são azuis; o Gelo Azul é um neutro.
+
+**The Visible Step Rule.** Dois neutros só separam superfícies se a diferença se vê: pelo menos 2% de luminosidade entre fundo, faixa e card, além da Linha Fina.
 
 **The Amber Means Caution Rule.** Âmbar é só para alertas ao comprador declarados no próprio anúncio. Nunca para promoção, destaque ou urgência.
 
@@ -244,7 +260,8 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 - **Lead** (400, 1.125rem, 1.55): o subtítulo da home, em Pedra, com `text-pretty`.
 - **Label** (500, 0.875rem): botões, links de navegação, chips, rótulos de campos.
 - **Caption** (400, 0.75rem): notas abaixo do botão de contato, origem da descrição, selos.
-- **Eyebrow** (500, 0.75rem, 0.1em, maiúsculas): o "Cross Country" da placa do modelo.
+- **Numeral** (600, 2.25rem no celular e 3rem a partir de 640px, algarismos tabulares, -0.04em): os numerais dos passos de "Como funciona", em Azul Fiorde.
+- **Placa** (600, até 22% da largura da placa e no máximo 6rem, entrelinha 0.85, -0.04em): o nome do modelo na placa sem foto.
 
 ### Named Rules
 
@@ -255,8 +272,8 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 ## Layout
 
 - **Contêiner:** largura máxima de 72rem (1152px), centralizado, com 16px de margem lateral no celular e 24px a partir de 640px.
-- **Ritmo das seções:** 48px de respiro vertical no celular e 64px a partir de 640px; seções da home separadas por uma Linha Fina a 70%.
-- **Grade de anúncios:** 1 coluna no celular, 2 a partir de 640px, 3 a partir de 1024px, com 16px de espaço entre os cards.
+- **Ritmo das seções:** 48px de respiro vertical no celular e 64px a partir de 640px; seções da home em Neve separadas por uma Linha Fina a 70%. A faixa didática ("Como funciona" e dicas de segurança) fica em Geada, de ponta a ponta, antes do rodapé.
+- **Grade de anúncios:** 1 coluna no celular, 2 a partir de 640px, 3 a partir de 1024px, com 16px de espaço entre os cards. No celular, a placa sem foto fica em 2:1 (mais baixa que a foto 16:10) para a grade não virar uma sequência de placas.
 - **Página do anúncio:** a partir de 1024px, duas colunas (conteúdo flexível + coluna lateral de 22rem, fixa ao rolar a 80px do topo). No celular, a coluna lateral vem primeiro e o botão de contato fica numa barra fixa no rodapé da tela.
 - **Larguras de leitura:** títulos e buscas em até 48rem, textos de apoio em até 36rem.
 - **Espaçamento:** escala de 4px; os passos mais usados são 8, 12 e 16px dentro de componentes e 24, 32 e 48px entre blocos.
@@ -264,7 +281,7 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 
 ## Elevation & Depth
 
-O sistema é plano. A profundidade vem de tons (Papel sobre Neve, painéis em Geada a 60%) e de bordas finas. A sombra aparece só no que flutua sobre o conteúdo: o banner de cookies, o painel de filtros e os botões sobre fotos. O cabeçalho e a barra de contato do celular ficam translúcidos (80–95%) com desfoque do fundo, para dar a sensação de camada sem sombra.
+O sistema é plano. A profundidade vem de tons (Papel sobre Neve, faixa em Geada, painéis em Geada a 60%, Papel com Linha Fina dentro da faixa) e de bordas finas. A sombra aparece só no que flutua sobre o conteúdo: o banner de cookies, o painel de filtros e os botões sobre fotos. O cabeçalho e a barra de contato do celular ficam translúcidos (80–95%) com desfoque do fundo, para dar a sensação de camada sem sombra.
 
 ### Shadow Vocabulary
 
@@ -277,7 +294,7 @@ O sistema é plano. A profundidade vem de tons (Papel sobre Neve, painéis em Ge
 
 ## Shapes
 
-Retângulos de cantos suaves, aninhados do maior para o menor: cards, galerias, ficha técnica e painéis de dicas com 18px; controles grandes (busca, botão de contato) e avisos com 14px; botões e campos padrão com 10px; chips e selos em pílula. As imagens são recortadas em 16:10 nos cards e 16:9 na página do anúncio, sempre dentro do card com borda. A placa do modelo (sem foto) é tipográfica: o nome do modelo grande e quase transparente, sem desenho de carro e sem nenhum elemento da marca Volvo.
+Retângulos de cantos suaves, aninhados do maior para o menor: cards, galerias, ficha técnica e painéis de dicas com 18px; controles grandes (busca, botão de contato) e avisos com 14px; botões e campos padrão com 10px; chips e selos em pílula. As imagens são recortadas em 16:10 nos cards e 16:9 na página do anúncio, sempre dentro do card com borda. A placa do modelo (sem foto) é tipográfica: superfície lisa em Gelo Azul, o nome do modelo grande em Azul Fiorde, sem desenho de carro, sem degradê e sem nenhum elemento da marca Volvo.
 
 ### Named Rules
 
@@ -313,7 +330,7 @@ Firmes e diretos: um único botão principal por bloco, com texto que diz a aç�
 - **Shadow Strategy:** nenhuma (ver The Flat Snow Rule).
 - **Border:** Linha Fina; no hover, Azul Fiorde a 40%.
 - **Internal Padding:** 16px, com 8px entre as linhas.
-- **Card de anúncio:** imagem 16:10 (ou a placa do modelo), título do carro, "ano · km" em Pedra, selo de repasse quando houver, preço empurrado para baixo e a linha "cidade · tipo de vendedor · há N dias". O card inteiro é clicável por um link esticado no título; o selo de verificado fica à direita do título, em Azul Fiorde.
+- **Card de anúncio:** imagem 16:10 (ou a placa do modelo, 2:1 no celular), título do carro, "ano · km" em Pedra, selo de repasse quando houver, preço empurrado para baixo e a linha "cidade · tipo de vendedor · há N dias". O card inteiro é clicável por um link esticado no título; o selo de verificado fica à direita do título, em Azul Fiorde.
 
 ### Inputs / Fields
 
@@ -330,12 +347,16 @@ Firmes e diretos: um único botão principal por bloco, com texto que diz a aç�
 
 ### Placa do modelo (Signature Component)
 
-O lugar da foto quando o anúncio não tem foto licenciada: um retângulo com degradê diagonal de Névoa para Geada, o nome do modelo enorme (3–3.75rem, semibold, espaçamento mais apertado) em Grafite a 10%, "Cross Country" como Eyebrow no topo quando for o caso e "sem foto" discreto no canto. É o detalhe de entusiasta que faz um anúncio sem foto parecer intencional.
+O lugar da foto quando o anúncio não tem foto licenciada, e o rosto da maioria dos anúncios. Superfície lisa em Gelo Azul; o nome do modelo-base enorme (papel tipográfico Placa) em Azul Fiorde a 35%; logo abaixo, a linha de ficha em Fiorde Profundo (0.875rem, 500), gerada só da taxonomia: variante, carroceria e geração do ano-modelo ("SUV · 2ª geração", "Cross Country · Hatch", "2ª geração (hatch)"); "sem foto" em Pedra (0.75rem) no canto superior direito. A placa é decorativa (`aria-hidden`): o título do card já diz o modelo. É o detalhe de entusiasta que faz um anúncio sem foto parecer intencional.
+
+### Passos numerados
+
+A forma de "Como funciona": lista ordenada de três passos, cada um aberto por uma Linha Fina. À esquerda, o numeral (papel Numeral, Azul Fiorde) alinhado pela linha de base ao título (1.125rem, 500); embaixo, o texto em Pedra. Sem ícones e sem rótulo acima do título: a ordem é a informação, e o numeral a carrega.
 
 ### Quadros de aviso
 
 - **Aviso de intermediação:** Geada a 60%, 14px de raio, 16px de preenchimento, texto de 0.875rem em Pedra com ícone de informação.
-- **Dicas de segurança:** Geada a 60%, 18px de raio, 24px de preenchimento (40px a partir de 640px), escudo em Azul Fiorde no título e marcadores de 6px em Azul Fiorde.
+- **Dicas de segurança:** 18px de raio, 24px de preenchimento (40px a partir de 640px), escudo em Azul Fiorde no título e marcadores de 6px em Azul Fiorde. Na página do anúncio, Geada a 60%; na home, Papel com Linha Fina dentro da faixa em Geada.
 - **Ficha técnica:** grade de 2 ou 3 colunas dentro de um contêiner com Linha Fina e 18px de raio; rótulo em Pedra (0.875rem) e valor em peso 500.
 
 ## Do's and Don'ts
@@ -347,7 +368,8 @@ O lugar da foto quando o anúncio não tem foto licenciada: um retângulo com de
 - **Do** dar à ação principal de cada página pública 48px de altura, 14px de raio e texto de 1rem.
 - **Do** manter o preço em semibold com espaçamento apertado, como o número mais pesado do card e do anúncio.
 - **Do** definir toda cor como token com a versão do tema escuro e conferir o contraste AA nos dois temas.
-- **Do** mostrar a placa do modelo quando não houver foto licenciada pelo vendedor.
+- **Do** mostrar a placa do modelo (Gelo Azul, nome em Azul Fiorde a 35%, linha de ficha da taxonomia) quando não houver foto licenciada pelo vendedor.
+- **Do** numerar sequências de verdade (passos) com o numeral grande em Azul Fiorde, à esquerda do título.
 - **Do** usar o âmbar suave (fundo, borda a 60%, tinta) para os alertas de repasse e ágio.
 
 ### Don't:
@@ -357,5 +379,7 @@ O lugar da foto quando o anúncio não tem foto licenciada: um retângulo com de
 - **Don't** usar a linguagem do feirão: vermelho e amarelo, "IMPERDÍVEL", preço gigante, contagem regressiva.
 - **Don't** usar gradientes roxos, ilustrações 3D ou brilhos de startup genérica.
 - **Don't** dar sombra ou elevação aos cards, nem em repouso nem no hover.
+- **Don't** separar superfícies com neutros a menos de 2% de luminosidade um do outro, nem com degradê entre tons quase iguais: se não se vê, não separa.
+- **Don't** pôr um rótulo pequeno acima de títulos (eyebrow); a hierarquia vem do próprio título.
 - **Don't** usar o vermelho fora de erros e ações destrutivas, nem o âmbar fora dos alertas ao comprador.
 - **Don't** mostrar fotos que não vieram com a licença do vendedor.

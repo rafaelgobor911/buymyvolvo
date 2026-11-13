@@ -1,30 +1,37 @@
+import { plateText } from "@/lib/listings/plate";
 import { cn } from "@/lib/utils";
 
 /**
- * Neutral typographic placeholder used instead of photos. Unclaimed listings never
- * show third-party images, and claimed listings without photos look the same.
- * No Volvo logo or official visual elements.
+ * Typographic plate used instead of photos: the model name, large and tinted
+ * Fjord blue, over the ice surface, with a spec line from the taxonomy. Unclaimed
+ * listings never show third-party images, and claimed listings without photos
+ * look the same. No Volvo logo or official visual elements.
  */
-export function ModelPlate({ modelName, className }: { modelName: string; className?: string }) {
-  const short = modelName.replace(/ Cross Country$/, "");
-  const isCrossCountry = short !== modelName;
+export function ModelPlate({
+  modelId,
+  modelName,
+  yearModel,
+  className,
+}: {
+  modelId: string;
+  modelName: string;
+  yearModel: number | null;
+  className?: string;
+}) {
+  const { name, details } = plateText(modelId, modelName, yearModel);
   return (
     <div
       aria-hidden
       className={cn(
-        "relative flex w-full items-end overflow-hidden bg-gradient-to-br from-secondary to-muted p-5",
+        "@container relative flex w-full flex-col justify-end gap-2 overflow-hidden bg-accent p-5 select-none",
         className,
       )}
     >
-      <span className="text-5xl font-semibold tracking-tighter text-foreground/10 select-none sm:text-6xl">
-        {short}
+      <span className="text-[length:min(22cqi,6rem)] leading-[0.85] font-semibold tracking-[-0.04em] text-primary/35">
+        {name}
       </span>
-      {isCrossCountry && (
-        <span className="absolute top-4 left-5 text-xs font-medium tracking-widest text-foreground/30 uppercase">
-          Cross Country
-        </span>
-      )}
-      <span className="absolute right-5 bottom-4 text-xs text-foreground/30">sem foto</span>
+      {details && <span className="text-sm font-medium text-accent-foreground">{details}</span>}
+      <span className="absolute top-4 right-5 text-xs text-muted-foreground">sem foto</span>
     </div>
   );
 }

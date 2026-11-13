@@ -1,4 +1,4 @@
-import { ArrowRight, MessageCircle, ScanSearch, SlidersHorizontal } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
@@ -22,17 +22,14 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const STEPS = [
   {
-    icon: ScanSearch,
     title: "Busque do seu jeito",
     text: "Escreva como você fala: “s60 t5”, “xc40 elétrico até 200 mil”, “v40 r-design sp”.",
   },
   {
-    icon: SlidersHorizontal,
     title: "Compare com calma",
     text: "Modelo, versão, ano, km, preço e cidade organizados lado a lado, de lojas e particulares.",
   },
   {
-    icon: MessageCircle,
     title: "Fale com a gente",
     text: "Um toque abre o nosso WhatsApp com a mensagem pronta. Confirmamos os detalhes e fazemos a ponte com o vendedor.",
   },
@@ -118,29 +115,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="como-funciona" className="border-b border-border/70">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <h2 id="como-funciona" className="text-2xl font-semibold tracking-tight">
-            Como funciona
-          </h2>
-          <ol className="mt-8 grid gap-8 sm:grid-cols-3 sm:gap-10">
-            {STEPS.map(({ icon: Icon, title, text }, index) => (
-              <li key={title} className="flex flex-col gap-3">
-                <span className="flex items-center gap-3 text-sm font-medium text-primary">
-                  <Icon className="size-5" aria-hidden />
-                  Passo {index + 1}
-                </span>
-                <h3 className="text-lg font-medium">{title}</h3>
-                <p className="text-muted-foreground">{text}</p>
-              </li>
-            ))}
-          </ol>
+      {/* The didactic band: frost surface, steps numbered like a manual, safety tips on paper. */}
+      <section aria-labelledby="como-funciona" className="bg-muted">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-12 sm:px-6 sm:py-16">
+          <div>
+            <h2 id="como-funciona" className="text-2xl font-semibold tracking-tight">
+              Como funciona
+            </h2>
+            <ol className="mt-8 grid gap-8 sm:grid-cols-3 sm:gap-10">
+              {STEPS.map(({ title, text }, index) => (
+                <li
+                  key={title}
+                  className="grid grid-cols-[2.25rem_1fr] content-start items-baseline gap-x-3 gap-y-2 border-t border-border pt-5 sm:grid-cols-[3rem_1fr]"
+                >
+                  <span
+                    aria-hidden
+                    className="text-4xl leading-none font-semibold tracking-[-0.04em] text-primary tabular-nums sm:text-5xl"
+                  >
+                    {index + 1}
+                  </span>
+                  <h3 className="text-lg font-medium text-balance">{title}</h3>
+                  <p className="col-start-2 text-pretty text-muted-foreground">{text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <SafetyTips className="border border-border bg-card" />
         </div>
       </section>
-
-      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        <SafetyTips />
-      </div>
     </>
   );
 }

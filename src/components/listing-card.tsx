@@ -41,7 +41,12 @@ export function ListingCard({
           className="aspect-[16/10] w-full bg-muted object-cover"
         />
       ) : (
-        <ModelPlate modelName={listing.modelName} className="aspect-[16/10]" />
+        <ModelPlate
+          modelId={listing.modelId}
+          modelName={listing.modelName}
+          yearModel={listing.yearModel}
+          className="aspect-[2/1] sm:aspect-[16/10]"
+        />
       )}
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-3">

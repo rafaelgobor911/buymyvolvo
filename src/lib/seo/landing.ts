@@ -10,7 +10,7 @@
  */
 import { type Uf, UFS } from "@/lib/search/places";
 import {
-  type BodyType,
+  BODY_LABELS,
   type EngineDef,
   FUEL_LABELS,
   getEngine,
@@ -236,15 +236,6 @@ export const isIndexable = (c: { depth: Landing["depth"]; count: number }) =>
 // ---------------------------------------------------------------------------
 // Short descriptive text, generated from the taxonomy (reviewed by the owner)
 // ---------------------------------------------------------------------------
-
-const BODY_LABELS: Record<BodyType, string> = {
-  sedan: "sedã",
-  perua: "perua",
-  hatch: "hatch",
-  suv: "SUV",
-  cupe: "cupê",
-  conversivel: "conversível",
-};
 
 const joinPt = (items: string[]) =>
   items.length <= 1

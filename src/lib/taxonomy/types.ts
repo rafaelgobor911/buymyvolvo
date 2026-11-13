@@ -94,6 +94,16 @@ export const FUEL_LABELS: Record<Fuel, string> = {
   eletrico: "Elétrico",
 };
 
+/** Body types in running text ("SUV", "sedã"). */
+export const BODY_LABELS: Record<BodyType, string> = {
+  sedan: "sedã",
+  perua: "perua",
+  hatch: "hatch",
+  suv: "SUV",
+  cupe: "cupê",
+  conversivel: "conversível",
+};
+
 export const TRANSMISSION_LABELS: Record<Transmission, string> = {
   manual: "Manual",
   automatico: "Automático",

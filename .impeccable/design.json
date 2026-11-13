@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-13T01:40:50+00:00",
+  "generatedAt": "2026-11-13T02:15:07+00:00",
   "title": "Design System: Buy My Volvo",
   "extensions": {
     "colorMeta": {
@@ -67,16 +67,16 @@
       "snow": {
         "role": "neutral",
         "displayName": "Neve Fria",
-        "canonical": "oklch(0.99 0.002 240)",
+        "canonical": "oklch(0.975 0.005 240)",
         "tonalRamp": [
-          "oklch(0.15 0.000 240)",
-          "oklch(0.26 0.001 240)",
-          "oklch(0.38 0.001 240)",
-          "oklch(0.49 0.002 240)",
-          "oklch(0.61 0.002 240)",
-          "oklch(0.72 0.001 240)",
-          "oklch(0.84 0.001 240)",
-          "oklch(0.95 0.000 240)"
+          "oklch(0.15 0.001 240)",
+          "oklch(0.26 0.002 240)",
+          "oklch(0.38 0.003 240)",
+          "oklch(0.49 0.004 240)",
+          "oklch(0.61 0.004 240)",
+          "oklch(0.72 0.003 240)",
+          "oklch(0.84 0.002 240)",
+          "oklch(0.95 0.001 240)"
         ]
       },
       "paper": {
@@ -127,44 +127,44 @@
       "mist": {
         "role": "neutral",
         "displayName": "Névoa",
-        "canonical": "oklch(0.96 0.006 240)",
+        "canonical": "oklch(0.95 0.009 240)",
         "tonalRamp": [
-          "oklch(0.15 0.001 240)",
-          "oklch(0.26 0.002 240)",
-          "oklch(0.38 0.004 240)",
-          "oklch(0.49 0.005 240)",
-          "oklch(0.61 0.005 240)",
-          "oklch(0.72 0.004 240)",
-          "oklch(0.84 0.002 240)",
-          "oklch(0.95 0.001 240)"
+          "oklch(0.15 0.002 240)",
+          "oklch(0.26 0.003 240)",
+          "oklch(0.38 0.006 240)",
+          "oklch(0.49 0.008 240)",
+          "oklch(0.61 0.008 240)",
+          "oklch(0.72 0.006 240)",
+          "oklch(0.84 0.003 240)",
+          "oklch(0.95 0.002 240)"
         ]
       },
       "frost": {
         "role": "neutral",
         "displayName": "Geada",
-        "canonical": "oklch(0.965 0.004 240)",
+        "canonical": "oklch(0.955 0.007 240)",
         "tonalRamp": [
           "oklch(0.15 0.001 240)",
-          "oklch(0.26 0.001 240)",
-          "oklch(0.38 0.002 240)",
-          "oklch(0.49 0.003 240)",
-          "oklch(0.61 0.003 240)",
-          "oklch(0.72 0.002 240)",
-          "oklch(0.84 0.001 240)",
+          "oklch(0.26 0.003 240)",
+          "oklch(0.38 0.004 240)",
+          "oklch(0.49 0.006 240)",
+          "oklch(0.61 0.006 240)",
+          "oklch(0.72 0.004 240)",
+          "oklch(0.84 0.003 240)",
           "oklch(0.95 0.001 240)"
         ]
       },
       "ice": {
         "role": "neutral",
         "displayName": "Gelo Azul",
-        "canonical": "oklch(0.95 0.018 240)",
+        "canonical": "oklch(0.94 0.02 240)",
         "tonalRamp": [
           "oklch(0.15 0.004 240)",
           "oklch(0.26 0.007 240)",
-          "oklch(0.38 0.011 240)",
-          "oklch(0.49 0.016 240)",
-          "oklch(0.61 0.016 240)",
-          "oklch(0.72 0.011 240)",
+          "oklch(0.38 0.012 240)",
+          "oklch(0.49 0.017 240)",
+          "oklch(0.61 0.017 240)",
+          "oklch(0.72 0.012 240)",
           "oklch(0.84 0.007 240)",
           "oklch(0.95 0.004 240)"
         ]
@@ -172,22 +172,7 @@
       "hairline": {
         "role": "neutral",
         "displayName": "Linha Fina",
-        "canonical": "oklch(0.905 0.006 240)",
-        "tonalRamp": [
-          "oklch(0.15 0.001 240)",
-          "oklch(0.26 0.002 240)",
-          "oklch(0.38 0.004 240)",
-          "oklch(0.49 0.005 240)",
-          "oklch(0.61 0.005 240)",
-          "oklch(0.72 0.004 240)",
-          "oklch(0.84 0.002 240)",
-          "oklch(0.95 0.001 240)"
-        ]
-      },
-      "field-stroke": {
-        "role": "neutral",
-        "displayName": "Contorno de Campo",
-        "canonical": "oklch(0.88 0.008 240)",
+        "canonical": "oklch(0.895 0.008 240)",
         "tonalRamp": [
           "oklch(0.15 0.002 240)",
           "oklch(0.26 0.003 240)",
@@ -196,6 +181,21 @@
           "oklch(0.61 0.007 240)",
           "oklch(0.72 0.005 240)",
           "oklch(0.84 0.003 240)",
+          "oklch(0.95 0.002 240)"
+        ]
+      },
+      "field-stroke": {
+        "role": "neutral",
+        "displayName": "Contorno de Campo",
+        "canonical": "oklch(0.87 0.01 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 240)",
+          "oklch(0.26 0.004 240)",
+          "oklch(0.38 0.006 240)",
+          "oklch(0.49 0.009 240)",
+          "oklch(0.61 0.009 240)",
+          "oklch(0.72 0.006 240)",
+          "oklch(0.84 0.004 240)",
           "oklch(0.95 0.002 240)"
         ]
       },
@@ -387,9 +387,13 @@
         "displayName": "Caption",
         "purpose": "Notas, selos e legendas."
       },
-      "eyebrow": {
-        "displayName": "Eyebrow",
-        "purpose": "\"Cross Country\" na placa do modelo, em maiúsculas."
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Numerais dos passos de \"Como funciona\", em Azul Fiorde (2.25rem no celular, 3rem a partir de 640px)."
+      },
+      "plate": {
+        "displayName": "Placa",
+        "purpose": "Nome do modelo na placa sem foto, proporcional à largura da placa (até 6rem)."
       }
     },
     "shadows": [
@@ -494,9 +498,9 @@
       "name": "Card de anúncio",
       "kind": "card",
       "refersTo": "card-listing",
-      "description": "Ficha resumida do carro com a placa do modelo no lugar da foto; o card inteiro é clicável.",
-      "html": "<article class=\"ds-card\"><div class=\"ds-plate\" aria-hidden=\"true\"><span class=\"ds-plate-model\">XC60</span><span class=\"ds-plate-note\">sem foto</span></div><div class=\"ds-card-body\"><div class=\"ds-card-head\"><h3><a href=\"#\">Volvo XC60 T8 Inscription</a></h3><span class=\"ds-card-check\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-label=\"Vendedor verificado\"><path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\"/><path d=\"m9 12 2 2 4-4\"/></svg></span></div><p class=\"ds-card-meta\">2019/2020 · 41.000 km</p><span class=\"ds-badge-repasse\">Repasse</span><p class=\"ds-card-price\">R$ 239.900</p><p class=\"ds-card-meta\">Curitiba, PR · Loja · há 3 dias</p></div></article>",
-      "css": ".ds-card { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; position: relative; display: flex; flex-direction: column; width: 100%; max-width: 360px; overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: var(--card); color: var(--card-foreground); transition: border-color 150ms; } .ds-card:hover { border-color: color-mix(in oklch, var(--primary) 40%, transparent); } .ds-plate { position: relative; display: flex; align-items: flex-end; aspect-ratio: 16 / 10; padding: 20px; background: linear-gradient(to bottom right, var(--secondary), var(--muted)); } .ds-plate-model { font-size: 3rem; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: color-mix(in oklch, var(--foreground) 10%, transparent); } .ds-plate-note { position: absolute; right: 20px; bottom: 16px; font-size: 0.75rem; color: color-mix(in oklch, var(--foreground) 30%, transparent); } .ds-card-body { display: flex; flex: 1; flex-direction: column; gap: 8px; padding: 16px; } .ds-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; } .ds-card h3 { margin: 0; font-size: 1rem; font-weight: 500; line-height: 1.375; } .ds-card h3 a { color: inherit; text-decoration: none; outline: none; } .ds-card h3 a::after { content: ''; position: absolute; inset: 0; } .ds-card h3 a:focus-visible { text-decoration: underline; } .ds-card-check { color: var(--primary); flex-shrink: 0; } .ds-card-meta { margin: 0; font-size: 0.875rem; color: var(--muted-foreground); } .ds-card-price { margin: auto 0 0; padding-top: 8px; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.025em; } .ds-badge-repasse { align-self: flex-start; display: inline-flex; align-items: center; height: 20px; padding: 2px 8px; border: 1px solid color-mix(in oklch, var(--warning) 60%, transparent); border-radius: 9999px; background: var(--warning-soft); color: var(--warning-foreground); font-size: 0.75rem; font-weight: 500; }"
+      "description": "Ficha resumida do carro; sem foto, a placa do modelo em Gelo Azul com o nome em Azul Fiorde e a linha de ficha da taxonomia. O card inteiro é clicável.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-plate\" aria-hidden=\"true\"><span class=\"ds-plate-model\">XC60</span><span class=\"ds-plate-spec\">SUV · 2ª geração</span><span class=\"ds-plate-note\">sem foto</span></div><div class=\"ds-card-body\"><div class=\"ds-card-head\"><h3><a href=\"#\">Volvo XC60 T8 Inscription</a></h3><span class=\"ds-card-check\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-label=\"Vendedor verificado\"><path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\"/><path d=\"m9 12 2 2 4-4\"/></svg></span></div><p class=\"ds-card-meta\">2019/2020 · 41.000 km</p><span class=\"ds-badge-repasse\">Repasse</span><p class=\"ds-card-price\">R$ 239.900</p><p class=\"ds-card-meta\">Curitiba, PR · Loja · há 3 dias</p></div></article>",
+      "css": ".ds-card { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; position: relative; display: flex; flex-direction: column; width: 100%; max-width: 360px; overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: var(--card); color: var(--card-foreground); transition: border-color 150ms; } .ds-card:hover { border-color: color-mix(in oklch, var(--primary) 40%, transparent); } .ds-plate { container-type: inline-size; position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; aspect-ratio: 16 / 10; padding: 20px; background: var(--accent); } .ds-plate-model { font-size: min(22cqi, 6rem); font-weight: 600; letter-spacing: -0.04em; line-height: 0.85; color: color-mix(in oklch, var(--primary) 35%, transparent); } .ds-plate-spec { font-size: 0.875rem; font-weight: 500; color: var(--accent-foreground); } .ds-plate-note { position: absolute; top: 16px; right: 20px; font-size: 0.75rem; color: var(--muted-foreground); } .ds-card-body { display: flex; flex: 1; flex-direction: column; gap: 8px; padding: 16px; } .ds-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; } .ds-card h3 { margin: 0; font-size: 1rem; font-weight: 500; line-height: 1.375; } .ds-card h3 a { color: inherit; text-decoration: none; outline: none; } .ds-card h3 a::after { content: ''; position: absolute; inset: 0; } .ds-card h3 a:focus-visible { text-decoration: underline; } .ds-card-check { color: var(--primary); flex-shrink: 0; } .ds-card-meta { margin: 0; font-size: 0.875rem; color: var(--muted-foreground); } .ds-card-price { margin: auto 0 0; padding-top: 8px; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.025em; } .ds-badge-repasse { align-self: flex-start; display: inline-flex; align-items: center; height: 20px; padding: 2px 8px; border: 1px solid color-mix(in oklch, var(--warning) 60%, transparent); border-radius: 9999px; background: var(--warning-soft); color: var(--warning-foreground); font-size: 0.75rem; font-weight: 500; }"
     },
     {
       "name": "Cabeçalho",
@@ -513,15 +517,25 @@
       "description": "Painel tonal, sem borda nem sombra, com o escudo e os marcadores em Azul Fiorde.",
       "html": "<section class=\"ds-safety\"><h2><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/><path d=\"m9 12 2 2 4-4\"/></svg>Compre com segurança</h2><ul><li>Nunca pague sinal ou reserva antes de ver o carro pessoalmente.</li><li>Confira o documento e se o vendedor é o proprietário.</li><li>Faça uma vistoria cautelar antes de fechar negócio.</li></ul></section>",
       "css": ".ds-safety { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px; max-width: 640px; padding: 24px; border-radius: 18px; background: color-mix(in oklch, var(--muted) 60%, transparent); } .ds-safety h2 { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; color: var(--foreground); } .ds-safety h2 svg { color: var(--primary); flex-shrink: 0; } .ds-safety ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; color: var(--muted-foreground); } .ds-safety li { display: flex; gap: 12px; } .ds-safety li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; margin-top: 9px; border-radius: 9999px; background: var(--primary); }"
+    },
+    {
+      "name": "Passos numerados",
+      "kind": "custom",
+      "refersTo": "steps",
+      "description": "\"Como funciona\" como num manual: numeral grande em Azul Fiorde à esquerda do título, Linha Fina abrindo cada passo, sem ícones.",
+      "html": "<ol class=\"ds-steps\"><li><span aria-hidden=\"true\">1</span><h3>Busque do seu jeito</h3><p>Escreva como você fala: “s60 t5”, “xc40 elétrico até 200 mil”.</p></li><li><span aria-hidden=\"true\">2</span><h3>Compare com calma</h3><p>Modelo, versão, ano, km, preço e cidade organizados lado a lado.</p></li><li><span aria-hidden=\"true\">3</span><h3>Fale com a gente</h3><p>Um toque abre o nosso WhatsApp com a mensagem pronta.</p></li></ol>",
+      "css": ".ds-steps { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; max-width: 960px; margin: 0; padding: 32px; list-style: none; background: var(--muted); color: var(--foreground); } .ds-steps li { display: grid; grid-template-columns: 3rem 1fr; align-items: baseline; column-gap: 12px; row-gap: 8px; padding-top: 20px; border-top: 1px solid var(--border); } .ds-steps span { font-size: 3rem; line-height: 1; font-weight: 600; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: var(--primary); } .ds-steps h3 { margin: 0; font-size: 1.125rem; font-weight: 500; } .ds-steps p { grid-column: 2; margin: 0; color: var(--muted-foreground); text-wrap: pretty; }"
     }
   ],
   "narrative": {
     "northStar": "O Manual do Proprietário",
-    "overview": "O Buy My Volvo se apresenta como um bom manual do proprietário: preciso, honesto e didático. Cada anúncio é uma ficha clara (ano, km, preço, cidade), cada termo Volvo pode ser entendido por quem está chegando agora, e nada disputa atenção com o carro e os seus números. O clima é **sereno, entusiasta e didático**: a calma escandinava de neutros frios e muito respiro, com o entusiasmo de quem conhece a marca aparecendo nos detalhes (a placa tipográfica do modelo, os passos numerados, o selo de verificado em azul).\n\nA densidade é moderada: telas públicas com seções largas separadas por linhas finas, conteúdo num contêiner de 72rem e textos corridos em colunas estreitas. A profundidade vem de tons e linhas, não de sombras. Os componentes são **firmes e confiantes**: as ações principais têm 48px de altura, os cards têm contorno nítido e o preço é o número mais pesado da tela. A identidade nórdica está em refinamento (decisão de 13/11/2026): **mais marcada e mais presente**, sem trocar a base de neutros frios e azul.\n\nO visual fica longe de três mundos: o **portal de classificados** (banners, selos piscando, tudo disputando atenção), o **feirão** (vermelho e amarelo, \"IMPERDÍVEL\", preço gigante, contagem regressiva) e a **startup genérica** (gradientes roxos, ilustrações 3D, brilho por todo lado).",
+    "overview": "O Buy My Volvo se apresenta como um bom manual do proprietário: preciso, honesto e didático. Cada anúncio é uma ficha clara (ano, km, preço, cidade), cada termo Volvo pode ser entendido por quem está chegando agora, e nada disputa atenção com o carro e os seus números. O clima é **sereno, entusiasta e didático**: a calma escandinava de neutros frios e muito respiro, com o entusiasmo de quem conhece a marca aparecendo nos detalhes (a placa tipográfica do modelo, os passos numerados, o selo de verificado em azul).\n\nA densidade é moderada: telas públicas com seções largas separadas por linhas finas, conteúdo num contêiner de 72rem e textos corridos em colunas estreitas. A profundidade vem de tons e linhas, não de sombras: os cards em Papel ficam visivelmente acima do fundo em Neve, e a faixa didática da home fica em Geada. Os componentes são **firmes e confiantes**: as ações principais têm 48px de altura, os cards têm contorno nítido e o preço é o número mais pesado da tela. A identidade nórdica está em refinamento (decisão de 13/11/2026): **mais marcada e mais presente**, sem trocar a base de neutros frios e azul.\n\nO visual fica longe de três mundos: o **portal de classificados** (banners, selos piscando, tudo disputando atenção), o **feirão** (vermelho e amarelo, \"IMPERDÍVEL\", preço gigante, contagem regressiva) e a **startup genérica** (gradientes roxos, ilustrações 3D, brilho por todo lado).",
     "keyCharacteristics": [
       "Neutros frios (matiz 240–255) com um único acento, o Azul Fiorde.",
       "Uma família tipográfica (Geist), hierarquia por tamanho, peso (500/600) e espaçamento apertado.",
       "Superfícies planas: bordas finas e painéis tonais; sombra só no que flutua.",
+      "Placa do modelo em Gelo Azul, com o nome em Azul Fiorde e uma linha de ficha: o rosto dos anúncios sem foto.",
+      "Passos numerados como num manual: numerais grandes em Azul Fiorde, sem ícones nem rótulos acima dos títulos.",
       "Cantos suaves e aninhados: 18px nos cards, 14px nos controles grandes, pílula nos chips.",
       "Ação principal grande e clara (48px), pensada para o polegar no celular.",
       "Tema claro e escuro, ambos verificados para WCAG 2.1 AA."
@@ -529,7 +543,12 @@
     "rules": [
       {
         "name": "The Fjord Accent Rule",
-        "body": "O Azul Fiorde marca o que se clica, o que tem foco e o que indica confiança (verificado, passos, marcadores). Superfícies grandes nunca são azuis.",
+        "body": "O Azul Fiorde marca o que se clica, o que tem foco e o que indica confiança (verificado, passos, marcadores), e tinge o nome do modelo na placa. Superfícies grandes nunca são azuis; o Gelo Azul é um neutro.",
+        "section": "colors"
+      },
+      {
+        "name": "The Visible Step Rule",
+        "body": "Dois neutros só separam superfícies se a diferença se vê: pelo menos 2% de luminosidade entre fundo, faixa e card, além da Linha Fina.",
         "section": "colors"
       },
       {
@@ -564,7 +583,8 @@
       "**Do** dar à ação principal de cada página pública 48px de altura, 14px de raio e texto de 1rem.",
       "**Do** manter o preço em semibold com espaçamento apertado, como o número mais pesado do card e do anúncio.",
       "**Do** definir toda cor como token com a versão do tema escuro e conferir o contraste AA nos dois temas.",
-      "**Do** mostrar a placa do modelo quando não houver foto licenciada pelo vendedor.",
+      "**Do** mostrar a placa do modelo (Gelo Azul, nome em Azul Fiorde a 35%, linha de ficha da taxonomia) quando não houver foto licenciada pelo vendedor.",
+      "**Do** numerar sequências de verdade (passos) com o numeral grande em Azul Fiorde, à esquerda do título.",
       "**Do** usar o âmbar suave (fundo, borda a 60%, tinta) para os alertas de repasse e ágio."
     ],
     "donts": [
@@ -573,6 +593,8 @@
       "**Don't** usar a linguagem do feirão: vermelho e amarelo, \"IMPERDÍVEL\", preço gigante, contagem regressiva.",
       "**Don't** usar gradientes roxos, ilustrações 3D ou brilhos de startup genérica.",
       "**Don't** dar sombra ou elevação aos cards, nem em repouso nem no hover.",
+      "**Don't** separar superfícies com neutros a menos de 2% de luminosidade um do outro, nem com degradê entre tons quase iguais: se não se vê, não separa.",
+      "**Don't** pôr um rótulo pequeno acima de títulos (eyebrow); a hierarquia vem do próprio título.",
       "**Don't** usar o vermelho fora de erros e ações destrutivas, nem o âmbar fora dos alertas ao comprador.",
       "**Don't** mostrar fotos que não vieram com a licença do vendedor."
     ]

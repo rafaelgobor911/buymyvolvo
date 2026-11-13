@@ -52,8 +52,9 @@
 }
 
 :root {
-  /* Scandinavian neutrals with a steel-blue accent. Contrast checked for WCAG AA. */
-  --background: oklch(0.99 0.002 240);
+  /* Scandinavian neutrals with a steel-blue accent. Contrast checked for WCAG AA.
+     Paper (card) sits visibly above snow (background); frost (muted) marks bands. */
+  --background: oklch(0.975 0.005 240);
   --foreground: oklch(0.21 0.012 255);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.21 0.012 255);
@@ -61,19 +62,19 @@
   --popover-foreground: oklch(0.21 0.012 255);
   --primary: oklch(0.45 0.075 245);
   --primary-foreground: oklch(0.985 0.002 240);
-  --secondary: oklch(0.96 0.006 240);
+  --secondary: oklch(0.95 0.009 240);
   --secondary-foreground: oklch(0.25 0.015 255);
-  --muted: oklch(0.965 0.004 240);
+  --muted: oklch(0.955 0.007 240);
   --muted-foreground: oklch(0.48 0.012 255);
-  --accent: oklch(0.95 0.018 240);
+  --accent: oklch(0.94 0.02 240);
   --accent-foreground: oklch(0.32 0.06 245);
   --destructive: oklch(0.55 0.2 27);
   /* Buyer alerts (repasse, ágio): amber, readable on the cool neutrals. */
   --warning: oklch(0.7 0.15 70);
   --warning-soft: oklch(0.97 0.035 85);
   --warning-foreground: oklch(0.42 0.09 60);
-  --border: oklch(0.905 0.006 240);
-  --input: oklch(0.88 0.008 240);
+  --border: oklch(0.895 0.008 240);
+  --input: oklch(0.87 0.01 240);
   --ring: oklch(0.6 0.08 245);
   --chart-1: oklch(0.45 0.075 245);
   --chart-2: oklch(0.6 0.06 220);
