@@ -241,7 +241,7 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 - **Grafite Nórdico** (`graphite`): texto principal e títulos. No escuro, `polar-text`.
 - **Pedra** (`stone`): texto secundário, metadados (ano · km, cidade · tipo · data), legendas. No escuro, `polar-stone`.
 - **Névoa** (`mist`): fundo dos botões secundários e dos selos de destaque do anúncio.
-- **Geada** (`frost`): a faixa didática da home ("Como funciona" e dicas de segurança, de ponta a ponta), painéis tonais (avisos de intermediação e dicas de segurança da página do anúncio, a 60%) e hover de botões outline e ghost.
+- **Geada** (`frost`): a faixa didática da home ("Como funciona" e dicas de segurança, de ponta a ponta), painéis tonais (avisos de intermediação, dicas de segurança da página do anúncio e o aviso de busca vazia) e hover de botões outline e ghost.
 - **Gelo Azul** (`ice`): superfície da placa do modelo e hover dos chips de busca e de modelo, o único neutro com um toque do acento.
 - **Linha Fina** (`hairline`): bordas de cards e divisórias de seção (a 70% nos divisores estruturais: cabeçalho, rodapé, seções da home).
 - **Contorno de Campo** (`field-stroke`): borda de inputs e selects, um passo mais escura que a Linha Fina.
@@ -301,7 +301,7 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 
 ## Elevation & Depth
 
-O sistema é plano. A profundidade vem de tons (Papel sobre Neve, faixa em Geada, painéis em Geada a 60%, Papel com Linha Fina dentro da faixa) e de bordas finas. A sombra aparece só no que flutua sobre o conteúdo: o banner de cookies, o painel de filtros e os botões sobre fotos. O cabeçalho e a barra de contato do celular ficam translúcidos (80–95%) com desfoque do fundo, para dar a sensação de camada sem sombra.
+O sistema é plano. A profundidade vem de tons (Papel sobre Neve, faixa em Geada, painéis em Geada, Papel com Linha Fina dentro da faixa) e de bordas finas. A sombra aparece só no que flutua sobre o conteúdo: o banner de cookies, o painel de filtros e os botões sobre fotos. O cabeçalho e a barra de contato do celular ficam translúcidos (80–95%) com desfoque do fundo, para dar a sensação de camada sem sombra.
 
 ### Shadow Vocabulary
 
@@ -383,8 +383,8 @@ Na página do anúncio, entre "Sobre este carro" e a Ficha: o título do carro d
 
 ### Quadros de aviso
 
-- **Aviso de intermediação:** Geada a 60%, 14px de raio, 16px de preenchimento, texto de 0.875rem em Pedra com ícone de informação.
-- **Dicas de segurança:** 18px de raio, 24px de preenchimento (40px a partir de 640px), escudo em Azul Fiorde no título e marcadores de 6px em Azul Fiorde. Na página do anúncio, Geada a 60%; na home, Papel com Linha Fina dentro da faixa em Geada.
+- **Aviso de intermediação:** Geada, 14px de raio, 16px de preenchimento, texto de 0.875rem em Pedra com ícone de informação.
+- **Dicas de segurança:** 18px de raio, 24px de preenchimento (40px a partir de 640px), escudo em Azul Fiorde no título e marcadores de 6px em Azul Fiorde. Na página do anúncio, Geada; na home, Papel com Linha Fina dentro da faixa em Geada.
 - **Ficha técnica:** grade de 2 ou 3 colunas dentro de um contêiner com Linha Fina e 18px de raio; rótulo em Pedra (0.875rem) e valor em peso 500.
 
 ## Do's and Don'ts
@@ -392,7 +392,7 @@ Na página do anúncio, entre "Sobre este carro" e a Ficha: o título do carro d
 ### Do:
 
 - **Do** usar o Azul Fiorde só para ação, foco e sinais de confiança; as superfícies ficam neutras.
-- **Do** separar superfícies com Linha Fina e painéis em Geada a 60%, não com sombra.
+- **Do** separar superfícies com Linha Fina e painéis em Geada, não com sombra.
 - **Do** dar à ação principal de cada página pública 48px de altura, 14px de raio e texto de 1rem.
 - **Do** manter o preço em semibold com espaçamento apertado, como o número mais pesado do card e do anúncio.
 - **Do** definir toda cor como token com a versão do tema escuro e conferir o contraste AA nos dois temas.

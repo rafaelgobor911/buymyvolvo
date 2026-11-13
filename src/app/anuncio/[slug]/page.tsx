@@ -277,7 +277,7 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
 
           <ContactActions listing={listing} available={canContact} />
 
-          <p className="flex gap-2 rounded-xl bg-muted/60 p-4 text-sm text-muted-foreground">
+          <p className="flex gap-2 rounded-xl bg-muted p-4 text-sm text-muted-foreground">
             <Info className="mt-0.5 size-4 shrink-0" aria-hidden />
             <span>
               Anúncio intermediado pelo {site.name}. O carro é de um vendedor parceiro (loja ou

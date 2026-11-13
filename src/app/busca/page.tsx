@@ -127,7 +127,8 @@ function EmptyState({ chips, params }: { chips: FilterChip[]; params: RawParams 
                 href={removeChipHref(params, chip)}
                 className="inline-flex h-11 items-center rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-9"
               >
-                Sem “{chip.label}”
+                {/* The text chip already carries its quotes. */}
+                Sem {chip.key === "text" ? chip.label : `“${chip.label}”`}
               </Link>
             </li>
           ))}
@@ -148,7 +149,7 @@ function EmptyState({ chips, params }: { chips: FilterChip[]; params: RawParams 
           ))}
         </ul>
       </div>
-      <div className="flex flex-col gap-2 rounded-xl bg-muted/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-2 rounded-xl bg-muted p-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="flex items-center gap-2 text-sm">
           <BellRing className="size-4 text-primary" aria-hidden />
           Quer ser avisado quando aparecer um carro assim?

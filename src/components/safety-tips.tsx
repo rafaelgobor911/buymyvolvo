@@ -20,7 +20,7 @@ export function SafetyTips({
     <section
       aria-labelledby="seguranca"
       className={cn(
-        "flex flex-col gap-5 rounded-2xl bg-muted/60 p-6",
+        "flex flex-col gap-5 rounded-2xl bg-muted p-6",
         !compact && "sm:p-10",
         className,
       )}

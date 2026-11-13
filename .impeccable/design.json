@@ -524,7 +524,7 @@
       "refersTo": "notice-panel",
       "description": "Painel tonal, sem borda nem sombra, com o escudo e os marcadores em Azul Fiorde.",
       "html": "<section class=\"ds-safety\"><h2><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/><path d=\"m9 12 2 2 4-4\"/></svg>Compre com segurança</h2><ul><li>Nunca pague sinal ou reserva antes de ver o carro pessoalmente.</li><li>Confira o documento e se o vendedor é o proprietário.</li><li>Faça uma vistoria cautelar antes de fechar negócio.</li></ul></section>",
-      "css": ".ds-safety { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px; max-width: 640px; padding: 24px; border-radius: 18px; background: color-mix(in oklch, var(--muted) 60%, transparent); } .ds-safety h2 { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; color: var(--foreground); } .ds-safety h2 svg { color: var(--primary); flex-shrink: 0; } .ds-safety ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; color: var(--muted-foreground); } .ds-safety li { display: flex; gap: 12px; } .ds-safety li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; margin-top: 9px; border-radius: 9999px; background: var(--primary); }"
+      "css": ".ds-safety { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px; max-width: 640px; padding: 24px; border-radius: 18px; background: var(--muted); } .ds-safety h2 { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; color: var(--foreground); } .ds-safety h2 svg { color: var(--primary); flex-shrink: 0; } .ds-safety ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; color: var(--muted-foreground); } .ds-safety li { display: flex; gap: 12px; } .ds-safety li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; margin-top: 9px; border-radius: 9999px; background: var(--primary); }"
     },
     {
       "name": "Passos numerados",
@@ -595,7 +595,7 @@
     ],
     "dos": [
       "**Do** usar o Azul Fiorde só para ação, foco e sinais de confiança; as superfícies ficam neutras.",
-      "**Do** separar superfícies com Linha Fina e painéis em Geada a 60%, não com sombra.",
+      "**Do** separar superfícies com Linha Fina e painéis em Geada, não com sombra.",
       "**Do** dar à ação principal de cada página pública 48px de altura, 14px de raio e texto de 1rem.",
       "**Do** manter o preço em semibold com espaçamento apertado, como o número mais pesado do card e do anúncio.",
       "**Do** definir toda cor como token com a versão do tema escuro e conferir o contraste AA nos dois temas.",
