@@ -11,12 +11,12 @@ import { SearchBox } from "@/components/search/search-box";
 import { Skeleton } from "@/components/ui/skeleton";
 import { POPULAR_SEARCHES } from "@/content/popular";
 import { formatInteger } from "@/lib/listings/format";
-import { getRecentListings } from "@/lib/listings/queries";
+import { bodyTypeCounts, getRecentListings } from "@/lib/listings/queries";
 import { websiteJsonLd } from "@/lib/seo/json-ld";
 import { LANDING_ROOT } from "@/lib/seo/landing";
 import { activeLandingCounts } from "@/lib/seo/queries";
 import { absoluteUrl, site } from "@/lib/site";
-import { getModel } from "@/lib/taxonomy";
+import { BODY_TITLES, type BodyType, getModel, primaryBodyType } from "@/lib/taxonomy";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -98,9 +98,9 @@ export default function HomePage() {
 
       <section aria-labelledby="por-modelo" className="border-b border-border/70">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
             <h2 id="por-modelo" className="text-2xl font-semibold tracking-tight">
-              Explore por modelo
+              Explore por tipo e modelo
             </h2>
             <Link
               href={LANDING_ROOT}
@@ -109,7 +109,7 @@ export default function HomePage() {
               Todos os modelos <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
-          <Suspense fallback={<Skeleton className="h-24 rounded-2xl" />}>
+          <Suspense fallback={<Skeleton className="h-72 rounded-2xl" />}>
             <ModelLinks />
           </Suspense>
         </div>
@@ -156,28 +156,71 @@ async function RecentListings() {
   return <ListingGrid listings={listings} now={new Date()} />;
 }
 
-/** Models with active listings, most listings first (internal links to the landing pages). */
+/** "Todos os SUVs", "Todas as peruas": the link that opens the search for a body type. */
+const BODY_ALL: Record<BodyType, string> = {
+  suv: "Todos os SUVs",
+  sedan: "Todos os sedãs",
+  perua: "Todas as peruas",
+  hatch: "Todos os hatches",
+  cupe: "Todos os cupês",
+  conversivel: "Todos os conversíveis",
+};
+
+/**
+ * Models with active listings grouped by body type (each model under the body
+ * of its latest generation), so the grouping itself shows XC = SUV, S = sedã,
+ * V = perua. Each row opens with the search for the whole body type.
+ */
 async function ModelLinks() {
   await connection();
-  const models = (await activeLandingCounts())
-    .filter((c) => c.depth === 1)
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 12);
-  if (models.length === 0) return null;
+  const [counts, bodies] = await Promise.all([activeLandingCounts(), bodyTypeCounts()]);
+  const models = counts.filter((c) => c.depth === 1).sort((a, b) => b.count - a.count);
+  if (models.length === 0 || bodies.length === 0) return null;
+  const rows = bodies
+    .map(({ bodyType, count }) => ({
+      bodyType,
+      count,
+      models: models.filter((c) => {
+        const model = getModel(c.modelId);
+        return model && primaryBodyType(model) === bodyType;
+      }),
+    }))
+    .filter((row) => row.models.length > 0);
   return (
-    <ul className="flex flex-wrap gap-2">
-      {models.map((c) => (
-        <li key={c.path}>
-          <Link
-            href={c.path}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-10"
-          >
-            <span className="font-medium">{getModel(c.modelId)?.name ?? c.modelId}</span>
-            <span className="text-muted-foreground">{formatInteger(c.count)}</span>
-          </Link>
-        </li>
+    <dl className="flex flex-col">
+      {rows.map(({ bodyType, count, models: group }) => (
+        <div
+          key={bodyType}
+          className="grid gap-3 border-t border-border py-4 sm:grid-cols-[8rem_1fr] sm:items-start sm:gap-6"
+        >
+          <dt className="text-lg font-semibold tracking-tight sm:pt-2">{BODY_TITLES[bodyType]}</dt>
+          <dd>
+            <ul className="flex flex-wrap gap-2">
+              <li>
+                <Link
+                  href={`/busca?carroceria=${bodyType}`}
+                  className="inline-flex h-11 items-center gap-2 rounded-full bg-accent px-4 text-sm text-accent-foreground transition-colors hover:bg-accent/70 sm:h-10"
+                >
+                  <span className="font-medium">{BODY_ALL[bodyType]}</span>
+                  <span>{formatInteger(count)}</span>
+                </Link>
+              </li>
+              {group.map((c) => (
+                <li key={c.path}>
+                  <Link
+                    href={c.path}
+                    className="inline-flex h-11 items-center gap-2 rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-10"
+                  >
+                    <span className="font-medium">{getModel(c.modelId)?.name ?? c.modelId}</span>
+                    <span className="text-muted-foreground">{formatInteger(c.count)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
       ))}
-    </ul>
+    </dl>
   );
 }
 

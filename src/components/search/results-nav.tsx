@@ -23,27 +23,13 @@ export function InterpretedChips({
   filters: SearchFilters;
 }) {
   if (chips.length === 0 && !filters.citySuggestion && filters.warnings.length === 0) return null;
+  const understood = chips.filter((c) => c.key !== "text");
+  const text = chips.find((c) => c.key === "text");
   return (
     <div className="flex flex-col gap-2">
-      {chips.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Entendemos:</span>
-          <ul className="flex flex-wrap gap-2">
-            {chips.map((chip) => (
-              <li key={chip.key}>
-                <Link
-                  href={removeChipHref(params, chip)}
-                  className="inline-flex h-11 items-center gap-1.5 rounded-full bg-accent pr-2.5 pl-3 text-sm text-accent-foreground transition-colors hover:bg-accent/70 sm:h-8"
-                  aria-label={`Remover filtro: ${chip.label}`}
-                >
-                  {chip.label}
-                  <X className="size-3.5" aria-hidden />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {understood.length > 0 && <ChipRow label="Entendemos:" chips={understood} params={params} />}
+      {/* Words the search did not recognize go to full-text search: say so, not "understood". */}
+      {text && <ChipRow label="Também buscamos o texto:" chips={[text]} params={params} />}
       {filters.citySuggestion && (
         <p className="text-sm text-muted-foreground">
           Buscando no estado inteiro.{" "}
@@ -63,6 +49,36 @@ export function InterpretedChips({
           {w}
         </p>
       ))}
+    </div>
+  );
+}
+
+function ChipRow({
+  label,
+  chips,
+  params,
+}: {
+  label: string;
+  chips: FilterChip[];
+  params: RawParams;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <ul className="flex flex-wrap gap-2">
+        {chips.map((chip) => (
+          <li key={chip.key}>
+            <Link
+              href={removeChipHref(params, chip)}
+              className="inline-flex h-11 items-center gap-1.5 rounded-full bg-accent pr-2.5 pl-3 text-sm text-accent-foreground transition-colors hover:bg-accent/70 sm:h-8"
+              aria-label={`Remover filtro: ${chip.label}`}
+            >
+              {chip.label}
+              <X className="size-3.5" aria-hidden />
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

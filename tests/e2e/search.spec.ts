@@ -46,6 +46,23 @@ test.describe("Busca e anúncio", () => {
     ).toBeVisible();
   });
 
+  test("carroceria: suv vira filtro, o resto vai para o texto", async ({ page }) => {
+    await page.goto("/busca?q=suv+teto+solar");
+    await expect(page.getByRole("link", { name: "Remover filtro: SUV" })).toBeVisible();
+    await expect(page.getByText("Também buscamos o texto:")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Remover filtro: “teto solar”" })).toBeVisible();
+
+    // A model that never had the body says what it is.
+    await page.goto("/busca?q=s60+perua");
+    await expect(page.getByText("S60 é sedã, não perua.")).toBeVisible();
+
+    // The home groups the models by body type and links to the whole type.
+    await page.goto("/");
+    await page.getByRole("link", { name: /Todos os SUVs/ }).click();
+    await expect(page).toHaveURL(/\/busca\?carroceria=suv/);
+    await expect(page.getByRole("link", { name: "Remover filtro: SUV" })).toBeVisible();
+  });
+
   test("remover um filtro amplia a busca", async ({ page }) => {
     await page.goto("/busca?q=s60+t5");
     await page.getByRole("link", { name: "Remover filtro: T5" }).click();

@@ -5,6 +5,7 @@ import { PAGE_SIZE, type SearchFilters } from "@/lib/search/filters";
 import { readBmvNumbers } from "@/lib/authorization/messages";
 import { photoUrl } from "@/lib/photos/storage";
 import {
+  BODY_TYPES,
   type BodyType,
   bodyTypeMatches,
   type Fuel,
@@ -254,6 +255,20 @@ export async function getRecentListings(limit = 8): Promise<ListingCard[]> {
       order by l.first_seen_at desc, l.id
       limit ${limit}`;
     return rows.map(toCard);
+  });
+}
+
+/** Active listings per body type (home "Explore por tipo e modelo"); bodies with none are left out. */
+export async function bodyTypeCounts(): Promise<Array<{ bodyType: BodyType; count: number }>> {
+  return asAnon(async (tx) => {
+    const out: Array<{ bodyType: BodyType; count: number }> = [];
+    for (const bodyType of BODY_TYPES) {
+      const [row] = await tx<Array<{ count: number }>>`
+        select count(*)::int as count from public.listings l
+        where l.status = 'active' and ${bodyCondition(tx, bodyType)}`;
+      if (row && row.count > 0) out.push({ bodyType, count: row.count });
+    }
+    return out;
   });
 }
 

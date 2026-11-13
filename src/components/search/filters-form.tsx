@@ -11,6 +11,8 @@ import { PUBLIC_FIELDS } from "@/components/public-fields";
 import { modelGroupLabel, PARAM, type SearchFilters } from "@/lib/search/filters";
 import { UF_CODES, UFS } from "@/lib/search/places";
 import {
+  BODY_TITLES,
+  BODY_TYPES,
   enginesForSelect,
   FUEL_LABELS,
   FUELS,
@@ -164,6 +166,7 @@ function trimSelectValue(ids: string[]): string {
   }
   return ids.join(",");
 }
+const BODY_OPTIONS: Option[] = BODY_TYPES.map((b) => ({ value: b, label: BODY_TITLES[b] }));
 const FUEL_OPTIONS: Option[] = FUELS.map((f) => ({ value: f, label: FUEL_LABELS[f] }));
 const TRANSMISSION_OPTIONS: Option[] = TRANSMISSIONS.map((t) => ({
   value: t,
@@ -185,6 +188,14 @@ export function FiltersForm({ filters, idPrefix }: { filters: SearchFilters; idP
         <input type="hidden" name={PARAM.sort} value={filters.sort} />
       )}
 
+      <Field id={id("carroceria")} label="Carroceria">
+        <Select
+          id={id("carroceria")}
+          name={PARAM.body}
+          value={filters.bodyType ?? ""}
+          options={BODY_OPTIONS}
+        />
+      </Field>
       <Field id={id("modelo")} label="Modelo">
         <Select
           id={id("modelo")}

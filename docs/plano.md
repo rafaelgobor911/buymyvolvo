@@ -440,3 +440,14 @@ Pedido do dono do produto (13/11/2026): **refinar, não recriar**, mantendo a id
 **Pendências da Fase 10:** a comissão (dono do produto); o aviso "did not produce a static shell" do servidor de desenvolvimento já existia antes da fase (só em dev); conferir se o V90 Cross Country foi vendido oficialmente no Brasil (dono do produto); tarefa sugerida para tirar "Anunciado por…" dos resumos fictícios do seed.
 
 **Decisões de 13/11 (dono do produto):** próxima frente, a **busca por carroceria** ("suv", "sedã", "perua", "hatch"); e um **rascunho de descrição por versão** (marcado REVISAR) para "Entenda o nome", que só vai ao ar depois da revisão do dono.
+
+## Fase 11: busca por carroceria
+
+Pedido do dono do produto (13/11/2026), a partir da avaliação final da Fase 10 ("suv" dava zero resultados).
+
+- **Taxonomia:** carroceria por geração quando o modelo teve mais de uma (V40: 1ª perua, 2ª hatch, como já dizia o nome das gerações). O SQL gerado não muda (o gerador não grava a carroceria das gerações); sem migration.
+- **Busca:** "suv", "sedã"/"sedan", "perua"/"station"/"sw", "hatch"/"hatchback", "cupê"/"coupé" e "conversível"/"cabriolet" viram o filtro `carroceria` (o painel sobrescreve, vazio = qualquer). Aviso quando o modelo digitado nunca teve aquela carroceria ("S60 é sedã, não perua.") ou a teve em outros anos ("O V40 perua é dos anos-modelo 1996–2004.").
+- **Interface:** campo "Carroceria" no topo do painel de filtros; chip "SUV" em "Entendemos"; as palavras não reconhecidas em "Também buscamos o texto:"; a home troca "Explore por modelo" por "Explore por tipo e modelo" (modelos agrupados pela carroceria, cada grupo com "Todos os SUVs" e a contagem).
+- **Testes:** leitura das carrocerias e avisos (unidade), as regras da taxonomia, buscas de aceitação nos anúncios fictícios (integração) e o caminho da home até a busca (e2e).
+
+**Pendências da Fase 11:** aprovação do merge; o rascunho de descrição das versões espera a revisão do dono do produto (Dynamic e Kinetic a conferir na taxonomia).

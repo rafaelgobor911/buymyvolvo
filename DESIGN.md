@@ -335,7 +335,7 @@ Firmes e diretos: um único botão principal por bloco, com texto que diz a aç�
 ### Chips
 
 - **Style:** pílula com Linha Fina, sem fundo, texto Grafite em Label, 44px de altura no celular; a partir de 640px, 36px (40px nos chips de modelo, que trazem a contagem em Pedra).
-- **State:** hover com fundo Gelo Azul e borda Azul Fiorde a 40%; foco com o anel de 3px. Usados para "Buscas populares" e "Explore por modelo".
+- **State:** hover com fundo Gelo Azul e borda Azul Fiorde a 40%; foco com o anel de 3px. Usados para "Buscas populares" e "Explore por tipo e modelo". O chip que abre um tipo inteiro ("Todos os SUVs") fica em Gelo Azul, sem borda.
 
 ### Badges
 
@@ -376,6 +376,14 @@ O lugar da foto quando o anúncio não tem foto licenciada, e o rosto da maioria
 ### Passos numerados
 
 A forma de "Como funciona": lista ordenada de três passos, cada um aberto por uma Linha Fina. À esquerda, o numeral (papel Numeral, Azul Fiorde) alinhado pela linha de base ao título (1.125rem, 500); embaixo, o texto em Pedra. Sem ícones e sem rótulo acima do título: a ordem é a informação, e o numeral a carrega.
+
+### Explore por tipo e modelo
+
+Na home, os modelos com anúncios agrupados pela carroceria (SUV, Sedã, Perua, Hatch, Cupê, Conversível), cada grupo numa linha aberta por uma Linha Fina: o nome do tipo à esquerda (1.125rem, 600) e, à direita, o chip "Todos os SUVs" em Gelo Azul com a contagem (abre a busca pela carroceria), seguido dos chips de modelo com contagem. Cada modelo fica no tipo da sua geração mais recente. O agrupamento mostra, sem precisar dizer, que no nome Volvo XC é SUV, S é sedã e V é perua.
+
+### Chips da busca interpretada
+
+"Entendemos:" lista só o que a busca reconheceu (chips em Gelo Azul com ×). As palavras que ela não reconheceu ficam numa linha própria, "Também buscamos o texto:", com o mesmo chip; nunca aparecem como entendidas.
 
 ### Entenda o nome
 
