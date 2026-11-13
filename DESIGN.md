@@ -212,7 +212,7 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 
 ### Primary
 
-- **Azul Fiorde** (`fjord-blue`): botões principais, links, o ícone de vendedor verificado, os numerais dos passos de "Como funciona", os marcadores das dicas de segurança e da lista do que conferir no modelo, e o nome do modelo na placa (a 35%). No escuro vira o **Azul Fiorde Noturno** (`fjord-blue-night`), mais claro, com texto em `on-fjord-night`.
+- **Azul Fiorde** (`fjord-blue`): botões principais, links, o ícone de vendedor verificado, os numerais dos passos de "Como funciona", os marcadores das dicas de segurança e da lista do que conferir no modelo, e o nome do modelo na placa (a 70%, 60% no escuro: pelo menos 3:1, como todo texto grande). No escuro vira o **Azul Fiorde Noturno** (`fjord-blue-night`), mais claro, com texto em `on-fjord-night`.
 - **Fiorde Profundo** (`fjord-deep`): texto sobre o fundo Gelo Azul, como a linha de ficha da placa do modelo.
 - **Anel de Foco** (`focus-ring`): contorno de foco de teclado, sempre com 3px a 50% de opacidade.
 
@@ -347,11 +347,15 @@ Firmes e diretos: um único botão principal por bloco, com texto que diz a aç�
 
 ### Placa do modelo (Signature Component)
 
-O lugar da foto quando o anúncio não tem foto licenciada, e o rosto da maioria dos anúncios. Superfície lisa em Gelo Azul; o nome do modelo-base enorme (papel tipográfico Placa) em Azul Fiorde a 35%; logo abaixo, a linha de ficha em Fiorde Profundo (0.875rem, 500), gerada só da taxonomia: variante, carroceria e geração do ano-modelo ("SUV · 2ª geração", "Cross Country · Hatch", "2ª geração (hatch)"); "sem foto" em Pedra (0.75rem) no canto superior direito. A placa é decorativa (`aria-hidden`): o título do card já diz o modelo. É o detalhe de entusiasta que faz um anúncio sem foto parecer intencional.
+O lugar da foto quando o anúncio não tem foto licenciada, e o rosto da maioria dos anúncios. Superfície lisa em Gelo Azul; o nome do modelo-base enorme (papel tipográfico Placa) em Azul Fiorde a 70% (60% no escuro, para manter pelo menos 3:1 sobre o Gelo Azul); logo abaixo, a linha de ficha em Fiorde Profundo (0.875rem, 500), gerada só da taxonomia: variante, carroceria e geração do ano-modelo ("SUV · 2ª geração", "Cross Country · Hatch", "2ª geração (hatch)"); "sem foto" em Pedra (0.75rem) no canto superior direito. A placa é decorativa (`aria-hidden`): o título do card já diz o modelo. É o detalhe de entusiasta que faz um anúncio sem foto parecer intencional.
 
 ### Passos numerados
 
 A forma de "Como funciona": lista ordenada de três passos, cada um aberto por uma Linha Fina. À esquerda, o numeral (papel Numeral, Azul Fiorde) alinhado pela linha de base ao título (1.125rem, 500); embaixo, o texto em Pedra. Sem ícones e sem rótulo acima do título: a ordem é a informação, e o numeral a carrega.
+
+### Entenda o nome
+
+Na página do anúncio, entre "Sobre este carro" e a Ficha: o título do carro dividido em modelo, motor e versão, como lista de definições. Cada parte é aberta por uma Linha Fina, com o código como está no título (1.5rem, 600, Grafite), o papel ("Modelo", "Motor", "Versão", 0.875rem, 500) e a explicação em Pedra. O texto sai só da taxonomia e do significado geral de cada termo: carroceria e geração ("SUV · 2ª geração, desde 2018"), o combustível do motor ("Híbrido plug-in (motor a gasolina e motor elétrico, com bateria que carrega na tomada)") e o que é uma versão ("A versão define o pacote de equipamentos e o acabamento"). Some quando o título é só o modelo. Na página de modelo, os motores aparecem em linhas (chip e combustível ao lado, em coluna alinhada) e as versões em chips sob a mesma frase; nos filtros, os motores ficam agrupados por combustível e as variantes dizem o que incluem ("V40 (inclui Cross Country)").
 
 ### Quadros de aviso
 
@@ -368,8 +372,9 @@ A forma de "Como funciona": lista ordenada de três passos, cada um aberto por u
 - **Do** dar à ação principal de cada página pública 48px de altura, 14px de raio e texto de 1rem.
 - **Do** manter o preço em semibold com espaçamento apertado, como o número mais pesado do card e do anúncio.
 - **Do** definir toda cor como token com a versão do tema escuro e conferir o contraste AA nos dois temas.
-- **Do** mostrar a placa do modelo (Gelo Azul, nome em Azul Fiorde a 35%, linha de ficha da taxonomia) quando não houver foto licenciada pelo vendedor.
+- **Do** mostrar a placa do modelo (Gelo Azul, nome em Azul Fiorde a 70%, linha de ficha da taxonomia) quando não houver foto licenciada pelo vendedor.
 - **Do** numerar sequências de verdade (passos) com o numeral grande em Azul Fiorde, à esquerda do título.
+- **Do** explicar o código Volvo onde ele aparece (motor, versão, variante), com palavras geradas da taxonomia; o mesmo termo usa sempre as mesmas palavras.
 - **Do** usar o âmbar suave (fundo, borda a 60%, tinta) para os alertas de repasse e ágio.
 
 ### Don't:

@@ -27,6 +27,7 @@ import {
 } from "@/lib/seo/landing";
 import { activeLandingCounts } from "@/lib/seo/queries";
 import { absoluteUrl } from "@/lib/site";
+import { engineFuelShort, TRIM_MEANING } from "@/lib/taxonomy/explain";
 
 const loadStats = cache(async (path: string) => {
   // Request-time data (also reached from generateMetadata; parseQuery reads the clock).
@@ -285,27 +286,31 @@ function EmptyState({ landing }: { landing: Landing }) {
   );
 }
 
-/** Internal links to the versions and states that have active listings. */
+/**
+ * Internal links to the versions and states that have active listings. Engines
+ * and trims are listed apart, each with a line saying what the codes mean.
+ */
 function FacetLinks({ landing, counts }: { landing: Landing; counts: LandingCount[] }) {
   const sameModel = counts.filter((c) => c.modelId === landing.model.id);
   const version = landing.engine?.id ?? landing.trim?.id;
   const versions = sameModel
     .filter((c) => (c.engineId ?? c.trimId) && c.uf === landing.uf && c.path !== landing.path)
     .sort((a, b) => b.count - a.count);
+  const engines = versions.filter((c) => c.engineId);
+  const trims = versions.filter((c) => !c.engineId);
   const states = sameModel
     .filter((c) => c.uf && (c.engineId ?? c.trimId) === version && c.path !== landing.path)
     .sort((a, b) => b.count - a.count);
   if (!versions.length && !states.length) return null;
-  const chip = (c: LandingCount, label: string) => (
-    <li key={c.path}>
-      <Link
-        href={c.path}
-        className="inline-flex h-9 items-center gap-2 rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
-      >
-        {label}
-        <span className="text-muted-foreground">{formatInteger(c.count)}</span>
-      </Link>
-    </li>
+  const where = landing.uf ? ` ${UF_IN[landing.uf]}` : "";
+  const link = (c: LandingCount, label: string) => (
+    <Link
+      href={c.path}
+      className="inline-flex h-9 shrink-0 items-center gap-2 justify-self-start rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
+    >
+      {label}
+      <span className="text-muted-foreground">{formatInteger(c.count)}</span>
+    </Link>
   );
   const versionLabel = (c: LandingCount) => {
     const resolved = resolveLanding(c.path.split("/").slice(2));
@@ -314,13 +319,35 @@ function FacetLinks({ landing, counts }: { landing: Landing; counts: LandingCoun
       : c.path;
   };
   return (
-    <div className="grid gap-8 sm:grid-cols-2">
-      {versions.length > 0 && (
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {engines.length > 0 && (
+        <section aria-labelledby="por-motor" className="flex flex-col gap-3">
+          <h2 id="por-motor" className="text-lg font-semibold tracking-tight">
+            {landing.model.name} por motor{where}
+          </h2>
+          <ul className="grid grid-cols-[max-content_1fr] items-center gap-x-3 gap-y-2">
+            {engines.map((c) => (
+              <li key={c.path} className="col-span-2 grid grid-cols-subgrid items-center">
+                {link(c, versionLabel(c))}
+                <span className="text-sm text-pretty text-muted-foreground">
+                  {engineFuelShort(c.engineId!)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {trims.length > 0 && (
         <section aria-labelledby="por-versao" className="flex flex-col gap-3">
           <h2 id="por-versao" className="text-lg font-semibold tracking-tight">
-            {landing.model.name} por versão{landing.uf ? ` ${UF_IN[landing.uf]}` : ""}
+            {landing.model.name} por versão{where}
           </h2>
-          <ul className="flex flex-wrap gap-2">{versions.map((c) => chip(c, versionLabel(c)))}</ul>
+          <p className="text-sm text-pretty text-muted-foreground">{TRIM_MEANING}.</p>
+          <ul className="flex flex-wrap gap-2">
+            {trims.map((c) => (
+              <li key={c.path}>{link(c, versionLabel(c))}</li>
+            ))}
+          </ul>
         </section>
       )}
       {states.length > 0 && (
@@ -328,7 +355,11 @@ function FacetLinks({ landing, counts }: { landing: Landing; counts: LandingCoun
           <h2 id="por-estado" className="text-lg font-semibold tracking-tight">
             {landing.name.replace("Volvo ", "")} por estado
           </h2>
-          <ul className="flex flex-wrap gap-2">{states.map((c) => chip(c, UFS[c.uf!]))}</ul>
+          <ul className="flex flex-wrap gap-2">
+            {states.map((c) => (
+              <li key={c.path}>{link(c, UFS[c.uf!])}</li>
+            ))}
+          </ul>
         </section>
       )}
     </div>

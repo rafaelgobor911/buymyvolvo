@@ -21,6 +21,7 @@ import {
   trimVariantsOf,
   variantsOf,
 } from "@/lib/taxonomy";
+import { withVariantsLabel } from "@/lib/taxonomy/explain";
 
 import { parseQuery, type RepasseFilter, type SearchSellerType } from "./parse-query";
 import { isUf, type Uf, UFS } from "./places";
@@ -245,7 +246,10 @@ export function modelGroupLabel(ids: string[]): string {
   const base = ids.find((id) =>
     ids.every((other) => other === id || getModel(other)?.parentId === id),
   );
-  if (base && ids.length > 1) return `${getModel(base)?.name} (inclui Cross Country)`;
+  if (base && ids.length > 1) {
+    const variants = ids.filter((id) => id !== base).map((id) => getModel(id)?.name ?? id);
+    return withVariantsLabel(getModel(base)?.name ?? base, variants);
+  }
   return ids.map((id) => getModel(id)?.name ?? id).join(" / ");
 }
 
@@ -254,9 +258,11 @@ export function trimGroupLabel(ids: string[]): string {
   const bases = ids.filter((id) => !getTrim(id)?.parentId || !ids.includes(getTrim(id)!.parentId!));
   return bases
     .map((id) => {
-      const hasVariants = trimVariantsOf(id).some((v) => ids.includes(v.id));
-      const name = getTrim(id)?.name ?? id;
-      return hasVariants ? `${name} (inclui Dark)` : name;
+      const variants = trimVariantsOf(id).filter((v) => ids.includes(v.id));
+      return withVariantsLabel(
+        getTrim(id)?.name ?? id,
+        variants.map((v) => v.name),
+      );
     })
     .join(" ou ");
 }

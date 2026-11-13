@@ -9,10 +9,10 @@
  * (/busca itself stays noindex).
  */
 import { type Uf, UFS } from "@/lib/search/places";
+import { engineExplanation, TRIM_MEANING } from "@/lib/taxonomy/explain";
 import {
   BODY_LABELS,
   type EngineDef,
-  FUEL_LABELS,
   getEngine,
   getModel,
   getTrim,
@@ -308,13 +308,14 @@ export function landingIntro(landing: Landing): { paragraphs: string[]; related:
   }
 
   if (engine) {
-    const fuels = joinPt(engine.fuels.map((f) => FUEL_LABELS[f].toLowerCase()));
-    paragraphs.push(`${engine.name}: motorização ${fuels}.`);
+    const meaning = engineExplanation(engine.id);
+    if (meaning)
+      paragraphs.push(`${engine.name}: ${meaning.charAt(0).toLowerCase()}${meaning.slice(1)}.`);
   }
   if (trim) {
     const trimVariants = trimVariantsOf(trim.id);
     paragraphs.push(
-      `Versão ${trim.name}${trimVariants.length ? `, incluindo ${joinPt(trimVariants.map((t) => t.name))}` : ""}.`,
+      `Versão ${trim.name}${trimVariants.length ? `, incluindo ${joinPt(trimVariants.map((t) => t.name))}` : ""}. ${TRIM_MEANING}.`,
     );
   }
   if (engine || trim || landing.uf) {

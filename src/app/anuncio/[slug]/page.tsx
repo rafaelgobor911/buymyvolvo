@@ -12,6 +12,7 @@ import { ListingAlerts } from "@/components/listing-alerts";
 import { ListingGrid, listingTitle, RepasseBadge } from "@/components/listing-card";
 import { ListingGallery } from "@/components/listing-gallery";
 import { ModelPlate } from "@/components/model-plate";
+import { NameParts } from "@/components/name-parts";
 import { SafetyTips } from "@/components/safety-tips";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -36,6 +37,7 @@ import {
 import { recordView } from "@/lib/listings/views";
 import { breadcrumbJsonLd, carJsonLd } from "@/lib/seo/json-ld";
 import { landingPath, LANDING_ROOT } from "@/lib/seo/landing";
+import { nameParts } from "@/lib/taxonomy/explain";
 import { absoluteUrl, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { FUEL_LABELS, getModel, TRANSMISSION_LABELS } from "@/lib/taxonomy";
@@ -211,6 +213,8 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
               </ul>
             )}
           </section>
+
+          <NameParts parts={nameParts(listing)} />
 
           <FactsTable listing={listing} now={now} />
 

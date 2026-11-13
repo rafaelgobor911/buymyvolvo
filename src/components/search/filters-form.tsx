@@ -2,7 +2,11 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import {
+  NativeSelect,
+  NativeSelectOptGroup,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
 import { modelGroupLabel, PARAM, type SearchFilters } from "@/lib/search/filters";
 import { UF_CODES, UFS } from "@/lib/search/places";
 import {
@@ -18,16 +22,34 @@ import {
   trimVariantsOf,
   variantsOf,
 } from "@/lib/taxonomy";
+import { fuelGroupOrder, withVariantsLabel } from "@/lib/taxonomy/explain";
 
 type Option = { value: string; label: string };
+type OptionGroup = { label: string; options: Option[] };
 
-function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
+function Field({
+  id,
+  label,
+  hint,
+  children,
+}: {
+  id: string;
+  label: string;
+  /** Short help under the control; the control points to it with aria-describedby. */
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="text-sm font-medium">
         {label}
       </label>
       {children}
+      {hint && (
+        <p id={`${id}-dica`} className="text-xs text-pretty text-muted-foreground">
+          {hint}
+        </p>
+      )}
     </div>
   );
 }
@@ -38,23 +60,41 @@ function Select({
   name,
   value,
   options,
+  groups,
   customLabel,
+  describedBy,
 }: {
   id: string;
   name: string;
   value: string;
-  options: Option[];
+  options?: Option[];
+  /** Options under labelled groups (engines by fuel), instead of a flat list. */
+  groups?: OptionGroup[];
   customLabel?: string;
+  describedBy?: string;
 }) {
-  const known = value === "" || options.some((o) => o.value === value);
+  const all = options ?? groups?.flatMap((g) => g.options) ?? [];
+  const known = value === "" || all.some((o) => o.value === value);
+  const render = (o: Option) => (
+    <NativeSelectOption key={o.value} value={o.value}>
+      {o.label}
+    </NativeSelectOption>
+  );
   return (
-    <NativeSelect id={id} name={name} defaultValue={value} className="w-full">
+    <NativeSelect
+      id={id}
+      name={name}
+      defaultValue={value}
+      className="w-full"
+      aria-describedby={describedBy}
+    >
       <NativeSelectOption value="">Qualquer</NativeSelectOption>
       {!known && <NativeSelectOption value={value}>{customLabel ?? value}</NativeSelectOption>}
-      {options.map((o) => (
-        <NativeSelectOption key={o.value} value={o.value}>
-          {o.label}
-        </NativeSelectOption>
+      {options?.map(render)}
+      {groups?.map((g) => (
+        <NativeSelectOptGroup key={g.label} label={g.label}>
+          {g.options.map(render)}
+        </NativeSelectOptGroup>
       ))}
     </NativeSelect>
   );
@@ -73,22 +113,39 @@ function modelSelectValue(ids: string[]): string {
   return ids.join(",");
 }
 
+/** "V40 (inclui Cross Country)" for the base model; the variant alone keeps its own name. */
 const MODEL_OPTIONS: Option[] = modelsForSelect().map(({ model, isVariant }) => ({
   value: model.id,
   label: isVariant
-    ? `${model.name} (só)`
-    : variantsOf(model.id).length
-      ? `${model.name} (todas)`
-      : model.name,
+    ? model.name
+    : withVariantsLabel(
+        model.name,
+        variantsOf(model.id).map((v) => v.name),
+      ),
 }));
-const ENGINE_OPTIONS: Option[] = enginesForSelect().map((e) => ({ value: e.id, label: e.name }));
+/** Engines grouped by fuel, so the codes explain themselves ("Híbrido plug-in: T8"). */
+const ENGINE_GROUPS: OptionGroup[] = (() => {
+  const groups = new Map<string, { order: number; options: Option[] }>();
+  for (const e of enginesForSelect()) {
+    const label = e.fuels
+      .map((f, i) => (i === 0 ? FUEL_LABELS[f] : FUEL_LABELS[f].toLowerCase()))
+      .join(" ou ");
+    const group = groups.get(label) ?? { order: fuelGroupOrder(e.fuels), options: [] };
+    group.options.push({ value: e.id, label: e.name });
+    groups.set(label, group);
+  }
+  return [...groups.entries()]
+    .sort(([, a], [, b]) => a.order - b.order)
+    .map(([label, g]) => ({ label, options: g.options }));
+})();
 const TRIM_OPTIONS: Option[] = trimsForSelect().map(({ trim, isVariant }) => ({
   value: trim.id,
   label: isVariant
-    ? `${trim.name} (só)`
-    : trimVariantsOf(trim.id).length
-      ? `${trim.name} (todas)`
-      : trim.name,
+    ? trim.name
+    : withVariantsLabel(
+        trim.name,
+        trimVariantsOf(trim.id).map((t) => t.name),
+      ),
 }));
 
 /** Collapses [base, ...its variants] back to the base id so the select shows "Ultimate". */
@@ -136,7 +193,7 @@ export function FiltersForm({ filters, idPrefix }: { filters: SearchFilters; idP
             id={id("motor")}
             name={PARAM.engine}
             value={filters.engineIds.join(",")}
-            options={ENGINE_OPTIONS}
+            groups={ENGINE_GROUPS}
           />
         </Field>
         <Field id={id("versao")} label="Versão">
@@ -245,10 +302,15 @@ export function FiltersForm({ filters, idPrefix }: { filters: SearchFilters; idP
           ]}
         />
       </Field>
-      <Field id={id("repasse")} label="Repasse">
+      <Field
+        id={id("repasse")}
+        label="Repasse"
+        hint="Repasse é a venda do carro no estado, em geral sem garantia."
+      >
         <Select
           id={id("repasse")}
           name={PARAM.repasse}
+          describedBy={`${id("repasse")}-dica`}
           value={filters.repasse === "only" ? "so" : filters.repasse === "exclude" ? "sem" : ""}
           options={[
             { value: "sem", label: "Sem repasse" },
