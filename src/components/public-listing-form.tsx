@@ -8,11 +8,15 @@ import { startTransition, useActionState, useEffect, useMemo, useState } from "r
 import { type PublicFormState, submitListingAction } from "@/app/anunciar/actions";
 import { Field, FormMessage, textareaClass } from "@/components/admin/form-bits";
 import { DocumentInput } from "@/components/document-input";
+import { PhotoPicker } from "@/components/photo-picker";
+import { CHOICE_BOX, CHOICE_ROW, PUBLIC_FIELDS } from "@/components/public-fields";
+import { SellerTypeChoice, type SellerTypeValue } from "@/components/seller-type-choice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { downscale, PHOTO_UPLOAD_MAX_BYTES } from "@/lib/photos/downscale";
 import type { Option, PublicFormOptions } from "@/lib/submissions/form";
+import { cn } from "@/lib/utils";
 
 const IDLE: PublicFormState = { status: "idle" };
 const MAX_PHOTOS = 15;
@@ -28,6 +32,7 @@ function Select({
   empty,
   invalid,
   required,
+  ...aria
 }: {
   id: string;
   name: string;
@@ -37,6 +42,8 @@ function Select({
   empty: string;
   invalid?: boolean;
   required?: boolean;
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean;
 }) {
   return (
     <NativeSelect
@@ -44,7 +51,8 @@ function Select({
       name={name}
       className="w-full"
       required={required}
-      aria-invalid={invalid ? true : undefined}
+      aria-describedby={aria["aria-describedby"]}
+      aria-invalid={invalid || aria["aria-invalid"] ? true : undefined}
       {...(onChange
         ? { value: value ?? "", onChange: (e) => onChange(e.target.value) }
         : { defaultValue: "" })}
@@ -73,6 +81,8 @@ export function PublicListingForm({
   const [engineId, setEngineId] = useState("");
   const [trimId, setTrimId] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
+  const [photoNotice, setPhotoNotice] = useState<string | null>(null);
+  const [sellerType, setSellerType] = useState<SellerTypeValue>("");
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [uploading, setUploading] = useState(false);
   const error = (key: string) => state.errors?.[key];
@@ -140,15 +150,44 @@ export function PublicListingForm({
     startTransition(() => formAction(data));
   };
 
+  // Never drop a photo silently: say which ones stayed out and why.
   const addPhotos = (files: FileList) => {
-    const accepted = Array.from(files).filter((f) => f.size <= PHOTO_UPLOAD_MAX_BYTES);
-    setPhotos((prev) => [...prev, ...accepted].slice(0, MAX_PHOTOS));
+    const chosen = Array.from(files);
+    const images = chosen.filter((f) => f.type.startsWith("image/"));
+    const fitting = images.filter((f) => f.size <= PHOTO_UPLOAD_MAX_BYTES);
+    const room = Math.max(0, MAX_PHOTOS - photos.length);
+    const accepted = fitting.slice(0, room);
+    const notes: string[] = [];
+    const notImages = chosen.length - images.length;
+    const tooBig = images.length - fitting.length;
+    const overLimit = fitting.length - accepted.length;
+    if (notImages) {
+      notes.push(
+        notImages === 1
+          ? "1 arquivo não é foto e ficou de fora."
+          : `${notImages} arquivos não são fotos e ficaram de fora.`,
+      );
+    }
+    if (tooBig) {
+      notes.push(
+        tooBig === 1
+          ? "1 foto tem mais de 10 MB e ficou de fora."
+          : `${tooBig} fotos têm mais de 10 MB e ficaram de fora.`,
+      );
+    }
+    if (overLimit) {
+      notes.push(
+        `O limite é de ${MAX_PHOTOS} fotos: ${overLimit === 1 ? "1 ficou" : `${overLimit} ficaram`} de fora.`,
+      );
+    }
+    setPhotoNotice(notes.length ? notes.join(" ") : null);
+    setPhotos((prev) => [...prev, ...accepted]);
   };
 
   const busy = pending || uploading;
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-8" aria-busy={busy}>
+    <form onSubmit={onSubmit} className={cn("flex flex-col gap-8", PUBLIC_FIELDS)} aria-busy={busy}>
       {/* Honeypot: hidden from people, filled by bots. */}
       <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label htmlFor="website">Site</label>
@@ -304,23 +343,26 @@ export function PublicListingForm({
         <legend className="mb-4 text-xl font-semibold">Fotos</legend>
         {photosEnabled ? (
           <>
-            <label className="flex flex-col gap-1.5 text-sm font-medium">
-              Escolher fotos ({photos.length} de {MAX_PHOTOS})
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/avif"
-                multiple
-                disabled={busy || photos.length >= MAX_PHOTOS}
-                onChange={(e) => {
-                  if (e.target.files?.length) addPhotos(e.target.files);
-                  e.target.value = "";
-                }}
-                className="text-sm font-normal file:mr-3 file:rounded-lg file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-sm disabled:opacity-50"
-              />
-            </label>
-            <p className="text-xs text-muted-foreground">
+            <PhotoPicker
+              label={photos.length ? "Escolher mais fotos" : "Escolher fotos"}
+              detail={`${photos.length} de ${MAX_PHOTOS} escolhidas`}
+              disabled={busy || photos.length >= MAX_PHOTOS}
+              describedBy="p-fotos-dica p-fotos-aviso"
+              onFiles={addPhotos}
+            />
+            <p id="p-fotos-dica" className="text-xs text-pretty text-muted-foreground">
               Até {MAX_PHOTOS} fotos (JPEG, PNG, WebP ou AVIF, até 10 MB cada). A primeira é a capa.
               As fotos perdem os dados do celular, como a localização.
+            </p>
+            <p
+              id="p-fotos-aviso"
+              role="status"
+              className={cn(
+                "text-sm font-medium text-warning-foreground",
+                !photoNotice && "sr-only",
+              )}
+            >
+              {photoNotice}
             </p>
             {photos.length > 0 && (
               <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5" aria-label="Fotos escolhidas">
@@ -336,10 +378,12 @@ export function PublicListingForm({
                       <button
                         type="button"
                         onClick={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
-                        className="absolute top-1 right-1 rounded-full bg-background/90 p-1 shadow"
+                        className="absolute -top-1.5 -right-1.5 flex size-11 items-center justify-center rounded-full focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                         aria-label={`Tirar a foto ${i + 1}`}
                       >
-                        <X className="size-3.5" aria-hidden />
+                        <span className="flex size-7 items-center justify-center rounded-full border border-border bg-background/95">
+                          <X className="size-4" aria-hidden />
+                        </span>
                       </button>
                     )}
                   </li>
@@ -360,31 +404,12 @@ export function PublicListingForm({
         <p className="-mt-2 text-sm text-muted-foreground">
           Não aparecem no anúncio. Servem só para a nossa equipe falar com você sobre esta venda.
         </p>
-        <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-sm font-medium">Você é</legend>
-          <div className="flex flex-wrap gap-4">
-            {(
-              [
-                ["particular", "Particular"],
-                ["loja", "Loja"],
-              ] as const
-            ).map(([value, label]) => (
-              <label key={value} className="flex items-center gap-2 text-sm">
-                <input
-                  type="radio"
-                  name="tipo"
-                  value={value}
-                  required
-                  className="size-4 accent-primary"
-                />
-                {label}
-              </label>
-            ))}
-          </div>
-          {error("sellerType") && (
-            <p className="text-xs font-medium text-destructive">{error("sellerType")}</p>
-          )}
-        </fieldset>
+        <SellerTypeChoice
+          idPrefix="p"
+          value={sellerType}
+          onChange={setSellerType}
+          error={error("sellerType")}
+        />
         <div className="grid gap-5 sm:grid-cols-2">
           <Field id="p-nome" label="Seu nome ou o nome da loja" error={error("name")}>
             <Input
@@ -415,17 +440,20 @@ export function PublicListingForm({
             name="cpf"
             kind="cpf"
             label="Seu CPF"
-            hint="Se for loja, o CPF do responsável. Só para identificar quem anuncia."
+            hint="Se for loja, o CPF do responsável. Só para identificar quem anuncia; nunca aparece no site."
             required
             serverError={error("cpf")}
           />
-          <DocumentInput
-            id="p-cnpj"
-            name="cnpj"
-            kind="cnpj"
-            label="CNPJ da loja (opcional)"
-            serverError={error("cnpj")}
-          />
+          {/* Only shops have a CNPJ; the server ignores it for private sellers too. */}
+          {sellerType === "loja" && (
+            <DocumentInput
+              id="p-cnpj"
+              name="cnpj"
+              kind="cnpj"
+              label="CNPJ da loja (opcional)"
+              serverError={error("cnpj")}
+            />
+          )}
         </div>
         <Field
           id="p-email"
@@ -445,9 +473,15 @@ export function PublicListingForm({
       </fieldset>
 
       <div className="flex flex-col gap-1">
-        <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" name="termos" className="mt-0.5 size-4 accent-primary" />
-          <span>
+        <label className={cn(CHOICE_ROW, "items-start py-2.5")}>
+          <input
+            type="checkbox"
+            name="termos"
+            className={CHOICE_BOX}
+            aria-describedby={error("terms") ? "p-termos-erro" : undefined}
+            aria-invalid={error("terms") ? true : undefined}
+          />
+          <span className="text-pretty">
             Li e aceito os{" "}
             <Link
               href="/termos-do-anunciante"
@@ -459,7 +493,11 @@ export function PublicListingForm({
             , incluindo a comissão e o uso das fotos que eu enviar.
           </span>
         </label>
-        {error("terms") && <p className="text-xs font-medium text-destructive">{error("terms")}</p>}
+        {error("terms") && (
+          <p id="p-termos-erro" className="text-xs font-medium text-destructive">
+            {error("terms")}
+          </p>
+        )}
       </div>
 
       {state.status === "error" && <FormMessage state={state} />}
@@ -482,7 +520,11 @@ export function PublicListingForm({
           ))}
         </ul>
       )}
-      <Button type="submit" disabled={busy} className="h-11 self-start rounded-xl px-5 text-base">
+      <Button
+        type="submit"
+        disabled={busy}
+        className="h-12 w-full rounded-xl px-6 text-base sm:w-auto sm:self-start"
+      >
         {uploading ? "Enviando as fotos…" : pending ? "Enviando…" : "Enviar anúncio"}
       </Button>
     </form>

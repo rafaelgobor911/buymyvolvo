@@ -3,8 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { PhotoPicker } from "@/components/photo-picker";
+import { CHOICE_BOX, CHOICE_ROW } from "@/components/public-fields";
 import { Button } from "@/components/ui/button";
 import { downscale, PHOTO_UPLOAD_MAX_BYTES as MAX_BYTES } from "@/lib/photos/downscale";
+import { cn } from "@/lib/utils";
 
 type Item = { name: string; status: "enviando" | "ok" | "erro"; error?: string };
 
@@ -66,31 +69,24 @@ export function PhotoUploader({
   return (
     <div className="flex flex-col gap-3">
       {!licenseAccepted && (
-        <label className="flex items-start gap-2 text-sm">
+        <label className={cn(CHOICE_ROW, "items-start py-2.5")}>
           <input
             type="checkbox"
             checked={license}
             onChange={(e) => setLicense(e.target.checked)}
-            className="mt-0.5 size-4 accent-primary"
+            className={CHOICE_BOX}
           />
-          <span>{licenseText}</span>
+          <span className="text-pretty">{licenseText}</span>
         </label>
       )}
-      <label className="flex flex-col gap-1.5 text-sm font-medium">
-        Adicionar fotos ({remaining} restante{remaining === 1 ? "" : "s"})
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/avif"
-          multiple
-          disabled={busy || remaining <= 0 || !license}
-          onChange={(e) => {
-            if (e.target.files?.length) void send(e.target.files);
-            e.target.value = "";
-          }}
-          className="text-sm font-normal file:mr-3 file:rounded-lg file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-sm disabled:opacity-50"
-        />
-      </label>
-      <p className="text-xs text-muted-foreground">
+      <PhotoPicker
+        label="Adicionar fotos"
+        detail={`${remaining} ${remaining === 1 ? "foto restante" : "fotos restantes"}`}
+        disabled={busy || remaining <= 0 || !license}
+        describedBy="fotos-dica"
+        onFiles={(files) => void send(files)}
+      />
+      <p id="fotos-dica" className="text-xs text-pretty text-muted-foreground">
         JPEG, PNG, WebP ou AVIF até 10 MB. As fotos são convertidas e perdem os dados do celular
         (como a localização).
       </p>

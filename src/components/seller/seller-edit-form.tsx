@@ -7,8 +7,10 @@ import { Field, FormMessage, type Option, textareaClass } from "@/components/adm
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { PUBLIC_FIELDS } from "@/components/public-fields";
 import { IDLE } from "@/lib/form-state";
 import type { SellerEdit } from "@/lib/sellers/edit-form";
+import { cn } from "@/lib/utils";
 
 const thousands = (n: number | null) =>
   n === null ? "" : new Intl.NumberFormat("pt-BR").format(n);
@@ -46,7 +48,7 @@ export function SellerEditForm({
     </NativeSelect>
   );
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <form onSubmit={onSubmit} className={cn("flex flex-col gap-4", PUBLIC_FIELDS)}>
       <input type="hidden" name="id" value={id} />
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <Field id="v-preco" label="Preço (R$)" error={error("priceCents")}>
@@ -106,7 +108,7 @@ export function SellerEditForm({
         <Input id="v-itens" name="itens" defaultValue={values.options.join(", ")} />
       </Field>
       <FormMessage state={state} />
-      <Button type="submit" disabled={pending} className="h-10 self-start rounded-xl px-4">
+      <Button type="submit" disabled={pending} className="h-11 self-start rounded-xl px-5">
         Salvar dados
       </Button>
     </form>

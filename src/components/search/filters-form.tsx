@@ -7,6 +7,7 @@ import {
   NativeSelectOptGroup,
   NativeSelectOption,
 } from "@/components/ui/native-select";
+import { PUBLIC_FIELDS } from "@/components/public-fields";
 import { modelGroupLabel, PARAM, type SearchFilters } from "@/lib/search/filters";
 import { UF_CODES, UFS } from "@/lib/search/places";
 import {
@@ -23,6 +24,7 @@ import {
   variantsOf,
 } from "@/lib/taxonomy";
 import { fuelGroupOrder, withVariantsLabel } from "@/lib/taxonomy/explain";
+import { cn } from "@/lib/utils";
 
 type Option = { value: string; label: string };
 type OptionGroup = { label: string; options: Option[] };
@@ -172,7 +174,12 @@ const UF_OPTIONS: Option[] = UF_CODES.map((uf) => ({ value: uf, label: `${UFS[uf
 export function FiltersForm({ filters, idPrefix }: { filters: SearchFilters; idPrefix: string }) {
   const id = (name: string) => `${idPrefix}-${name}`;
   return (
-    <form action="/busca" method="get" className="flex flex-col gap-4" aria-label="Filtros">
+    <form
+      action="/busca"
+      method="get"
+      className={cn("flex flex-col gap-4", PUBLIC_FIELDS)}
+      aria-label="Filtros"
+    >
       <input type="hidden" name={PARAM.q} value={filters.q} />
       {filters.sort !== "recentes" && (
         <input type="hidden" name={PARAM.sort} value={filters.sort} />
@@ -327,12 +334,12 @@ export function FiltersForm({ filters, idPrefix }: { filters: SearchFilters; idP
         />
       </Field>
       <div className="flex items-center gap-3 pt-1">
-        <Button type="submit" className="h-10 flex-1 rounded-lg">
+        <Button type="submit" className="h-11 flex-1 rounded-lg">
           Aplicar filtros
         </Button>
         <Link
           href="/busca"
-          className="rounded-md px-2 py-2 text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex h-11 items-center rounded-md px-3 text-sm text-muted-foreground hover:text-foreground"
         >
           Limpar
         </Link>

@@ -33,7 +33,7 @@ export function InterpretedChips({
               <li key={chip.key}>
                 <Link
                   href={removeChipHref(params, chip)}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-full bg-accent pr-2.5 pl-3 text-sm text-accent-foreground transition-colors hover:bg-accent/70"
+                  className="inline-flex h-11 items-center gap-1.5 rounded-full bg-accent pr-2.5 pl-3 text-sm text-accent-foreground transition-colors hover:bg-accent/70 sm:h-8"
                   aria-label={`Remover filtro: ${chip.label}`}
                 >
                   {chip.label}
@@ -80,7 +80,7 @@ export function SortLinks({ params, current }: { params: RawParams; current: Sor
           href={searchHref(params, { [PARAM.sort]: sort === "recentes" ? null : sort })}
           aria-current={sort === current ? "true" : undefined}
           className={cn(
-            "rounded-md px-2.5 py-1.5 transition-colors",
+            "inline-flex h-11 items-center rounded-md px-2.5 transition-colors sm:h-8",
             sort === current
               ? "bg-secondary font-medium text-foreground"
               : "text-muted-foreground hover:text-foreground",
@@ -118,7 +118,7 @@ export function Pagination({
   if (pageCount <= 1) return null;
   const href = (p: number) => searchHref(params, { [PARAM.page]: p === 1 ? null : String(p) });
   const linkClass =
-    "inline-flex h-10 min-w-10 items-center justify-center rounded-lg px-3 text-sm transition-colors hover:bg-secondary";
+    "inline-flex h-11 min-w-11 items-center justify-center rounded-lg px-3 text-sm sm:h-10 sm:min-w-10 transition-colors hover:bg-secondary";
   return (
     <nav aria-label="Paginação" className="flex items-center justify-center gap-1 pt-4">
       {page > 1 && (

@@ -95,7 +95,7 @@ async function RemoveView({
       </p>
       <Link
         href={`/anuncio/${listing.slug}`}
-        className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+        className="-my-3 inline-flex self-start py-3 text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
         Voltar ao anúncio
       </Link>

@@ -127,7 +127,7 @@ async function LandingView({ params }: { params: Promise<{ rota: string[] }> }) 
                   {crumb.short}
                 </span>
               ) : (
-                <Link href={crumb.path} className="hover:text-foreground">
+                <Link href={crumb.path} className="-my-3 inline-flex py-3 hover:text-foreground">
                   {crumb.short}
                 </Link>
               )}
@@ -163,7 +163,7 @@ async function LandingView({ params }: { params: Promise<{ rota: string[] }> }) 
           {total > 0 && (
             <Link
               href={searchHref}
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary"
+              className="-my-3 inline-flex items-center gap-1 py-3 text-sm font-medium text-primary"
             >
               {total > PAGE_SIZE ? `Ver os ${formatInteger(total)} na busca` : "Filtrar na busca"}
               <ArrowRight className="size-4" aria-hidden />
@@ -196,7 +196,7 @@ async function LandingView({ params }: { params: Promise<{ rota: string[] }> }) 
                 <li key={link.path}>
                   <Link
                     href={link.path}
-                    className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
+                    className="inline-flex h-11 items-center rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-9"
                   >
                     {link.label}
                   </Link>
@@ -306,7 +306,7 @@ function FacetLinks({ landing, counts }: { landing: Landing; counts: LandingCoun
   const link = (c: LandingCount, label: string) => (
     <Link
       href={c.path}
-      className="inline-flex h-9 shrink-0 items-center gap-2 justify-self-start rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
+      className="inline-flex h-11 shrink-0 items-center gap-2 justify-self-start rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-9"
     >
       {label}
       <span className="text-muted-foreground">{formatInteger(c.count)}</span>

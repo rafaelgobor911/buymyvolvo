@@ -15,7 +15,8 @@ export function SearchBox({
   autoFocus?: boolean;
   className?: string;
 }) {
-  const height = size === "lg" ? "h-12" : "h-11";
+  // The compact results header keeps 44px from 640px; phones always get 48px.
+  const height = size === "lg" ? "h-12" : "h-12 sm:h-11";
   return (
     <form
       action="/busca"

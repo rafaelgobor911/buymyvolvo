@@ -6,7 +6,9 @@ import { markSoldAction } from "@/app/vendedor/actions";
 import { Field, FormMessage } from "@/components/admin/form-bits";
 import { Button } from "@/components/ui/button";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { CHOICE_BOX, CHOICE_ROW, PUBLIC_FIELDS } from "@/components/public-fields";
 import { IDLE } from "@/lib/form-state";
+import { cn } from "@/lib/utils";
 
 const ANSWERS = [
   { value: "sim", label: "Sim, o comprador chegou pelo site" },
@@ -24,14 +26,17 @@ export function MarkSoldForm({ listingId, refs }: { listingId: string; refs: str
     startTransition(() => formAction(data));
   };
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3 rounded-lg bg-muted/40 p-3">
+    <form
+      onSubmit={onSubmit}
+      className={cn("flex flex-col gap-3 rounded-lg bg-muted/40 p-3", PUBLIC_FIELDS)}
+    >
       <input type="hidden" name="id" value={listingId} />
       <fieldset className="flex flex-col gap-1.5">
         <legend className="mb-1 text-sm font-medium">
           Vendeu para alguém que chegou pelo site?
         </legend>
         {ANSWERS.map((a) => (
-          <label key={a.value} className="flex items-center gap-2 text-sm">
+          <label key={a.value} className={CHOICE_ROW}>
             <input
               type="radio"
               name="pelo_site"
@@ -39,7 +44,7 @@ export function MarkSoldForm({ listingId, refs }: { listingId: string; refs: str
               required
               checked={answer === a.value}
               onChange={() => setAnswer(a.value)}
-              className="size-4 accent-primary"
+              className={CHOICE_BOX}
             />
             {a.label}
           </label>
@@ -71,7 +76,7 @@ export function MarkSoldForm({ listingId, refs }: { listingId: string; refs: str
         type="submit"
         variant="outline"
         disabled={pending}
-        className="h-9 self-start rounded-xl px-3"
+        className="h-11 self-start rounded-xl px-4"
       >
         Marcar como vendido
       </Button>

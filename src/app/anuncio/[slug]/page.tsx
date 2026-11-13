@@ -161,13 +161,16 @@ async function ListingView({ params }: { params: Promise<{ slug: string }> }) {
       <nav aria-label="Navegação estrutural" className="text-sm text-muted-foreground">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li>
-            <Link href={LANDING_ROOT} className="hover:text-foreground">
+            <Link href={LANDING_ROOT} className="-my-3 inline-flex py-3 hover:text-foreground">
               Volvo à venda
             </Link>
           </li>
           <li aria-hidden>/</li>
           <li>
-            <Link href={landingPath({ modelId: baseModelId })} className="hover:text-foreground">
+            <Link
+              href={landingPath({ modelId: baseModelId })}
+              className="-my-3 inline-flex py-3 hover:text-foreground"
+            >
               {baseModelName}
             </Link>
           </li>

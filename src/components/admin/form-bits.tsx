@@ -1,4 +1,5 @@
 import { CircleAlert, CircleCheck, TriangleAlert } from "lucide-react";
+import { cloneElement, isValidElement } from "react";
 
 import type { FormState } from "@/lib/admin/form-state";
 import { cn } from "@/lib/utils";
@@ -23,13 +24,26 @@ export function Field({
   className?: string;
   children: React.ReactNode;
 }) {
+  // The control points to its hint or error, so screen readers read it with the field.
+  const describedBy = error ? `${id}-erro` : hint ? `${id}-dica` : undefined;
+  const control =
+    describedBy && isValidElement<Record<string, unknown>>(children)
+      ? cloneElement(children, {
+          "aria-describedby": children.props["aria-describedby"] ?? describedBy,
+          "aria-invalid": children.props["aria-invalid"] ?? (error ? true : undefined),
+        })
+      : children;
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <label htmlFor={id} className="text-sm font-medium">
         {label}
       </label>
-      {children}
-      {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {control}
+      {hint && !error && (
+        <p id={`${id}-dica`} className="text-xs text-pretty text-muted-foreground">
+          {hint}
+        </p>
+      )}
       {error && (
         <p id={`${id}-erro`} className="text-xs font-medium text-destructive">
           {error}

@@ -66,7 +66,7 @@ export default function HomePage() {
                 <li key={term}>
                   <Link
                     href={{ pathname: "/busca", query: { q: term.toLowerCase() } }}
-                    className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm text-foreground transition-colors outline-none hover:border-primary/40 hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50"
+                    className="inline-flex h-11 items-center rounded-full border border-border px-4 text-sm text-foreground transition-colors outline-none hover:border-primary/40 hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-9"
                   >
                     {term}
                   </Link>
@@ -85,7 +85,7 @@ export default function HomePage() {
             </h2>
             <Link
               href="/busca"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary"
+              className="-my-3 inline-flex items-center gap-1 py-3 text-sm font-medium text-primary"
             >
               Ver todos <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -104,7 +104,7 @@ export default function HomePage() {
             </h2>
             <Link
               href={LANDING_ROOT}
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary"
+              className="-my-3 inline-flex items-center gap-1 py-3 text-sm font-medium text-primary"
             >
               Todos os modelos <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -170,7 +170,7 @@ async function ModelLinks() {
         <li key={c.path}>
           <Link
             href={c.path}
-            className="inline-flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
+            className="inline-flex h-11 items-center gap-2 rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-10"
           >
             <span className="font-medium">{getModel(c.modelId)?.name ?? c.modelId}</span>
             <span className="text-muted-foreground">{formatInteger(c.count)}</span>

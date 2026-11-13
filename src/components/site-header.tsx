@@ -9,7 +9,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
-          className="text-[0.95rem] font-semibold tracking-tight text-foreground"
+          className="inline-flex h-11 items-center text-[0.95rem] font-semibold tracking-tight text-foreground"
           aria-label={`${site.name}: página inicial`}
         >
           {site.name}
@@ -17,7 +17,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-1">
           <Link
             href="/anunciar"
-            className="rounded-lg px-3 py-1.5 text-sm font-medium text-foreground hover:bg-secondary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+            className="inline-flex h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:h-9"
           >
             Anuncie seu Volvo
           </Link>

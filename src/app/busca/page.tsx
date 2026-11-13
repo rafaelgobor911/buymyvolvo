@@ -125,7 +125,7 @@ function EmptyState({ chips, params }: { chips: FilterChip[]; params: RawParams 
             <li key={chip.key}>
               <Link
                 href={removeChipHref(params, chip)}
-                className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
+                className="inline-flex h-11 items-center rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-9"
               >
                 Sem “{chip.label}”
               </Link>
@@ -140,7 +140,7 @@ function EmptyState({ chips, params }: { chips: FilterChip[]; params: RawParams 
             <li key={term}>
               <Link
                 href={{ pathname: "/busca", query: { q: term.toLowerCase() } }}
-                className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent"
+                className="inline-flex h-11 items-center rounded-full border border-border px-4 text-sm hover:border-primary/40 hover:bg-accent sm:h-9"
               >
                 {term}
               </Link>

@@ -8,7 +8,9 @@ import { Field, FormMessage, textareaClass } from "@/components/admin/form-bits"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { CHOICE_BOX, CHOICE_ROW, PUBLIC_FIELDS } from "@/components/public-fields";
 import { IDLE } from "@/lib/form-state";
+import { cn } from "@/lib/utils";
 
 export function ClaimForm({
   slug,
@@ -25,7 +27,7 @@ export function ClaimForm({
   };
   const error = (key: string) => state.errors?.[key];
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <form onSubmit={onSubmit} className={cn("flex flex-col gap-4", PUBLIC_FIELDS)}>
       <input type="hidden" name="slug" value={slug} />
       <div className="grid gap-3 sm:grid-cols-2">
         <Field id="cl-nome" label="Nome (seu ou da loja)" error={error("displayName")}>
@@ -53,8 +55,8 @@ export function ClaimForm({
       >
         <textarea id="cl-prova" name="prova" rows={3} maxLength={1000} className={textareaClass} />
       </Field>
-      <label className="flex items-start gap-2 text-sm">
-        <input type="checkbox" name="termos" className="mt-0.5 size-4 accent-primary" />
+      <label className={cn(CHOICE_ROW, "items-start py-2.5")}>
+        <input type="checkbox" name="termos" className={CHOICE_BOX} />
         <span>
           Li e aceito os{" "}
           <Link
@@ -71,7 +73,7 @@ export function ClaimForm({
       <Button
         type="submit"
         disabled={pending}
-        className="h-11 self-start rounded-xl px-5 text-base"
+        className="h-12 w-full rounded-xl px-6 text-base sm:w-auto sm:self-start"
       >
         Reivindicar anúncio
       </Button>

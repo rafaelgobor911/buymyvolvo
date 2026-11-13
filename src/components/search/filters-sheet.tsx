@@ -17,7 +17,7 @@ export function FiltersSheet({
     <Sheet>
       <SheetTrigger
         render={
-          <Button variant="outline" className="h-10 rounded-lg lg:hidden">
+          <Button variant="outline" className="h-11 rounded-lg lg:hidden">
             <SlidersHorizontal aria-hidden />
             Filtros{activeCount > 0 ? ` (${activeCount})` : ""}
           </Button>

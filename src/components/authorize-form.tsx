@@ -6,9 +6,12 @@ import { startTransition, useActionState, useState } from "react";
 import { acceptInviteAction, declineInviteAction } from "@/app/autorizar/[codigo]/actions";
 import { Field, FormMessage } from "@/components/admin/form-bits";
 import { DocumentInput } from "@/components/document-input";
+import { CHOICE_BOX, CHOICE_ROW, PUBLIC_FIELDS } from "@/components/public-fields";
+import { SellerTypeChoice, type SellerTypeValue } from "@/components/seller-type-choice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IDLE } from "@/lib/form-state";
+import { cn } from "@/lib/utils";
 
 const submitInTransition =
   (action: (data: FormData) => void) => (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,9 +35,13 @@ export function AuthorizeForm({
   others: OtherListingOption[];
 }) {
   const [state, formAction, pending] = useActionState(acceptInviteAction, IDLE);
+  const [type, setType] = useState<SellerTypeValue>(sellerType ?? "");
   const error = (key: string) => state.errors?.[key];
   return (
-    <form onSubmit={submitInTransition(formAction)} className="flex flex-col gap-5">
+    <form
+      onSubmit={submitInTransition(formAction)}
+      className={cn("flex flex-col gap-5", PUBLIC_FIELDS)}
+    >
       <input type="hidden" name="codigo" value={code} />
 
       {others.length > 0 && (
@@ -46,13 +53,8 @@ export function AuthorizeForm({
             Marque os que também quer divulgar nas mesmas condições.
           </p>
           {others.map((o) => (
-            <label key={o.id} className="flex items-start gap-2 text-sm">
-              <input
-                type="checkbox"
-                name="outros"
-                value={o.id}
-                className="mt-0.5 size-4 accent-primary"
-              />
+            <label key={o.id} className={CHOICE_ROW}>
+              <input type="checkbox" name="outros" value={o.id} className={CHOICE_BOX} />
               {o.label}
             </label>
           ))}
@@ -70,30 +72,13 @@ export function AuthorizeForm({
         />
       </Field>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1 text-sm font-medium">Você é</legend>
-        <div className="flex flex-wrap gap-4">
-          {(
-            [
-              ["loja", "Loja"],
-              ["particular", "Particular"],
-            ] as const
-          ).map(([value, label]) => (
-            <label key={value} className="flex items-center gap-2 text-sm">
-              <input
-                type="radio"
-                name="tipo"
-                value={value}
-                defaultChecked={sellerType === value}
-                required
-                className="size-4 accent-primary"
-              />
-              {label}
-            </label>
-          ))}
-        </div>
-        {error("type") && <p className="text-xs font-medium text-destructive">{error("type")}</p>}
-      </fieldset>
+      <SellerTypeChoice
+        idPrefix="az"
+        value={type}
+        onChange={setType}
+        error={error("type")}
+        order={["loja", "particular"]}
+      />
 
       <Field
         id="az-whatsapp"
@@ -118,18 +103,21 @@ export function AuthorizeForm({
         name="cpf"
         kind="cpf"
         label="Seu CPF"
-        hint="Se for loja, o CPF do responsável. Serve só para identificar quem autoriza; não aparece no anúncio."
+        hint="Se for loja, o CPF do responsável. Só para identificar quem autoriza; nunca aparece no site."
         required
         serverError={error("cpf")}
       />
 
-      <DocumentInput
-        id="az-cnpj"
-        name="cnpj"
-        kind="cnpj"
-        label="CNPJ da loja (opcional)"
-        serverError={error("cnpj")}
-      />
+      {/* Only shops have a CNPJ; the server ignores it for private sellers too. */}
+      {type === "loja" && (
+        <DocumentInput
+          id="az-cnpj"
+          name="cnpj"
+          kind="cnpj"
+          label="CNPJ da loja (opcional)"
+          serverError={error("cnpj")}
+        />
+      )}
 
       <Field id="az-email" label="E-mail (opcional)" error={error("email")}>
         <Input
@@ -143,9 +131,15 @@ export function AuthorizeForm({
       </Field>
 
       <div className="flex flex-col gap-1">
-        <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" name="termos" className="mt-0.5 size-4 accent-primary" />
-          <span>
+        <label className={cn(CHOICE_ROW, "items-start py-2.5")}>
+          <input
+            type="checkbox"
+            name="termos"
+            className={CHOICE_BOX}
+            aria-describedby={error("terms") ? "az-termos-erro" : undefined}
+            aria-invalid={error("terms") ? true : undefined}
+          />
+          <span className="text-pretty">
             Li e aceito os{" "}
             <Link
               href="/termos-do-anunciante"
@@ -157,14 +151,18 @@ export function AuthorizeForm({
             , incluindo a comissão e o uso das fotos do anúncio.
           </span>
         </label>
-        {error("terms") && <p className="text-xs font-medium text-destructive">{error("terms")}</p>}
+        {error("terms") && (
+          <p id="az-termos-erro" className="text-xs font-medium text-destructive">
+            {error("terms")}
+          </p>
+        )}
       </div>
 
       <FormMessage state={state} />
       <Button
         type="submit"
         disabled={pending}
-        className="h-11 self-start rounded-xl px-5 text-base"
+        className="h-12 w-full rounded-xl px-6 text-base sm:w-auto sm:self-start"
       >
         Autorizar a divulgação
       </Button>
@@ -180,7 +178,7 @@ export function DeclineInviteForm({ code }: { code: string }) {
       <Button
         type="button"
         variant="ghost"
-        className="h-10 self-start rounded-xl px-3 text-muted-foreground"
+        className="h-11 self-start rounded-xl px-3 text-muted-foreground"
         onClick={() => setOpen(true)}
       >
         Não quero divulgar este anúncio
@@ -188,17 +186,20 @@ export function DeclineInviteForm({ code }: { code: string }) {
     );
   }
   return (
-    <form onSubmit={submitInTransition(formAction)} className="flex flex-col gap-3">
+    <form
+      onSubmit={submitInTransition(formAction)}
+      className={cn("flex flex-col gap-3", PUBLIC_FIELDS)}
+    >
       <input type="hidden" name="codigo" value={code} />
       <Field id="az-motivo" label="Quer contar o motivo? (opcional)">
         <Input id="az-motivo" name="motivo" maxLength={300} />
       </Field>
       <FormMessage state={state} />
       <div className="flex flex-wrap gap-2">
-        <Button type="submit" variant="outline" disabled={pending} className="h-10 rounded-xl">
+        <Button type="submit" variant="outline" disabled={pending} className="h-11 rounded-xl">
           Confirmar: não divulgar
         </Button>
-        <Button type="button" variant="ghost" className="h-10" onClick={() => setOpen(false)}>
+        <Button type="button" variant="ghost" className="h-11" onClick={() => setOpen(false)}>
           Voltar
         </Button>
       </div>

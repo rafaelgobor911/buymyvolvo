@@ -145,7 +145,7 @@ components:
     typography: "{typography.label}"
     rounded: "{rounded.full}"
     padding: "0 16px"
-    height: "36px"
+    height: "44px"
   chip-hover:
     backgroundColor: "{colors.ice}"
   badge-repasse:
@@ -166,6 +166,13 @@ components:
     rounded: "{rounded.lg}"
     padding: "4px 10px"
     height: "32px"
+  input-public:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.graphite}"
+    typography: "{typography.body}"
+    rounded: "{rounded.lg}"
+    padding: "0 12px"
+    height: "44px"
   input-search:
     textColor: "{colors.graphite}"
     typography: "{typography.body}"
@@ -314,7 +321,7 @@ Firmes e diretos: um único botão principal por bloco, com texto que diz a aç�
 
 ### Chips
 
-- **Style:** pílula com Linha Fina, sem fundo, texto Grafite em Label, 36px de altura (40px nos chips de modelo, que trazem a contagem em Pedra).
+- **Style:** pílula com Linha Fina, sem fundo, texto Grafite em Label, 44px de altura no celular; a partir de 640px, 36px (40px nos chips de modelo, que trazem a contagem em Pedra).
 - **State:** hover com fundo Gelo Azul e borda Azul Fiorde a 40%; foco com o anel de 3px. Usados para "Buscas populares" e "Explore por modelo".
 
 ### Badges
@@ -334,15 +341,19 @@ Firmes e diretos: um único botão principal por bloco, com texto que diz a aç�
 
 ### Inputs / Fields
 
-- **Style:** borda em Contorno de Campo, fundo transparente (branco a 30% no escuro), 10px de raio, 32px de altura, texto de 1rem no celular (evita o zoom do iOS) e 0.875rem a partir de 768px.
-- **Busca:** 48px de altura, 14px de raio, ícone de lupa à esquerda e texto sempre em 1rem.
+- **Style:** borda em Contorno de Campo, 10px de raio, texto de 1rem no celular (evita o zoom do iOS) e 0.875rem a partir de 768px. Nas páginas públicas (formulário do vendedor, autorização, remoção, reivindicação, filtros e painel do vendedor), 44px de altura sobre Papel (branco a 30% no escuro), aplicados pela classe `PUBLIC_FIELDS` no formulário; o admin mantém 32px com fundo transparente.
+- **Escolhas:** rádios e caixas de seleção de 20px dentro de uma linha clicável de 44px. "Você é: Particular | Loja" vira dois blocos de 44px em Papel, com borda em Azul Fiorde e fundo Gelo Azul quando marcados; o CNPJ só aparece para loja.
+- **Fotos:** área de 112px com borda tracejada em Papel, ícone em Azul Fiorde, "Escolher fotos" e a contagem; nenhuma foto sai em silêncio (acima de 10 MB, fora do limite ou que não seja imagem: aviso em âmbar escuro, anunciado ao leitor de tela).
+- **Dica e erro:** ficam embaixo do campo e são ligados a ele (`aria-describedby`), para o leitor de tela ler junto.
+- **Busca:** 48px de altura (44px no cabeçalho da busca a partir de 640px), 14px de raio, ícone de lupa à esquerda e texto sempre em 1rem.
 - **Focus:** borda no Anel de Foco e anel de 3px a 50%.
 - **Error / Disabled:** erro com borda vermelha e anel vermelho a 20%; desabilitado a 50% com cursor de bloqueio.
 
 ### Navigation
 
-- **Cabeçalho:** fixo no topo, 56px, Neve a 80% com desfoque e Linha Fina a 70% embaixo. À esquerda, o nome "Buy My Volvo" como texto (0.95rem, semibold, espaçamento apertado), sem logotipo; à direita, o link "Anuncie seu Volvo" (Label, hover em Névoa) e o botão de tema.
-- **Rodapé:** Linha Fina a 70% em cima, texto de 0.875rem em Pedra, links com sublinhado no hover, a frase de intermediação e "Não afiliado à Volvo Car Corporation."
+- **Cabeçalho:** fixo no topo, 56px, Neve a 80% com desfoque e Linha Fina a 70% embaixo. À esquerda, o nome "Buy My Volvo" como texto (0.95rem, semibold, espaçamento apertado), sem logotipo; à direita, o link "Anuncie seu Volvo" (Label, hover em Névoa) e o botão de tema, ambos com 44px de altura no celular. O rótulo do botão de tema só diz a ação ("Ativar tema escuro" ou "claro") depois que a página carrega.
+- **Rodapé:** Linha Fina a 70% em cima, texto de 0.875rem em Pedra, links com sublinhado no hover (44px de altura no celular), a frase de intermediação e "Não afiliado à Volvo Car Corporation."
+- **Alvos de toque:** no celular, tudo o que se toca tem pelo menos 44px de altura: chips, ordenação, paginação, botões e links soltos (estes ganham área de toque sem mudar o espaço que ocupam). Links dentro de frases ficam como texto.
 - **Trilha de navegação:** 0.875rem em Pedra, com hover em Grafite.
 
 ### Placa do modelo (Signature Component)
