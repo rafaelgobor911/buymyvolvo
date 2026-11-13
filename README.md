@@ -21,7 +21,7 @@ Buscador de anúncios de Volvo à venda no Brasil ([buymyvolvo.com.br](https://b
 | 9a   | Anúncio a partir de texto colado (admin)    | ✅ no ar em 12/11/2026 |
 | 9b   | Formulário público "Anuncie" com fotos      | ✅ no ar em 12/11/2026 |
 | 9c   | Pesquisa de fontes (documento)              | ✅ aprovada 13/11/2026 |
-| 10   | Design: identidade, termos Volvo, controles | aguardando aprovação   |
+| 10   | Design: identidade, termos Volvo, controles | ✅ no ar em 13/11/2026 |
 
 ## Stack
 

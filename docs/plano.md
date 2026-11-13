@@ -426,6 +426,8 @@ Pesquisa em [`docs/fontes.md`](fontes.md). Conclusão: os portais (OLX, Webmotor
 
 ## Fase 10: design (identidade, termos Volvo, controles)
 
+**Aprovada e no ar em 13/11/2026** (sem migration; merge no `main` às 23:05 UTC, smoke test das páginas públicas em produção).
+
 Pedido do dono do produto (13/11/2026): **refinar, não recriar**, mantendo a identidade nórdica, mas "mais marcada, mais presente". Ferramenta: a skill `impeccable` (`PRODUCT.md` e `DESIGN.md` na raiz; avaliações com dois agentes isolados, um de revisão de design e outro de detector e medições).
 
 - **Avaliação inicial:** 27/40 (Aceitável). Escopo escolhido: os três problemas principais mais os controles; o painel de filtros fica para depois; a página fechada do "Anuncie" se resolve quando o dono definir a comissão.
@@ -435,4 +437,6 @@ Pedido do dono do produto (13/11/2026): **refinar, não recriar**, mantendo a id
 - **10.4 Polimento:** títulos equilibrados e parágrafos sem palavra sozinha, legenda da foto coerente com o botão de contato, Ficha em Papel, avisos em Geada inteira, aspas duplicadas na busca vazia, contagem da busca no tamanho Title, `DESIGN.md` sem divergências (o detector fica limpo).
 - **Avaliação final:** 28/40 (Bom). Achados novos, para as próximas fases: a busca não entende carroceria ("suv" dá zero resultados); a placa ainda lembra um espaço vazio para quem avalia (sugestão: plaqueta de dados, sem "sem foto" repetido); a lógica dos nomes Volvo só aparece dentro do anúncio; as versões não têm descrição própria (precisa de texto editorial do dono do produto); o contato não diz o que acontece depois do WhatsApp; o formulário do vendedor é longo e pede a versão antes do ano; o painel de filtros continua denso (adiado).
 
-**Pendências da Fase 10:** aprovação do merge; a comissão (dono do produto); o aviso "did not produce a static shell" do servidor de desenvolvimento já existia antes da fase (só em dev); conferir se o V90 Cross Country foi vendido oficialmente no Brasil (dono do produto); tarefa sugerida para tirar "Anunciado por…" dos resumos fictícios do seed.
+**Pendências da Fase 10:** a comissão (dono do produto); o aviso "did not produce a static shell" do servidor de desenvolvimento já existia antes da fase (só em dev); conferir se o V90 Cross Country foi vendido oficialmente no Brasil (dono do produto); tarefa sugerida para tirar "Anunciado por…" dos resumos fictícios do seed.
+
+**Decisões de 13/11 (dono do produto):** próxima frente, a **busca por carroceria** ("suv", "sedã", "perua", "hatch"); e um **rascunho de descrição por versão** (marcado REVISAR) para "Entenda o nome", que só vai ao ar depois da revisão do dono.
