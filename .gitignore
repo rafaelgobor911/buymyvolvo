@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Local photo storage (development and tests)
 /.data/
+
+# impeccable skill engine (22 MB binary): reinstall with `npx impeccable install`
+.claude/skills/impeccable/scripts/bin/
