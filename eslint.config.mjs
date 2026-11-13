@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "test-results/**",
     "next-env.d.ts",
+    // Third-party agent skills (impeccable), kept as installed.
+    ".claude/**",
   ]),
 ]);
 

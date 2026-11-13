@@ -7,3 +7,7 @@ package-lock.json
 next-env.d.ts
 AGENTS.md
 docs/PROMPT.md
+
+# Third-party agent skills (impeccable): kept as installed
+.claude/skills/
+.claude/agents/
