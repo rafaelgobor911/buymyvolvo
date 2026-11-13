@@ -4,7 +4,13 @@ import { asAnon, db, type Tx } from "@/lib/db/client";
 import { PAGE_SIZE, type SearchFilters } from "@/lib/search/filters";
 import { readBmvNumbers } from "@/lib/authorization/messages";
 import { photoUrl } from "@/lib/photos/storage";
-import type { Fuel, SellerType, Transmission } from "@/lib/taxonomy";
+import {
+  type BodyType,
+  bodyTypeMatches,
+  type Fuel,
+  type SellerType,
+  type Transmission,
+} from "@/lib/taxonomy";
 
 export type ListingStatus = "active" | "sold" | "expired";
 
@@ -158,6 +164,24 @@ export interface SearchResult {
   pageCount: number;
 }
 
+/**
+ * Listings of a body type: whole models, plus model-year windows for models
+ * sold with several bodies (V40 perua 1996–2004, hatch 2013–2019).
+ */
+function bodyCondition(tx: Tx, body: BodyType) {
+  const matches = bodyTypeMatches(body);
+  const whole = matches.filter((m) => m.yearMin === undefined).map((m) => m.modelId);
+  const parts = [tx`l.model_id = any(${whole})`];
+  for (const m of matches.filter((x) => x.yearMin !== undefined)) {
+    parts.push(
+      m.yearMax === undefined
+        ? tx`(l.model_id = ${m.modelId} and l.year_model >= ${m.yearMin!})`
+        : tx`(l.model_id = ${m.modelId} and l.year_model between ${m.yearMin!} and ${m.yearMax})`,
+    );
+  }
+  return tx`(${parts.reduce((acc, p) => tx`${acc} or ${p}`)})`;
+}
+
 /** WHERE clause of the public search (active listings matching the filters). */
 function searchWhere(tx: Tx, f: SearchFilters) {
   const conditions = [tx`l.status = 'active'`];
@@ -169,6 +193,7 @@ function searchWhere(tx: Tx, f: SearchFilters) {
   if (f.sellerType) conditions.push(tx`l.seller_type = ${f.sellerType}`);
   if (f.repasse === "only") conditions.push(tx`l.red_flags @> array['repasse']`);
   if (f.repasse === "exclude") conditions.push(tx`not (l.red_flags @> array['repasse'])`);
+  if (f.bodyType) conditions.push(bodyCondition(tx, f.bodyType));
   if (f.yearMin !== undefined) conditions.push(tx`l.year_model >= ${f.yearMin}`);
   if (f.yearMax !== undefined) conditions.push(tx`l.year_model <= ${f.yearMax}`);
   if (f.priceMin !== undefined) conditions.push(tx`l.price_cents >= ${f.priceMin * 100}`);

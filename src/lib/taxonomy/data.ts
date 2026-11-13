@@ -93,8 +93,22 @@ export const MODELS: ModelDef[] = [
     aliases: [],
     generations: [
       // NedCar platform, outside the platform list.
-      { id: "v40-1", name: "1ª geração (perua)", yearStart: 1996, yearEnd: 2004, platform: null },
-      { id: "v40-2", name: "2ª geração (hatch)", yearStart: 2013, yearEnd: 2019, platform: "P1" },
+      {
+        id: "v40-1",
+        name: "1ª geração (perua)",
+        yearStart: 1996,
+        yearEnd: 2004,
+        platform: null,
+        bodyTypes: ["perua"],
+      },
+      {
+        id: "v40-2",
+        name: "2ª geração (hatch)",
+        yearStart: 2013,
+        yearEnd: 2019,
+        platform: "P1",
+        bodyTypes: ["hatch"],
+      },
     ],
   },
   {

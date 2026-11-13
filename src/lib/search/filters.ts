@@ -6,6 +6,9 @@
  * Pure and client-safe: used by server pages and by components building links.
  */
 import {
+  BODY_TITLES,
+  BODY_TYPES,
+  type BodyType,
   ENGINES,
   FUEL_LABELS,
   FUELS,
@@ -44,6 +47,7 @@ export const PARAM = {
   transmission: "cambio",
   seller: "vendedor",
   repasse: "repasse",
+  body: "carroceria",
   yearMin: "ano_min",
   yearMax: "ano_max",
   priceMin: "preco_min",
@@ -67,6 +71,7 @@ export interface SearchFilters {
   transmission?: Transmission;
   sellerType?: SearchSellerType;
   repasse?: RepasseFilter;
+  bodyType?: BodyType;
   yearMin?: number;
   yearMax?: number;
   priceMin?: number;
@@ -130,6 +135,7 @@ export function resolveSearch(params: RawParams, options: { now?: Date } = {}): 
   const transmission = get(PARAM.transmission);
   const seller = get(PARAM.seller);
   const repasse = get(PARAM.repasse);
+  const body = get(PARAM.body);
   const uf = get(PARAM.uf)?.toUpperCase();
   const city = get(PARAM.city)?.trim();
   const yearMin = pick(PARAM.yearMin, () => positiveInt(get(PARAM.yearMin), 2100), parsed.yearMin);
@@ -175,6 +181,11 @@ export function resolveSearch(params: RawParams, options: { now?: Date } = {}): 
       PARAM.repasse,
       () => (repasse === "so" ? "only" : repasse === "sem" ? "exclude" : undefined),
       parsed.repasse,
+    ),
+    bodyType: pick(
+      PARAM.body,
+      () => (BODY_TYPES.includes(body as BodyType) ? (body as BodyType) : undefined),
+      parsed.bodyType,
     ),
     yearMin,
     yearMax,
@@ -269,6 +280,7 @@ export function trimGroupLabel(ids: string[]): string {
 
 export function describeFilters(f: SearchFilters): FilterChip[] {
   const chips: FilterChip[] = [];
+  if (f.bodyType) chips.push({ key: "body", label: BODY_TITLES[f.bodyType], param: PARAM.body });
   if (f.modelIds.length)
     chips.push({ key: "model", label: modelGroupLabel(f.modelIds), param: PARAM.model });
   if (f.engineIds.length) {

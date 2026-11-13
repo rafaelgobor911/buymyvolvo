@@ -19,6 +19,11 @@ export interface Generation {
   yearStart: number;
   yearEnd: number | null;
   platform: Platform | null;
+  /**
+   * Only for models sold with several bodies, when this generation had fewer
+   * (V40: 1st generation perua, 2nd hatch). Absent = the model's body types.
+   */
+  bodyTypes?: BodyType[];
   /** `false` = never sold officially in Brazil (still recognized by search). */
   brazil?: false;
   review?: string;
@@ -92,6 +97,26 @@ export const FUEL_LABELS: Record<Fuel, string> = {
   hibrido_leve: "Híbrido leve",
   hibrido_plugin: "Híbrido plug-in",
   eletrico: "Elétrico",
+};
+
+/** Body types in display order (search filter, home). */
+export const BODY_TYPES: readonly BodyType[] = [
+  "suv",
+  "sedan",
+  "perua",
+  "hatch",
+  "cupe",
+  "conversivel",
+];
+
+/** Body types as a label or chip ("SUV", "Sedã"). */
+export const BODY_TITLES: Record<BodyType, string> = {
+  suv: "SUV",
+  sedan: "Sedã",
+  perua: "Perua",
+  hatch: "Hatch",
+  cupe: "Cupê",
+  conversivel: "Conversível",
 };
 
 /** Body types in running text ("SUV", "sedã"). */

@@ -1,5 +1,6 @@
 import { ENGINES, MODELS, TRIMS } from "./data";
 import type {
+  BodyType,
   BrazilOffer,
   EngineDef,
   Fuel,
@@ -176,4 +177,37 @@ export function trimsForSelect(): Array<{ trim: TrimDef; isVariant: boolean }> {
 /** Engines for select inputs. Only what was sold in Brazil. */
 export function enginesForSelect(): EngineDef[] {
   return ENGINES.filter((e) => e.brazil !== false);
+}
+
+/** A model, or a model-year window of it, that has a given body type. */
+export interface BodyMatch {
+  modelId: string;
+  yearMin?: number;
+  yearMax?: number;
+}
+
+/**
+ * Models with a body type, for the search filter. Models sold with several
+ * bodies count only in the generations that had it (V40 perua = 1996–2004).
+ */
+export function bodyTypeMatches(body: BodyType): BodyMatch[] {
+  const out: BodyMatch[] = [];
+  for (const model of MODELS) {
+    if (!model.bodyTypes.includes(body)) continue;
+    if (!model.generations.some((g) => g.bodyTypes)) {
+      out.push({ modelId: model.id });
+      continue;
+    }
+    for (const g of model.generations) {
+      if (!(g.bodyTypes ?? model.bodyTypes).includes(body)) continue;
+      out.push({ modelId: model.id, yearMin: g.yearStart, yearMax: g.yearEnd ?? undefined });
+    }
+  }
+  return out;
+}
+
+/** The body a model is known by today (its last generation's), to group models. */
+export function primaryBodyType(model: ModelDef): BodyType {
+  const last = [...model.generations].sort((a, b) => b.yearStart - a.yearStart)[0];
+  return (last?.bodyTypes ?? model.bodyTypes)[0]!;
 }

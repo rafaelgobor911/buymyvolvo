@@ -4,6 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { getListingBySlug, searchListings, searchStats } from "@/lib/listings/queries";
 import { PAGE_SIZE, resolveSearch } from "@/lib/search/filters";
 import { activeLandingCounts, sitemapListings } from "@/lib/seo/queries";
+import { type BodyType, bodyTypeMatches } from "@/lib/taxonomy";
 
 import { migrate } from "../../scripts/db/lib";
 import { FIXTURE_LISTINGS } from "../../scripts/db/fixtures";
@@ -19,6 +20,21 @@ const slugOf = (predicate: (l: (typeof FIXTURE_LISTINGS)[number]) => boolean) =>
   FIXTURE_LISTINGS.map((l, i) => ({ l, slug: fixtureSlug(l, i) })).filter(({ l }) => predicate(l));
 
 const activeCount = FIXTURE_LISTINGS.filter((l) => (l.status ?? "active") === "active").length;
+
+const fitsBody = (body: BodyType, modelId: string, year: number | null) =>
+  bodyTypeMatches(body).some(
+    (m) =>
+      m.modelId === modelId &&
+      (m.yearMin === undefined ||
+        (year !== null && year >= m.yearMin && year <= (m.yearMax ?? 9999))),
+  );
+const expectedForBody = (body: BodyType, models?: string[]) =>
+  FIXTURE_LISTINGS.filter(
+    (l) =>
+      (l.status ?? "active") === "active" &&
+      (!models || models.includes(l.model)) &&
+      fitsBody(body, l.model, l.yearModel),
+  ).length;
 
 describe.skipIf(!url)("database", () => {
   let sql: postgres.Sql;
@@ -115,6 +131,34 @@ describe.skipIf(!url)("database", () => {
       expect(new Set(r.items.map((i) => i.modelName))).toEqual(
         new Set(["V40", "V40 Cross Country"]),
       );
+    });
+
+    it("suv returns exactly the SUVs (body type from the taxonomy)", async () => {
+      const r = await search("suv");
+      expect(r.total).toBe(expectedForBody("suv"));
+      expect(r.items.every((i) => fitsBody("suv", i.modelId, i.yearModel))).toBe(true);
+    });
+
+    it("v40 hatch keeps the 2nd-generation V40 and the V40 Cross Country", async () => {
+      const r = await search("v40 hatch");
+      expect(r.total).toBe(expectedForBody("hatch", ["v40", "v40-cc"]));
+      expect(r.items.every((i) => (i.yearModel ?? 0) >= 2013)).toBe(true);
+      expect(new Set(r.items.map((i) => i.modelName))).toEqual(
+        new Set(["V40", "V40 Cross Country"]),
+      );
+    });
+
+    it("perua leaves out the hatch V40", async () => {
+      const r = await search("perua");
+      expect(r.total).toBe(expectedForBody("perua"));
+      expect(r.items.some((i) => i.modelId === "v40")).toBe(false);
+    });
+
+    it("the carroceria param overrides the text, empty means any", async () => {
+      const sedans = await search("suv", { carroceria: "sedan" });
+      expect(sedans.items.every((i) => fitsBody("sedan", i.modelId, i.yearModel))).toBe(true);
+      const any = await search("suv", { carroceria: "" });
+      expect(any.total).toBe(activeCount);
     });
 
     it("xc90 t8 2020 a 2022 até 60 mil km applies years and km", async () => {

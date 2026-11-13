@@ -12,6 +12,9 @@
  */
 import {
   aliasKey,
+  BODY_LABELS,
+  type BodyType,
+  bodyTypeMatches,
   describeBrazilOffers,
   ENGINES,
   type Fuel,
@@ -50,6 +53,8 @@ export interface ParsedQuery {
   transmission?: Transmission;
   sellerType?: SearchSellerType;
   repasse?: RepasseFilter;
+  /** "suv", "sedã", "perua"…: models (and, for the V40, generations) with that body. */
+  bodyType?: BodyType;
   yearMin?: number;
   yearMax?: number;
   priceMin?: number;
@@ -77,6 +82,7 @@ type Entry =
   | { kind: "transmission"; value: Transmission }
   | { kind: "seller"; value: SearchSellerType }
   | { kind: "repasse"; value: RepasseFilter }
+  | { kind: "body"; value: BodyType }
   | { kind: "uf"; uf: Uf; ambiguous: boolean }
   | { kind: "city"; city: string; uf: Uf }
   | { kind: "homonym"; city: string; uf: Uf }
@@ -145,6 +151,16 @@ const REPASSE_PHRASES: Array<[string[], RepasseFilter]> = [
     "only",
   ],
   [["sem repasse", "nao repasse", "exceto repasse", "sem repasses"], "exclude"],
+];
+
+/** Body types as people write them; the taxonomy says which models have each. */
+const BODY_PHRASES: Array<[string[], BodyType]> = [
+  [["suv", "suvs", "utilitario esportivo", "utilitarios esportivos"], "suv"],
+  [["sedan", "sedans", "seda", "sedas"], "sedan"],
+  [["perua", "peruas", "station", "station wagon", "wagon", "sw", "estate"], "perua"],
+  [["hatch", "hatches", "hatchs", "hatchback", "hatchbacks"], "hatch"],
+  [["cupe", "cupes", "coupe", "coupes"], "cupe"],
+  [["conversivel", "conversiveis", "cabriolet", "cabrio"], "conversivel"],
 ];
 
 const SELLER_PHRASES: Array<[string[], SearchSellerType]> = [
@@ -263,6 +279,9 @@ for (const [phrases, value] of REPASSE_PHRASES) {
 for (const [phrases, value] of SELLER_PHRASES) {
   for (const p of phrases) addEntry(p, { kind: "seller", value });
 }
+for (const [phrases, value] of BODY_PHRASES) {
+  for (const p of phrases) addEntry(p, { kind: "body", value });
+}
 for (const uf of UF_CODES) {
   const code = uf.toLowerCase();
   addEntry(code, { kind: "uf", uf, ambiguous: AMBIGUOUS_UFS.has(code) });
@@ -293,6 +312,11 @@ function homonymKeys(): Record<string, true> {
 /** Capital city of each UF (first gazetteer entry for the UF is its capital). */
 const CAPITALS = new Map<Uf, string>();
 for (const c of CITIES) if (!CAPITALS.has(c.uf)) CAPITALS.set(c.uf, c.name);
+
+const joinPt = (items: string[]) =>
+  items.length <= 1
+    ? (items[0] ?? "")
+    : `${items.slice(0, -1).join(", ")} e ${items[items.length - 1]}`;
 
 // ---------------------------------------------------------------------------
 // Text folding (same length as the input so spans map back to the original)
@@ -644,6 +668,9 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
         case "repasse":
           result.repasse = e.value;
           break;
+        case "body":
+          result.bodyType = e.value;
+          break;
         case "uf":
           result.uf = e.uf;
           break;
@@ -741,6 +768,34 @@ export function parseQuery(input: string, options: ParseOptions = {}): ParsedQue
     const model = getModel(id);
     if (model?.brazil === false) {
       result.warnings.push(`O ${model.name} não foi vendido oficialmente no Brasil.`);
+    }
+  }
+
+  // A body the typed model never had, or not in those years: say what it is.
+  if (result.bodyType && typedModels.length > 0) {
+    const body = result.bodyType;
+    const windows = bodyTypeMatches(body).filter((m) => result.modelIds.includes(m.modelId));
+    const fits = windows.some(
+      (m) =>
+        (m.yearMin ?? 0) <= (yearWindow.max ?? Number.POSITIVE_INFINITY) &&
+        (yearWindow.min ?? 0) <= (m.yearMax ?? Number.POSITIVE_INFINITY),
+    );
+    if (!fits) {
+      for (const id of typedModels) {
+        const model = getModel(id);
+        if (!model) continue;
+        if (!model.bodyTypes.includes(body)) {
+          const bodies = model.bodyTypes.map((b) => BODY_LABELS[b]);
+          result.warnings.push(`${model.name} é ${joinPt(bodies)}, não ${BODY_LABELS[body]}.`);
+        } else {
+          const years = windows
+            .filter((m) => m.modelId === id)
+            .map((m) => (m.yearMax ? `${m.yearMin}–${m.yearMax}` : `desde ${m.yearMin}`));
+          result.warnings.push(
+            `O ${model.name} ${BODY_LABELS[body]} é dos anos-modelo ${joinPt(years)}.`,
+          );
+        }
+      }
     }
   }
   for (const engineId of result.engineIds) {

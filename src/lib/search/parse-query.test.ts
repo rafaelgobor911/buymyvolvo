@@ -348,3 +348,35 @@ describe("parseQuery: Brazilian market (owner review 2026-11-07)", () => {
     );
   });
 });
+
+describe("parseQuery: body types", () => {
+  it("suv elétrico → SUV + electric, nothing left as text", () => {
+    const r = parse("suv elétrico");
+    expect(r.bodyType).toBe("suv");
+    expect(r.fuels).toEqual(["eletrico"]);
+    expect(r.text).toBe("");
+  });
+
+  it("recognizes the usual spellings", () => {
+    expect(parse("sedã até 100 mil").bodyType).toBe("sedan");
+    expect(parse("station wagon").bodyType).toBe("perua");
+    expect(parse("hatchback").bodyType).toBe("hatch");
+    expect(parse("cabriolet").bodyType).toBe("conversivel");
+  });
+
+  it("keeps a model that has the body, with no notice", () => {
+    const r = parse("xc60 suv");
+    expect(r.modelIds).toEqual(["xc60"]);
+    expect(r.bodyType).toBe("suv");
+    expect(r.warnings).toEqual([]);
+  });
+
+  it("says what the model is when it never had that body", () => {
+    expect(parse("s60 perua").warnings).toContain("S60 é sedã, não perua.");
+  });
+
+  it("says the years when the body belongs to another generation", () => {
+    expect(parse("v40 perua 2016").warnings).toContain("O V40 perua é dos anos-modelo 1996–2004.");
+    expect(parse("v40 hatch").warnings).toEqual([]);
+  });
+});
