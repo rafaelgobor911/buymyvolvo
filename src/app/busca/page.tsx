@@ -85,7 +85,7 @@ async function SearchResults({ searchParams }: { searchParams: Promise<RawParams
             <div className="flex items-center justify-between gap-3">
               <h1
                 id="resultados"
-                className="text-lg font-semibold tracking-tight"
+                className="text-xl font-semibold tracking-tight"
                 aria-live="polite"
               >
                 {result.total === 0

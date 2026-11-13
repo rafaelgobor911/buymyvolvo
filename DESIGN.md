@@ -271,7 +271,7 @@ Uma paleta fria e contida: neve, grafite e pedra, com o Azul Fiorde como única 
 
 - **Display** (600, 2.25rem → 3rem, 1.1, -0.025em): o título da home ("Encontre seu próximo Volvo."), com `text-balance`.
 - **Headline** (600, 1.5rem, 1.33, -0.025em): títulos de seção da home ("Anúncios recentes", "Como funciona") e o título do anúncio, que sobe para 1.875rem em telas maiores.
-- **Title** (600, 1.25rem, 1.4, -0.025em): seções da página do anúncio ("Sobre este carro", "Ficha" e a lista do que conferir no modelo).
+- **Title** (600, 1.25rem, 1.4, -0.025em): seções da página do anúncio ("Sobre este carro", "Entenda o nome", "Ficha" e a lista do que conferir no modelo) e a contagem de resultados da busca ("5 anúncios"), um degrau acima dos títulos dos cards.
 - **Title Card** (500, 1rem, 1.375): o nome do carro no card ("Volvo XC60 T8 Inscription").
 - **Price** (600, 1.25rem no card, 1.875rem no anúncio, -0.025em): o preço pedido, o número mais pesado da tela.
 - **Body** (400, 1rem, 1.5): textos corridos, em colunas de até 36–48rem.

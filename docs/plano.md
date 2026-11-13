@@ -423,3 +423,16 @@ Pesquisa em [`docs/fontes.md`](fontes.md). Conclusão: os portais (OLX, Webmotor
 - **Loja piloto:** a Matelli Motors topou a parceria. A maioria das revendas usa o **Revenda Mais**, que gera um link XML do estoque por portal parceiro (ver `docs/fontes.md`).
 - **Portais (OLX, Webmotors, iCarros, Marketplace):** não vale procurar, porque somos concorrentes e não há leitura automática. Anúncio de lá só à mão (Fase 9a).
 - **Backlog de aquisição:** campanhas pagas (Meta e Google Ads) para quem está vendendo ou procurando carro, levando para o "Anuncie seu Volvo". Antes, medir o envio do formulário como conversão.
+
+## Fase 10: design (identidade, termos Volvo, controles)
+
+Pedido do dono do produto (13/11/2026): **refinar, não recriar**, mantendo a identidade nórdica, mas "mais marcada, mais presente". Ferramenta: a skill `impeccable` (`PRODUCT.md` e `DESIGN.md` na raiz; avaliações com dois agentes isolados, um de revisão de design e outro de detector e medições).
+
+- **Avaliação inicial:** 27/40 (Aceitável). Escopo escolhido: os três problemas principais mais os controles; o painel de filtros fica para depois; a página fechada do "Anuncie" se resolve quando o dono definir a comissão.
+- **10.1 Identidade:** placa do modelo em Gelo Azul, com o nome em Azul Fiorde e a linha de ficha da taxonomia ("SUV · 2ª geração"); neutros com degraus visíveis (cards em Papel sobre Neve); "Como funciona" numa faixa em Geada, com numerais de manual.
+- **10.2 Termos Volvo:** "Entenda o nome" no anúncio (modelo, motor e versão explicados); motores com o combustível e versões com a definição na página de modelo; filtros com motores agrupados por combustível e "V40 (inclui Cross Country)"; dica sobre repasse.
+- **10.3 Controles:** campos de 44px nos formulários públicos, Particular/Loja em blocos (CNPJ só para loja), seletor de fotos que avisa o que ficou de fora, dicas e erros lidos com o campo, botão de tema com o rótulo certo no escuro, alvos de toque de 44px no celular.
+- **10.4 Polimento:** títulos equilibrados e parágrafos sem palavra sozinha, legenda da foto coerente com o botão de contato, Ficha em Papel, avisos em Geada inteira, aspas duplicadas na busca vazia, contagem da busca no tamanho Title, `DESIGN.md` sem divergências (o detector fica limpo).
+- **Avaliação final:** 28/40 (Bom). Achados novos, para as próximas fases: a busca não entende carroceria ("suv" dá zero resultados); a placa ainda lembra um espaço vazio para quem avalia (sugestão: plaqueta de dados, sem "sem foto" repetido); a lógica dos nomes Volvo só aparece dentro do anúncio; as versões não têm descrição própria (precisa de texto editorial do dono do produto); o contato não diz o que acontece depois do WhatsApp; o formulário do vendedor é longo e pede a versão antes do ano; o painel de filtros continua denso (adiado).
+
+**Pendências da Fase 10:** aprovação do merge; a comissão (dono do produto); o aviso "did not produce a static shell" do servidor de desenvolvimento já existia antes da fase (só em dev); conferir se o V90 Cross Country foi vendido oficialmente no Brasil (dono do produto); tarefa sugerida para tirar "Anunciado por…" dos resumos fictícios do seed.
