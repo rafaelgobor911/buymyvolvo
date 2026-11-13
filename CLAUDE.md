@@ -211,6 +211,16 @@ RUNBOOK.md               colocar no ar, rotina e incidentes
 - **Fotos do formulário:** o navegador manda uma por pedido para `POST /anunciar/fotos` com um token assinado (HMAC com `HASH_SALT`, 2 h, `lib/submissions/photo-token.ts`), só para anúncio do formulário ainda em moderação; mesmo processamento da Fase 6 (sharp, sem metadados, até 15). A licença é a seção 5 dos Termos do Anunciante. O admin vê as fotos na moderação e pode excluí-las.
 - Contra abuso: campo armadilha, limite por aparelho (`public_listings_per_day`, hash do IP em `listing_submissions`) e blocklist; anúncio parecido com um existente entra com a nota em `review_note`.
 
+## Design (Fase 10)
+
+- **Fonte da verdade visual:** `DESIGN.md` (tokens no frontmatter, regras na prosa) e `PRODUCT.md` (público, posicionamento, princípios); o espelho `.impeccable/design.json` acompanha o DESIGN.md. Mudou cor, tipo ou componente? Atualize os dois.
+- **Skill `impeccable`** (`.claude/skills/impeccable`; o binário vem de impeccable.style e fica fora do git): depois de mexer em interface, `impeccable detect --json <arquivos>`. Avaliações locais em `.impeccable/critique/` (fora do git e do Prettier).
+- **Placa do modelo** (`model-plate.tsx`): Gelo Azul, nome em Azul Fiorde a 70% (60% no escuro, para manter 3:1 como todo texto grande) e linha de ficha de `lib/listings/plate.ts` (só taxonomia).
+- **Termos Volvo explicados** (`lib/taxonomy/explain.ts`): "Entenda o nome" no anúncio, motores com o combustível na página de modelo e agrupados por combustível nos filtros, "V40 (inclui Cross Country)" nos filtros e nos chips. Os textos saem só da taxonomia e do significado geral do termo; o mesmo termo usa sempre as mesmas palavras.
+- **Formulários públicos:** `PUBLIC_FIELDS` no `<form>` (campos de 44px em Papel, 16px no celular), `CHOICE_ROW`/`CHOICE_BOX` para rádios e caixas, `SellerTypeChoice` (o CNPJ só aparece para loja) e `PhotoPicker` (nenhuma foto sai em silêncio: acima de 10 MB, além do limite ou que não seja imagem, aparece um aviso). O `Field` liga a dica ou o erro ao campo (`aria-describedby`) sozinho.
+- **Alvos de toque:** no celular, tudo o que se toca tem pelo menos 44px (links soltos ganham área com `-my-3 py-3`, sem mudar o layout). Títulos equilibram as linhas e parágrafos evitam palavra sozinha (base do `globals.css`).
+- O aviso "did not produce a static shell" no servidor de desenvolvimento já existia antes da Fase 10 (só em dev; o build passa).
+
 ## Variáveis de ambiente
 
 - Segredos **só** em variáveis de ambiente. **Nunca** commite `.env*` (o `.gitignore` já bloqueia). Mantenha `.env.example` atualizado a cada variável nova.
