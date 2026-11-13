@@ -1,0 +1,580 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T01:40:50+00:00",
+  "title": "Design System: Buy My Volvo",
+  "extensions": {
+    "colorMeta": {
+      "fjord-blue": {
+        "role": "primary",
+        "displayName": "Azul Fiorde",
+        "canonical": "oklch(0.45 0.075 245)",
+        "tonalRamp": [
+          "oklch(0.15 0.015 245)",
+          "oklch(0.26 0.027 245)",
+          "oklch(0.38 0.046 245)",
+          "oklch(0.49 0.065 245)",
+          "oklch(0.61 0.065 245)",
+          "oklch(0.72 0.046 245)",
+          "oklch(0.84 0.027 245)",
+          "oklch(0.95 0.015 245)"
+        ]
+      },
+      "fjord-deep": {
+        "role": "primary",
+        "displayName": "Fiorde Profundo",
+        "canonical": "oklch(0.32 0.06 245)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 245)",
+          "oklch(0.26 0.022 245)",
+          "oklch(0.38 0.037 245)",
+          "oklch(0.49 0.052 245)",
+          "oklch(0.61 0.052 245)",
+          "oklch(0.72 0.037 245)",
+          "oklch(0.84 0.022 245)",
+          "oklch(0.95 0.012 245)"
+        ]
+      },
+      "on-fjord": {
+        "role": "primary",
+        "displayName": "Texto sobre Fiorde",
+        "canonical": "oklch(0.985 0.002 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.000 240)",
+          "oklch(0.26 0.001 240)",
+          "oklch(0.38 0.001 240)",
+          "oklch(0.49 0.002 240)",
+          "oklch(0.61 0.002 240)",
+          "oklch(0.72 0.001 240)",
+          "oklch(0.84 0.001 240)",
+          "oklch(0.95 0.000 240)"
+        ]
+      },
+      "focus-ring": {
+        "role": "primary",
+        "displayName": "Anel de Foco",
+        "canonical": "oklch(0.6 0.08 245)",
+        "tonalRamp": [
+          "oklch(0.15 0.016 245)",
+          "oklch(0.26 0.029 245)",
+          "oklch(0.38 0.050 245)",
+          "oklch(0.49 0.070 245)",
+          "oklch(0.61 0.070 245)",
+          "oklch(0.72 0.050 245)",
+          "oklch(0.84 0.029 245)",
+          "oklch(0.95 0.016 245)"
+        ]
+      },
+      "snow": {
+        "role": "neutral",
+        "displayName": "Neve Fria",
+        "canonical": "oklch(0.99 0.002 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.000 240)",
+          "oklch(0.26 0.001 240)",
+          "oklch(0.38 0.001 240)",
+          "oklch(0.49 0.002 240)",
+          "oklch(0.61 0.002 240)",
+          "oklch(0.72 0.001 240)",
+          "oklch(0.84 0.001 240)",
+          "oklch(0.95 0.000 240)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0.000 0)",
+          "oklch(0.26 0.000 0)",
+          "oklch(0.38 0.000 0)",
+          "oklch(0.49 0.000 0)",
+          "oklch(0.61 0.000 0)",
+          "oklch(0.72 0.000 0)",
+          "oklch(0.84 0.000 0)",
+          "oklch(0.95 0.000 0)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Grafite Nórdico",
+        "canonical": "oklch(0.21 0.012 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 255)",
+          "oklch(0.26 0.004 255)",
+          "oklch(0.38 0.007 255)",
+          "oklch(0.49 0.010 255)",
+          "oklch(0.61 0.010 255)",
+          "oklch(0.72 0.007 255)",
+          "oklch(0.84 0.004 255)",
+          "oklch(0.95 0.002 255)"
+        ]
+      },
+      "stone": {
+        "role": "neutral",
+        "displayName": "Pedra",
+        "canonical": "oklch(0.48 0.012 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 255)",
+          "oklch(0.26 0.004 255)",
+          "oklch(0.38 0.007 255)",
+          "oklch(0.49 0.010 255)",
+          "oklch(0.61 0.010 255)",
+          "oklch(0.72 0.007 255)",
+          "oklch(0.84 0.004 255)",
+          "oklch(0.95 0.002 255)"
+        ]
+      },
+      "mist": {
+        "role": "neutral",
+        "displayName": "Névoa",
+        "canonical": "oklch(0.96 0.006 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.001 240)",
+          "oklch(0.26 0.002 240)",
+          "oklch(0.38 0.004 240)",
+          "oklch(0.49 0.005 240)",
+          "oklch(0.61 0.005 240)",
+          "oklch(0.72 0.004 240)",
+          "oklch(0.84 0.002 240)",
+          "oklch(0.95 0.001 240)"
+        ]
+      },
+      "frost": {
+        "role": "neutral",
+        "displayName": "Geada",
+        "canonical": "oklch(0.965 0.004 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.001 240)",
+          "oklch(0.26 0.001 240)",
+          "oklch(0.38 0.002 240)",
+          "oklch(0.49 0.003 240)",
+          "oklch(0.61 0.003 240)",
+          "oklch(0.72 0.002 240)",
+          "oklch(0.84 0.001 240)",
+          "oklch(0.95 0.001 240)"
+        ]
+      },
+      "ice": {
+        "role": "neutral",
+        "displayName": "Gelo Azul",
+        "canonical": "oklch(0.95 0.018 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 240)",
+          "oklch(0.26 0.007 240)",
+          "oklch(0.38 0.011 240)",
+          "oklch(0.49 0.016 240)",
+          "oklch(0.61 0.016 240)",
+          "oklch(0.72 0.011 240)",
+          "oklch(0.84 0.007 240)",
+          "oklch(0.95 0.004 240)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Linha Fina",
+        "canonical": "oklch(0.905 0.006 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.001 240)",
+          "oklch(0.26 0.002 240)",
+          "oklch(0.38 0.004 240)",
+          "oklch(0.49 0.005 240)",
+          "oklch(0.61 0.005 240)",
+          "oklch(0.72 0.004 240)",
+          "oklch(0.84 0.002 240)",
+          "oklch(0.95 0.001 240)"
+        ]
+      },
+      "field-stroke": {
+        "role": "neutral",
+        "displayName": "Contorno de Campo",
+        "canonical": "oklch(0.88 0.008 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 240)",
+          "oklch(0.26 0.003 240)",
+          "oklch(0.38 0.005 240)",
+          "oklch(0.49 0.007 240)",
+          "oklch(0.61 0.007 240)",
+          "oklch(0.72 0.005 240)",
+          "oklch(0.84 0.003 240)",
+          "oklch(0.95 0.002 240)"
+        ]
+      },
+      "amber": {
+        "role": "warning",
+        "displayName": "Âmbar",
+        "canonical": "oklch(0.7 0.15 70)",
+        "tonalRamp": [
+          "oklch(0.15 0.030 70)",
+          "oklch(0.26 0.055 70)",
+          "oklch(0.38 0.093 70)",
+          "oklch(0.49 0.131 70)",
+          "oklch(0.61 0.131 70)",
+          "oklch(0.72 0.093 70)",
+          "oklch(0.84 0.055 70)",
+          "oklch(0.95 0.030 70)"
+        ]
+      },
+      "amber-soft": {
+        "role": "warning",
+        "displayName": "Âmbar Suave",
+        "canonical": "oklch(0.97 0.035 85)",
+        "tonalRamp": [
+          "oklch(0.15 0.007 85)",
+          "oklch(0.26 0.013 85)",
+          "oklch(0.38 0.022 85)",
+          "oklch(0.49 0.031 85)",
+          "oklch(0.61 0.031 85)",
+          "oklch(0.72 0.022 85)",
+          "oklch(0.84 0.013 85)",
+          "oklch(0.95 0.007 85)"
+        ]
+      },
+      "amber-ink": {
+        "role": "warning",
+        "displayName": "Tinta Âmbar",
+        "canonical": "oklch(0.42 0.09 60)",
+        "tonalRamp": [
+          "oklch(0.15 0.018 60)",
+          "oklch(0.26 0.033 60)",
+          "oklch(0.38 0.056 60)",
+          "oklch(0.49 0.079 60)",
+          "oklch(0.61 0.079 60)",
+          "oklch(0.72 0.056 60)",
+          "oklch(0.84 0.033 60)",
+          "oklch(0.95 0.018 60)"
+        ]
+      },
+      "alert-red": {
+        "role": "error",
+        "displayName": "Vermelho de Alerta",
+        "canonical": "oklch(0.55 0.2 27)",
+        "tonalRamp": [
+          "oklch(0.15 0.040 27)",
+          "oklch(0.26 0.073 27)",
+          "oklch(0.38 0.124 27)",
+          "oklch(0.49 0.175 27)",
+          "oklch(0.61 0.175 27)",
+          "oklch(0.72 0.124 27)",
+          "oklch(0.84 0.073 27)",
+          "oklch(0.95 0.040 27)"
+        ]
+      },
+      "polar-night": {
+        "role": "neutral",
+        "displayName": "Noite Polar (tema escuro)",
+        "canonical": "oklch(0.17 0.01 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 255)",
+          "oklch(0.26 0.004 255)",
+          "oklch(0.38 0.006 255)",
+          "oklch(0.49 0.009 255)",
+          "oklch(0.61 0.009 255)",
+          "oklch(0.72 0.006 255)",
+          "oklch(0.84 0.004 255)",
+          "oklch(0.95 0.002 255)"
+        ]
+      },
+      "polar-surface": {
+        "role": "neutral",
+        "displayName": "Superfície Polar (tema escuro)",
+        "canonical": "oklch(0.205 0.012 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 255)",
+          "oklch(0.26 0.004 255)",
+          "oklch(0.38 0.007 255)",
+          "oklch(0.49 0.010 255)",
+          "oklch(0.61 0.010 255)",
+          "oklch(0.72 0.007 255)",
+          "oklch(0.84 0.004 255)",
+          "oklch(0.95 0.002 255)"
+        ]
+      },
+      "polar-text": {
+        "role": "neutral",
+        "displayName": "Texto Polar (tema escuro)",
+        "canonical": "oklch(0.96 0.004 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.001 240)",
+          "oklch(0.26 0.001 240)",
+          "oklch(0.38 0.002 240)",
+          "oklch(0.49 0.003 240)",
+          "oklch(0.61 0.003 240)",
+          "oklch(0.72 0.002 240)",
+          "oklch(0.84 0.001 240)",
+          "oklch(0.95 0.001 240)"
+        ]
+      },
+      "polar-stone": {
+        "role": "neutral",
+        "displayName": "Pedra Polar (tema escuro)",
+        "canonical": "oklch(0.73 0.01 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 240)",
+          "oklch(0.26 0.004 240)",
+          "oklch(0.38 0.006 240)",
+          "oklch(0.49 0.009 240)",
+          "oklch(0.61 0.009 240)",
+          "oklch(0.72 0.006 240)",
+          "oklch(0.84 0.004 240)",
+          "oklch(0.95 0.002 240)"
+        ]
+      },
+      "fjord-blue-night": {
+        "role": "primary",
+        "displayName": "Azul Fiorde Noturno (tema escuro)",
+        "canonical": "oklch(0.76 0.08 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.016 240)",
+          "oklch(0.26 0.029 240)",
+          "oklch(0.38 0.050 240)",
+          "oklch(0.49 0.070 240)",
+          "oklch(0.61 0.070 240)",
+          "oklch(0.72 0.050 240)",
+          "oklch(0.84 0.029 240)",
+          "oklch(0.95 0.016 240)"
+        ]
+      },
+      "on-fjord-night": {
+        "role": "primary",
+        "displayName": "Texto sobre Fiorde Noturno (tema escuro)",
+        "canonical": "oklch(0.18 0.02 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 255)",
+          "oklch(0.26 0.007 255)",
+          "oklch(0.38 0.012 255)",
+          "oklch(0.49 0.017 255)",
+          "oklch(0.61 0.017 255)",
+          "oklch(0.72 0.012 255)",
+          "oklch(0.84 0.007 255)",
+          "oklch(0.95 0.004 255)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Título da home, uma vez por página."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Títulos de seção da home e título do anúncio."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Seções da página do anúncio."
+      },
+      "title-card": {
+        "displayName": "Título do card",
+        "purpose": "Nome do carro no card de anúncio."
+      },
+      "price": {
+        "displayName": "Preço",
+        "purpose": "Preço pedido: o número mais pesado da tela (1.875rem na página do anúncio)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Textos corridos."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Subtítulo da home, em Pedra."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Botões, navegação, chips, rótulos de campos."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Notas, selos e legendas."
+      },
+      "eyebrow": {
+        "displayName": "Eyebrow",
+        "purpose": "\"Cross Country\" na placa do modelo, em maiúsculas."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Banner de cookies e painéis sobrepostos: só o que flutua."
+      },
+      {
+        "name": "on-photo",
+        "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "purpose": "Botões pequenos sobre miniaturas de foto."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent)",
+        "purpose": "Foco de teclado em botões, campos, chips e links."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Transições de cor, borda e fundo nos estados de hover e foco."
+      },
+      {
+        "name": "duration-fast",
+        "value": "150ms",
+        "purpose": "Duração padrão das transições de estado."
+      },
+      {
+        "name": "press",
+        "value": "translateY(1px)",
+        "purpose": "Botão pressionado desce 1px."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal em telas compactas (admin, painéis, formulários).",
+      "html": "<button class=\"ds-btn-primary\">Salvar</button>",
+      "css": ".ds-btn-primary { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 10px; background: var(--primary); color: var(--primary-foreground); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-primary:hover { background: color-mix(in oklch, var(--primary) 80%, transparent); } .ds-btn-primary:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Ação principal grande",
+      "kind": "button",
+      "refersTo": "button-primary-lg",
+      "description": "A ação de cada página pública: buscar, falar no WhatsApp. 48px para o polegar.",
+      "html": "<a class=\"ds-btn-cta\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7.9 20A9 9 0 1 0 4 16.1L2 22Z\"/></svg>Tenho interesse: falar no WhatsApp</a>",
+      "css": ".ds-btn-cta { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; max-width: 352px; height: 48px; padding: 0 24px; border: 1px solid transparent; border-radius: 14px; background: var(--primary); color: var(--primary-foreground); font-size: 1rem; font-weight: 500; text-decoration: none; transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-cta:hover { background: color-mix(in oklch, var(--primary) 80%, transparent); } .ds-btn-cta:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-btn-cta:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Botão outline",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ação secundária ao lado da principal.",
+      "html": "<button class=\"ds-btn-outline\">Limpar filtros</button>",
+      "css": ".ds-btn-outline { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; height: 32px; padding: 0 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--background); color: var(--foreground); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-outline:hover { background: var(--muted); } .ds-btn-outline:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-btn-outline:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Busca",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Campo de busca em texto livre com a ação ao lado; empilha no celular.",
+      "html": "<form class=\"ds-search\" role=\"search\" onsubmit=\"return false\"><label class=\"ds-search-field\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input type=\"search\" placeholder=\"Ex.: xc60 t8 sp até 250 mil\" aria-label=\"Buscar anúncios\"></label><button type=\"submit\">Buscar</button></form>",
+      "css": ".ds-search { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: flex; flex-wrap: wrap; gap: 12px; max-width: 640px; } .ds-search-field { position: relative; flex: 1 1 260px; display: flex; align-items: center; color: var(--muted-foreground); } .ds-search-field svg { position: absolute; left: 14px; pointer-events: none; } .ds-search-field input { width: 100%; height: 48px; padding: 0 12px 0 44px; border: 1px solid var(--input); border-radius: 14px; background: transparent; color: var(--foreground); font: inherit; font-size: 1rem; transition: border-color 150ms, box-shadow 150ms; } .ds-search-field input::placeholder { color: var(--muted-foreground); } .ds-search-field input:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-search button { font: inherit; height: 48px; padding: 0 24px; border: 1px solid transparent; border-radius: 14px; background: var(--primary); color: var(--primary-foreground); font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-search button:hover { background: color-mix(in oklch, var(--primary) 80%, transparent); } .ds-search button:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); }"
+    },
+    {
+      "name": "Chips de busca",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Buscas populares e atalhos por modelo (com a contagem em Pedra).",
+      "html": "<ul class=\"ds-chips\"><li><a href=\"#\">XC60 T8</a></li><li><a href=\"#\">V40 R-Design</a></li><li><a href=\"#\" class=\"ds-chip-model\"><b>XC40</b><span>12</span></a></li></ul>",
+      "css": ".ds-chips { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; } .ds-chips a { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px; border: 1px solid var(--border); border-radius: 9999px; color: var(--foreground); font-size: 0.875rem; text-decoration: none; transition: background-color 150ms, border-color 150ms; } .ds-chips a:hover { border-color: color-mix(in oklch, var(--primary) 40%, transparent); background: var(--accent); } .ds-chips a:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-chip-model { height: 40px !important; } .ds-chip-model b { font-weight: 500; } .ds-chip-model span { color: var(--muted-foreground); }"
+    },
+    {
+      "name": "Selo Repasse",
+      "kind": "chip",
+      "refersTo": "badge-repasse",
+      "description": "Alerta ao comprador quando o próprio anúncio se declara repasse.",
+      "html": "<span class=\"ds-badge-repasse\" title=\"O próprio anúncio se descreve como repasse\">Repasse</span>",
+      "css": ".ds-badge-repasse { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; height: 20px; padding: 2px 8px; border: 1px solid color-mix(in oklch, var(--warning) 60%, transparent); border-radius: 9999px; background: var(--warning-soft); color: var(--warning-foreground); font-size: 0.75rem; font-weight: 500; white-space: nowrap; }"
+    },
+    {
+      "name": "Card de anúncio",
+      "kind": "card",
+      "refersTo": "card-listing",
+      "description": "Ficha resumida do carro com a placa do modelo no lugar da foto; o card inteiro é clicável.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-plate\" aria-hidden=\"true\"><span class=\"ds-plate-model\">XC60</span><span class=\"ds-plate-note\">sem foto</span></div><div class=\"ds-card-body\"><div class=\"ds-card-head\"><h3><a href=\"#\">Volvo XC60 T8 Inscription</a></h3><span class=\"ds-card-check\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-label=\"Vendedor verificado\"><path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\"/><path d=\"m9 12 2 2 4-4\"/></svg></span></div><p class=\"ds-card-meta\">2019/2020 · 41.000 km</p><span class=\"ds-badge-repasse\">Repasse</span><p class=\"ds-card-price\">R$ 239.900</p><p class=\"ds-card-meta\">Curitiba, PR · Loja · há 3 dias</p></div></article>",
+      "css": ".ds-card { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; position: relative; display: flex; flex-direction: column; width: 100%; max-width: 360px; overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: var(--card); color: var(--card-foreground); transition: border-color 150ms; } .ds-card:hover { border-color: color-mix(in oklch, var(--primary) 40%, transparent); } .ds-plate { position: relative; display: flex; align-items: flex-end; aspect-ratio: 16 / 10; padding: 20px; background: linear-gradient(to bottom right, var(--secondary), var(--muted)); } .ds-plate-model { font-size: 3rem; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: color-mix(in oklch, var(--foreground) 10%, transparent); } .ds-plate-note { position: absolute; right: 20px; bottom: 16px; font-size: 0.75rem; color: color-mix(in oklch, var(--foreground) 30%, transparent); } .ds-card-body { display: flex; flex: 1; flex-direction: column; gap: 8px; padding: 16px; } .ds-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; } .ds-card h3 { margin: 0; font-size: 1rem; font-weight: 500; line-height: 1.375; } .ds-card h3 a { color: inherit; text-decoration: none; outline: none; } .ds-card h3 a::after { content: ''; position: absolute; inset: 0; } .ds-card h3 a:focus-visible { text-decoration: underline; } .ds-card-check { color: var(--primary); flex-shrink: 0; } .ds-card-meta { margin: 0; font-size: 0.875rem; color: var(--muted-foreground); } .ds-card-price { margin: auto 0 0; padding-top: 8px; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.025em; } .ds-badge-repasse { align-self: flex-start; display: inline-flex; align-items: center; height: 20px; padding: 2px 8px; border: 1px solid color-mix(in oklch, var(--warning) 60%, transparent); border-radius: 9999px; background: var(--warning-soft); color: var(--warning-foreground); font-size: 0.75rem; font-weight: 500; }"
+    },
+    {
+      "name": "Cabeçalho",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "Cabeçalho fixo e translúcido com o nome em texto (sem logotipo), o link para anunciar e o botão de tema.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-header-name\" href=\"#\">Buy My Volvo</a><nav><a class=\"ds-header-link\" href=\"#\">Anuncie seu Volvo</a><button class=\"ds-header-icon\" aria-label=\"Ativar tema escuro\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\"/></svg></button></nav></header>",
+      "css": ".ds-header { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 16px; border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent); background: color-mix(in oklch, var(--background) 80%, transparent); backdrop-filter: blur(8px); } .ds-header nav { display: flex; align-items: center; gap: 4px; } .ds-header-name { color: var(--foreground); font-size: 0.95rem; font-weight: 600; letter-spacing: -0.025em; text-decoration: none; } .ds-header-link { padding: 6px 12px; border-radius: 10px; color: var(--foreground); font-size: 0.875rem; font-weight: 500; text-decoration: none; } .ds-header-link:hover { background: var(--secondary); } .ds-header-link:focus-visible, .ds-header-name:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-header-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--foreground); cursor: pointer; } .ds-header-icon:hover { background: var(--muted); } .ds-header-icon:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); }"
+    },
+    {
+      "name": "Dicas de segurança",
+      "kind": "custom",
+      "refersTo": "notice-panel",
+      "description": "Painel tonal, sem borda nem sombra, com o escudo e os marcadores em Azul Fiorde.",
+      "html": "<section class=\"ds-safety\"><h2><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/><path d=\"m9 12 2 2 4-4\"/></svg>Compre com segurança</h2><ul><li>Nunca pague sinal ou reserva antes de ver o carro pessoalmente.</li><li>Confira o documento e se o vendedor é o proprietário.</li><li>Faça uma vistoria cautelar antes de fechar negócio.</li></ul></section>",
+      "css": ".ds-safety { font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px; max-width: 640px; padding: 24px; border-radius: 18px; background: color-mix(in oklch, var(--muted) 60%, transparent); } .ds-safety h2 { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; color: var(--foreground); } .ds-safety h2 svg { color: var(--primary); flex-shrink: 0; } .ds-safety ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; color: var(--muted-foreground); } .ds-safety li { display: flex; gap: 12px; } .ds-safety li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; margin-top: 9px; border-radius: 9999px; background: var(--primary); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Manual do Proprietário",
+    "overview": "O Buy My Volvo se apresenta como um bom manual do proprietário: preciso, honesto e didático. Cada anúncio é uma ficha clara (ano, km, preço, cidade), cada termo Volvo pode ser entendido por quem está chegando agora, e nada disputa atenção com o carro e os seus números. O clima é **sereno, entusiasta e didático**: a calma escandinava de neutros frios e muito respiro, com o entusiasmo de quem conhece a marca aparecendo nos detalhes (a placa tipográfica do modelo, os passos numerados, o selo de verificado em azul).\n\nA densidade é moderada: telas públicas com seções largas separadas por linhas finas, conteúdo num contêiner de 72rem e textos corridos em colunas estreitas. A profundidade vem de tons e linhas, não de sombras. Os componentes são **firmes e confiantes**: as ações principais têm 48px de altura, os cards têm contorno nítido e o preço é o número mais pesado da tela. A identidade nórdica está em refinamento (decisão de 13/11/2026): **mais marcada e mais presente**, sem trocar a base de neutros frios e azul.\n\nO visual fica longe de três mundos: o **portal de classificados** (banners, selos piscando, tudo disputando atenção), o **feirão** (vermelho e amarelo, \"IMPERDÍVEL\", preço gigante, contagem regressiva) e a **startup genérica** (gradientes roxos, ilustrações 3D, brilho por todo lado).",
+    "keyCharacteristics": [
+      "Neutros frios (matiz 240–255) com um único acento, o Azul Fiorde.",
+      "Uma família tipográfica (Geist), hierarquia por tamanho, peso (500/600) e espaçamento apertado.",
+      "Superfícies planas: bordas finas e painéis tonais; sombra só no que flutua.",
+      "Cantos suaves e aninhados: 18px nos cards, 14px nos controles grandes, pílula nos chips.",
+      "Ação principal grande e clara (48px), pensada para o polegar no celular.",
+      "Tema claro e escuro, ambos verificados para WCAG 2.1 AA."
+    ],
+    "rules": [
+      {
+        "name": "The Fjord Accent Rule",
+        "body": "O Azul Fiorde marca o que se clica, o que tem foco e o que indica confiança (verificado, passos, marcadores). Superfícies grandes nunca são azuis.",
+        "section": "colors"
+      },
+      {
+        "name": "The Amber Means Caution Rule",
+        "body": "Âmbar é só para alertas ao comprador declarados no próprio anúncio. Nunca para promoção, destaque ou urgência.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Toda a hierarquia sai da Geist em três pesos (400, 500, 600). Nenhuma segunda família decorativa.",
+        "section": "typography"
+      },
+      {
+        "name": "The Price Anchor Rule",
+        "body": "O preço é semibold, com espaçamento apertado, na cor do texto. Nunca em vermelho, nunca riscado, nunca com \"a partir de\".",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Snow Rule",
+        "body": "Cards e painéis ficam planos em repouso e no hover. O hover de um card é a borda tingida de Azul Fiorde (40%), nunca sombra nem elevação.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Nested Radius Rule",
+        "body": "O raio diminui de fora para dentro (18 → 14 → 10px); nada dentro de um card tem raio maior que o card.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** usar o Azul Fiorde só para ação, foco e sinais de confiança; as superfícies ficam neutras.",
+      "**Do** separar superfícies com Linha Fina e painéis em Geada a 60%, não com sombra.",
+      "**Do** dar à ação principal de cada página pública 48px de altura, 14px de raio e texto de 1rem.",
+      "**Do** manter o preço em semibold com espaçamento apertado, como o número mais pesado do card e do anúncio.",
+      "**Do** definir toda cor como token com a versão do tema escuro e conferir o contraste AA nos dois temas.",
+      "**Do** mostrar a placa do modelo quando não houver foto licenciada pelo vendedor.",
+      "**Do** usar o âmbar suave (fundo, borda a 60%, tinta) para os alertas de repasse e ágio."
+    ],
+    "donts": [
+      "**Don't** usar o logotipo da Volvo, o \"iron mark\" ou qualquer elemento visual oficial da marca.",
+      "**Don't** parecer um portal de classificados: nada de banners, selos piscando ou vários destaques disputando atenção.",
+      "**Don't** usar a linguagem do feirão: vermelho e amarelo, \"IMPERDÍVEL\", preço gigante, contagem regressiva.",
+      "**Don't** usar gradientes roxos, ilustrações 3D ou brilhos de startup genérica.",
+      "**Don't** dar sombra ou elevação aos cards, nem em repouso nem no hover.",
+      "**Don't** usar o vermelho fora de erros e ações destrutivas, nem o âmbar fora dos alertas ao comprador.",
+      "**Don't** mostrar fotos que não vieram com a licença do vendedor."
+    ]
+  }
+}
